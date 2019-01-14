@@ -1,0 +1,23 @@
+.dropdown {
+  margin-right: 16px;
+  margin-bottom: 8px;
+	.custom-dropdown {
+		background-color: #ffffff;
+    border-radius: 8px;
+		border: 1px solid #0e9aff;
+		color: #393939;
+    font-size: 16px;
+		height: 32px;
+		line-height: 18px;
+		min-width: 192px;
+    position: relative;
+    padding-right: 50px;
+		img {
+			width: 12px;
+			margin-left: 16px;
+			top: 12px;
+			right: 16px;
+			position: absolute;
+		}
+	}
+}

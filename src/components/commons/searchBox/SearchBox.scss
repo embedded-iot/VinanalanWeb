@@ -1,0 +1,17 @@
+.search-box {
+	height: 32px;
+	line-height: 32px;
+	position: relative;
+	input {
+		width: 100%;
+		border: 1px solid #393939;
+		border-radius: 8px;
+	}
+	img {
+    height: 16px;
+    position: absolute;
+    right: 24px;
+    top: 12px;
+    cursor: pointer;
+	}
+}

@@ -1,0 +1,6 @@
+export const confirmConstants = {
+  SHOW_ALERT: 'SHOW_ALERT',
+  SHOW_MODAL: 'SHOW_MODAL',
+  HIDE_MODAL: 'HIDE_MODAL',
+  ACTION_MODAL: 'ACTION_MODAL'
+};

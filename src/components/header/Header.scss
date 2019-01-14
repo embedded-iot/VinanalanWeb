@@ -1,0 +1,133 @@
+.header-session {
+  width: 100%;
+  position: fixed;
+  z-index: 22;
+  .main-header {
+    display: flex;
+    width: 100%;
+    height: 66px;
+    background-color: #fff;
+    border-bottom: 2px solid #d8d8d8;
+    .branch-box {
+      height: 100%;
+      width: 165px;
+      padding: 10px;
+      display: flex;
+      margin-left: 4px;
+      .ic-logo {
+        height: 100%;
+      }
+      .ic-branch {
+        height: 23px;
+        margin: auto;
+      }
+    }
+
+    .header-contents {
+      display: flex;
+      .header-icon {
+        margin: auto 12px;  
+        color: #03a9f4;
+      }
+      .header-text {
+        color: rgba(0, 0, 0, 0.75);
+        font-family: "Roboto-Regular";
+        font-size: 14px;
+        line-height: 34px;
+      }
+      .locale-box {
+        display: inline-flex;
+        cursor: pointer;
+        height: 34px;
+        line-height: 30px;
+        margin: 13px;
+        border: none;
+        background-color: transparent;
+        &:hover {
+          color: #03a9f4;
+        }
+        .header-icon {
+          width: 31px;
+        }
+        &:focus {
+          outline:0;
+        }
+      }
+      
+      .user-box {
+        margin: auto 30px auto 6px;
+        font-size: 14px;
+        cursor: pointer;
+        height: 100%;
+        .header-icon {
+          height: 17px;
+          width: 23px;
+        }
+    
+        .btn-show-user-info {
+          cursor: pointer;
+          border: none;
+          background-color: transparent;
+          height: 100%;
+          padding: 0;
+          img {
+            height: 38px;
+            width: 38px;
+            margin: 0 8px 0 4px;
+          }
+          &:hover {
+            color: #03a9f4;
+          }
+          &:focus {
+            color: #03a9f4;
+            outline:0;
+          }
+        }
+        .profile {
+          transform: none !important;
+          top: 62px !important;
+          right: 30px;
+          left: unset !important;
+          border: 1px solid #d4d4d4;
+          background-color: #ffffff;
+          padding: 8px;
+          .profile-userpic {
+            height: 100px;
+            width: 100%;
+            text-align: center;
+            img {
+              height: 100px;
+              width: 100px;
+              margin: auto;
+              border-radius: 50%;
+            }
+          }
+          .profile-usertitle {
+            margin: 8px 0;
+            .profile-name {
+              font-size: 24px;
+              color: #03a9f4;
+              text-align: center;
+            }
+            .profile-email {
+              color: #a0a0a0;
+              text-align: center;
+            }
+          }
+          .profile-userbuttons {
+            display: flex;
+            justify-content: space-evenly;
+            .btn-become-host {
+              background-color: #26c6da;
+              color: #fafafa;
+            }
+            .btn-logout {
+              color: #545454;
+              background-color: #fafafa;
+            }
+          }
+        }
+      }
+    }
+  }
+}

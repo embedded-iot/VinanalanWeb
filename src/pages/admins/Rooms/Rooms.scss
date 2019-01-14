@@ -1,0 +1,112 @@
+.rooms {
+  .imfomation-room {
+    margin-top: 30px;
+    border-bottom: 3px solid #ccc;
+
+    .badge-light {
+      color: #252525;
+      background-color: #fff;
+    }
+
+    .btn {
+      color: #fff;
+      min-width: 140px;
+      margin-right: 20px;
+      font-weight: bold;
+    }
+
+    .button-all {
+      background: #0e9aff;
+    }
+
+    .button-empty {
+      background: #7f7d7d;
+    }
+
+    .button-dirty {
+      background: #59b09e;
+    }
+
+    .button-overdue {
+      background: #ff001c;
+    }
+  }
+
+  .table-room-list {
+    .dropdown:hover > .hover-setting {
+      display: block;
+    }
+
+    .hover-setting {
+      position: absolute;
+      top: 21%;
+      left: 0px;
+      z-index: 1000;
+      background-color: #fff;
+      display: block;
+      width: 138px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .dropdown > .dropdown-toggle:active {
+      pointer-events: none;
+    }
+
+    .my-tooltip {
+      border: 1px solid #ccc;
+      box-shadow: 3px 3px 3px #ccc;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      img {
+        height: 35px;
+        margin-left: 14px;
+        cursor: pointer;
+      }
+
+      .mouse {
+        height: 20px;
+      }
+    }
+
+    td {
+      padding: 25px;
+    }
+
+    .no_padding-left {
+      padding-left: 0px !important;
+    }
+
+    .no_padding-right {
+      padding-right: 0px !important;
+    }
+
+    .room-item {
+      width: 140px;
+      height: 140px;
+      text-align: center;
+      padding: 18px 0;
+      background: #55e868;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 5px 5px 5px #ccc;
+
+      img {
+        height: 67px;
+        width: 67px;
+        margin-bottom: 23px;
+      }
+
+      span {
+        font-family: AvenirNext-Bold;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.modal-dialog {
+  min-width: 840px;
+}

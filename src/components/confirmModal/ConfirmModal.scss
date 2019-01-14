@@ -1,0 +1,27 @@
+.alert-modal {
+  min-width: 340px;
+  height: 100px;
+  .modal-header {
+    padding: 20px;
+    color: #488ad6;
+    font-weight: bold;
+    font-size: 20px;
+    .edit-test-case-header {
+      width: 850px;
+    }
+  }
+  .modal-body {
+    font-size: 14px;
+  }
+  .modal-footer {
+    padding: 20px;
+    button {
+      margin-right: 20px;
+      min-width: 100px;
+      width: auto;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+.upload-images-with-size {
+  position: relative;
+  .hidden {
+    display: none;
+  }
+  .form-input {
+    width: 200px;
+    img {
+      width: 100%;
+    }
+    .loading-img {
+      width: 24px;
+    }
+  }
+}
+.upload-images-with-size::after {
+  clear: both;
+  content: "";
+  display: block;
+}

@@ -1,0 +1,52 @@
+.upload-images {
+  position: relative;
+  padding-top: 50px;
+  .loading-img {
+    height: 30px;
+    margin-left: 20px;
+  }
+  .hidden {
+    display: none;
+  }
+  .btn-upload-img {
+    left: 50%;
+    top: 30px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+  }
+
+  .crop-img-box {
+    position: relative;
+    float: left;
+    width: 704px;
+    height: 396px;
+    margin: 10px;
+    .cropper-crop-box {
+      height: 360px !important;
+      width: 640px !important;
+    }
+    .btn {
+      bottom: 10px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+    }
+    .img-loading {
+      bottom: 10px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .img-cropped {
+      height: 360px;
+    }
+  }
+  
+}
+
+.upload-images::after {
+  clear: both;
+  content: "";
+  display: block;
+}
