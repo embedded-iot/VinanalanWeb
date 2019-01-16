@@ -10,6 +10,7 @@ import {
     HomeCatalog,
     RoomsCatalog,
     Rooms,
+    RoomDetail,
 } from './pages';
 
 import {
@@ -28,6 +29,7 @@ export default () =>
             <Route exact path="/HomeCatalog" component={HomeCatalog}/>
             <Route exact path="/RoomsCatalog" component={RoomsCatalog}/>
             <Route exact path="/Room" component={Rooms}/>
+            <Route exact path="/RoomDetail" component={RoomDetail}/>
 
             <Route exact path="/" component={Home}/>
             <Route exact path="/Home" component={Home}/>

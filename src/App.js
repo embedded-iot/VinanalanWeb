@@ -29,7 +29,8 @@ class App extends Component {
     let urlPage = window.location.pathname.toLowerCase();
     let hiddenLeftMenu = true;
     let hiddenHeader = false;
-    if (urlPage === '/' || urlPage === '/home' || urlPage === '/room' || urlPage === '/service' || urlPage === '/report' || urlPage === '/homecatalog' || urlPage === '/roomscatalog') {
+    if (urlPage === '/' || urlPage === '/home' || urlPage === '/room' || urlPage === '/service' || urlPage === '/report' ||
+        urlPage === '/homecatalog' || urlPage === '/roomscatalog' || urlPage === '/roomdetail') {
       hiddenLeftMenu = false;
     }
     if (urlPage === '/login' || urlPage === '/register' || urlPage === '/forgotpw') {

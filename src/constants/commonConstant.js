@@ -35,7 +35,8 @@ export const IMAGES = "Images";
 export const CREATE_NEW_ROOM = "Create New Room";
 export const CREATE_NEW_ROOM_CATALOG = "Create New Room Catalog";
 export const PRIVATE = "Room Private";
-
+export const HIGHT_LIGHT = "Highlight";
+export const MAX_GUEST = "Max guest";
 
 
 

@@ -22,7 +22,7 @@ class DropDownRoomCatalog extends Component {
                 let listData = response.data.data.map(item => {
                     const data = {};
                     data.label = item.catalogName;
-                    data.value = item.id;
+                    data.value = item.id ;
                     return data;
                 });
                 this.setState({

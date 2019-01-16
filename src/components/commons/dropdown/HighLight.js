@@ -3,14 +3,14 @@ import Select from "react-select";
 import './HomeDropDown.scss';
 
 const listRoomMedia = [
-    {value: 'Room Media 1', label: 'Room Media 1'},
-    {value: 'Room Media 2', label: 'Room Media 2'},
-    {value: 'Room Media 3', label: 'Room Media 3'},
-    {value: 'Room Media 4', label: 'Room Media 4'},
+    {value: 'Highlight 1', label: 'Highlight 1'},
+    {value: 'Highlight 2', label: 'Highlight 2'},
+    {value: 'Highlight 3', label: 'Highlight 2'},
+    {value: 'Highlight 4', label: 'Highlight 3'},
 ]
 
 
-class RoomMedia extends Component {
+class HighLight extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -39,4 +39,4 @@ class RoomMedia extends Component {
     }
 }
 
-export default RoomMedia;
+export default HighLight;

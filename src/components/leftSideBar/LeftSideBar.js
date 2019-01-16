@@ -67,6 +67,7 @@ class LeftSideBar extends Component {
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a className="dropdown-item" href="/RoomsCatalog">Rooms Catalog</a>
                             <a className="dropdown-item" href="/HomeCatalog">Home Catalog</a>
+                            <a className="dropdown-item" href="/RoomDetail">Home Catalog</a>
                         </div>
                     </div>
                 </div>

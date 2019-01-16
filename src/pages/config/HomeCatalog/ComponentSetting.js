@@ -23,16 +23,15 @@ export const Input = props => {
 }
 
 export const Textarea = props => {
-    const {value, title, onChangeData, name, style} = props;
+    const {value, title, onChangeData, name, style, flex} = props;
     return (
         <div className="row" style={{marginBottom: '16px'}}>
-            <div className="col-lg-4">
-                <div className="add-modal-title"
-                     style={styleInput}>
-                    {title}
+            <div className={flex ? `col-lg-${flex.title}` : 'col-lg-4'}>
+                <div className="add-modal-title">
+                    <span>{title}</span>
                 </div>
             </div>
-            <div className="col-lg-8">
+            <div className={flex ? `col-lg-${flex.input}` : "col-lg-8"}>
                 <textarea className="form-control"
                           value={value}
                           style={style}

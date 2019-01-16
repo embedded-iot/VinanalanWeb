@@ -4,32 +4,74 @@ import iconLookUp from '../../../public/images/icons/group-5@2x.png';
 import iconLook from '../../../public/images/icons/group-6@2x.png';
 import iconSetup from '../../../public/images/icons/group-5-copy@2x.png';
 import iconMouse from '../../../public/images/icons/16-px-shape-arrow@2x.png';
-
+import {Button} from "../../config/HomeCatalog/ComponentSetting";
+import {error, showModal, success} from "../../../actions";
+import {connect} from 'react-redux';
 
 const RoomItem = props => {
+    const {data, handlelookUp, handleConstructingRoom} = props;
     return (
-        <div data-toggle="dropdown" className='room-item'>
+        <div className='room-item' style={props.style ? {marginLeft: '0px'} : {}}>
             <img src={user_ic}/>
-            <div><span>{props.roomName}</span></div>
+            <div><span>{data.roomName}</span></div>
+            <div className="up-arrow">
+                <div className='hanna-confirmed'>
+                    <div className='header'>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Hanna-Confirmed</span></div>
+                        </div>
+                    </div>
+                    <div className='content'>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Checkin/out: </span></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Guest: {data.maxGuest}</span></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Price: {data.roomPrice}</span></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Total: </span></div>
+                        </div>
+                    </div>
+                </div>
+                <div className='contract-info' style={{float: 'left'}}>
+                    <div className='header'>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Contract Info</span></div>
+                        </div>
+                    </div>
+                    <div className='content'>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Customer: </span></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Status: {data.status}</span></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-12'><span>Pay: </span></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-6'><a className='btn btn-finish' href="/RoomDetail">Detail</a></div>
+                            <div className='col-lg-6'><a className='btn btn-finish' href="/RoomCheckin">Check-In</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <Tooltip handlelookUp={handlelookUp} handleConstructingRoom={handleConstructingRoom}/>
         </div>
     );
 }
 
-const Row = props => {
-    return (
-        props.list.length.map(item => {
-            return (
-                <span>{props.list.roomName}</span>
-            );
-        })
-    )
-}
-const Tooltip = () => {
+const Tooltip = (props) => {
         return (
             <div className="my-tooltip">
-                <img className='lookup' src={iconLookUp}/>
+                <img className='lookup' onClick={props.handlelookUp} src={iconLookUp}/>
                 <img className='mouse' src={iconMouse}/>
-                <img className='setup' src={iconSetup}/>
+                <img className='setup' onClick={props.handleConstructingRoom} src={iconSetup}/>
             </div>
         )
     }
@@ -46,57 +88,59 @@ class TableListRoom extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.listRooms) {
-            let listRooms = [];
-            let listData = [];
-            nextProps.listRooms.map((item, index) => {
-                listData.push(item);
-                if (((index + 1) % nextProps.row === 0 && index > 1) || index === nextProps.listRooms.length - 1) {
-                    listRooms.push(listData)
-                    listData = [];
-                }
-            })
-
-            const number = listRooms[listRooms.length - 1].length % nextProps.row;
-            if(number>0 && nextProps.listRooms.length > nextProps.row)
-            for (let i = 0; i < nextProps.row - number; i++) {
-                listRooms[listRooms.length - 1].push({roomName: 'Null'});
-            }
-            this.setState({listRoom: listRooms});
+            this.setState({listRoom: nextProps.listRooms});
         }
+    }
+
+    handlelookUp = () => {
+        this.props.showModal("LookUp", confirm => {
+            alert("0k");
+
+        }, er => {
+
+        });
+    }
+    handleConstructingRoom = () => {
+        this.props.showModal("Constructing Room", confirm => {
+            alert("0k");
+        }, er => {
+
+        });
     }
 
     render() {
         const {listRoom} = this.state;
+        const {row} = this.props;
         return (
             <div>
-                {listRoom.length ? <table className='table-room-list'>
-                    <tbody>
-                    {listRoom.map((item, key) => {
+                {listRoom.length ? <div className='table-room-list'>
+                    {listRoom.map((item, k) => {
                         return (
-                            <tr key={key}>
-                                {item.map((ColumnsItem, index) => {
-                                    return (
-                                        <td key={index}
-                                            className={index === 0 ? 'no_padding-left' : index === item.length - 1 ? 'no_padding-right' : ''}>
-                                            <div className="dropdown">
-                                                <RoomItem roomName={ColumnsItem.roomName}/>
-                                                <div className="hover-setting"
-                                                     aria-labelledby="dropdownMenuButton">
-                                                    <Tooltip/>
-                                                </div>
-                                            </div>
-
-                                        </td>
-                                    );
-                                })}
-                            </tr>
+                            <RoomItem key={k} style={k % row === 0 ? true : false} data={item}
+                                      handlelookUp={this.handlelookUp}
+                                      handleConstructingRoom={this.handleConstructingRoom}
+                            />
                         );
                     })}
-                    </tbody>
-                </table> : 'is Load Data !'}
+                </div> : <span>'is Load Data !</span>}
             </div>
         );
     }
 }
 
-export default TableListRoom;
+
+const mapDispatchToProps = dispatch => {
+    return {
+        // error: (message) => {
+        //     dispatch(error(message));
+        // },
+        // success: (message) => {
+        //     dispatch(success(message));
+        // },
+        showModal: (message, confirm) => {
+            dispatch(showModal(message, confirm))
+        }
+    }
+};
+
+export default connect(null, mapDispatchToProps)(TableListRoom);
