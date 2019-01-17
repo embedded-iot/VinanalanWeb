@@ -1,0 +1,80 @@
+.book_room {
+  width: 70%;
+  padding: 20px;
+  font-size: 20px;
+  color: #393939;
+
+  .row {
+    margin-bottom: 10px;
+  }
+
+  .header {
+    position: absolute;
+    padding: 5px;
+    font-size: 28px;
+    background-color: #fff;
+    color: #0e9aff;
+  }
+
+  font-family: AvenirNext-Bold;
+  font-weight: bold;
+
+  .contact-info {
+    padding: 20px;
+    width: 49%;
+    position: relative;
+    float: left;
+    height: 442px;
+    border: 2px solid #0496ff;
+    border-radius: 7px;
+    margin-right: 2%;
+
+    .header {
+      left: 9%;
+      top: -7%;
+    }
+  }
+
+  .right-info {
+    width: 49%;
+    float: left;
+    height: 400px;
+
+    .customer-info {
+      padding: 20px;
+      width: 100%;
+      position: relative;
+      border: 2px solid #0496ff;
+      border-radius: 7px;
+      margin-bottom: 30px;
+
+      .header {
+        top: -11%;
+        left: 5%;
+      }
+    }
+
+    .extra-info {
+      padding: 20px 20px 0 20px;
+      width: 100%;
+      border: 2px solid #0496ff;
+      border-radius: 7px;
+      position: relative;
+
+      .header {
+        position: absolute;
+        top: -22%;
+        left: 5%;
+      }
+    }
+  }
+  .btn{
+    width: 100%;
+    margin-top: 31px;
+    background: #4cd137;
+    height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+  }
+}

@@ -57,3 +57,25 @@ export const Button = props => {
         </button>
     );
 }
+
+//
+// const data = {
+//     "roomId":"5c3c5b45bdb6b43970501d7a",
+//         "customerId": "string",
+//         "bookingSource": "string",
+//         "checkin": "2019-01-15T07:02:57.355Z",
+//         "checkout": "2019-01-15T07:02:57.355Z",
+//         "guestNumber": 4,
+//         "totalMoney": 0,
+//         "description":"String", // Description
+//         "prePay": 0
+//     "userId":"5c35b8794109b335a4836832",//id của thằng book
+//         "customerEmail":"{{link:0}}",
+//         "customerName":"3343dsf",
+//         "customerPhone":"23132",
+//         "customerPassportId": "12313",
+//         "customerCountry": "VN",
+//         "extraInfo" :"dfdas"//Customer note
+// }
+//
+// birthday

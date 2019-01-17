@@ -30,7 +30,7 @@ class App extends Component {
     let hiddenLeftMenu = true;
     let hiddenHeader = false;
     if (urlPage === '/' || urlPage === '/home' || urlPage === '/room' || urlPage === '/service' || urlPage === '/report' ||
-        urlPage === '/homecatalog' || urlPage === '/roomscatalog' || urlPage === '/roomdetail') {
+        urlPage === '/homecatalog' || urlPage === '/roomscatalog' || urlPage.includes('/roomdetail') || urlPage.includes('/bookroom')) {
       hiddenLeftMenu = false;
     }
     if (urlPage === '/login' || urlPage === '/register' || urlPage === '/forgotpw') {

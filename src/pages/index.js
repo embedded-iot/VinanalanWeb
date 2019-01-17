@@ -6,3 +6,4 @@ export { default as HomeCatalog } from "./config/HomeCatalog/HomeCatalog";
 export { default as RoomsCatalog } from "./config/RoomsCatalog/RoomsCatalog";
 export { default as Rooms } from "./admins/Rooms/Rooms";
 export { default as RoomDetail } from "./admins/Rooms/RoomDetail";
+export { default as BookRoom } from "./admins/Rooms/BookRoom";
