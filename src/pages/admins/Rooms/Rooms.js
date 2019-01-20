@@ -31,7 +31,8 @@ class Rooms extends Component {
             searchText: '',
             listRooms: [],
             selectRow: {label: 'Row 8', value: 8},
-            isShowModal: false
+            isShowModal: false,
+            listCount: []
         }
     }
 
@@ -44,8 +45,11 @@ class Rooms extends Component {
             if (res.data.isSucess)
                 this.setState({listRooms: res.data.data})
         }, er => {
-
         });
+
+        Services.getCountRoomByStatus(res =>{
+           this.setState({listCount: res.data.data});
+        })
     }
     onChangeSelectedMap = (key, value) => {
         this.setState({selectedMap: {...this.state.selectedMap, [key]: value}});
@@ -77,16 +81,27 @@ class Rooms extends Component {
         if (isUpdate) this.getListRooms();
         this.setState({isShowModal: false});
     }
+
+    onChangeSeacrhRoom = (value) => {
+        Services.getRoomByStatus(value, res => {
+            this.setState({listRooms: res.data.data});
+        }, er => {
+
+        })
+    }
+    onUpdate = () =>{
+        this.getListRooms();
+    }
     render() {
 
         const {country, provinces, districts, wards} = this.state.selectedMap;
-        const {searchText, listRooms, selectRow, isShowModal} = this.state;
+        const {searchText, listRooms, selectRow, isShowModal, listCount} = this.state;
 
         return (
             <div className='rooms' style={styles}>
                 <div className="row" style={{marginBottom: '25px'}}>
                     <div className="col-lg-8"><span
-                        style={{fontSize: '28px', fontWeight: 'bold'}}>{CONSTANTS.HOME_CATALOG}</span></div>
+                        style={{fontSize: '28px', fontWeight: 'bold'}}>{CONSTANTS.ROOM}</span></div>
                     <div className="col-lg 3"><SearchBox placeholder="Search" value={searchText}
                                                          onChangeSearch={this.onChangeSearch}
                                                          onSearch={this.handleSearch}/></div>
@@ -117,21 +132,25 @@ class Rooms extends Component {
                                 value={selectRow} placeholder='Select Row'></Select>
                     </div>
                 </div>
+
                 <div className='imfomation-room'>
-                    <button type="button" className="btn button-all">
-                        All &nbsp;<span className="badge badge-light">4</span>
+                    <button type="button" onClick={this.getListRooms} className="btn button-all">
+                        All &nbsp;<span className="badge badge-light"></span>
                     </button>
-                    <button type="button" className="btn button-empty">
-                        Empty &nbsp; <span className="badge badge-light">4</span>
+                    <button type="button" onClick={() => this.onChangeSeacrhRoom(1)} className="btn button-empty">
+                        Empty &nbsp; <span className="badge badge-dark">{listCount[0]}</span>
                     </button>
-                    <button type="button" className="btn button-dirty">
-                        Dirty &nbsp;<span className="badge badge-light">4</span>
+                    <button type="button" onClick={() => this.onChangeSeacrhRoom(2)} className="btn button-booking">
+                        Booking&nbsp;<span className="badge badge-light">{listCount[1]}</span>
                     </button>
-                    <button type="button" className="btn button-overdue">
-                        Overdue &nbsp;<span className="badge badge-light">4</span>
+                    <button type="button" onClick={() => this.onChangeSeacrhRoom(3)} className="btn  button-staying">
+                         Staying&nbsp;<span className="badge badge-light">{listCount[2]}</span>
+                    </button>
+                    <button type="button" onClick={() => this.onChangeSeacrhRoom(4)} className="btn button-close">
+                        Close &nbsp;<span className="badge badge-light">{listCount[3]}</span>
                     </button>
                 </div>
-                <TableListRoom listRooms={listRooms} row={selectRow.value}/>
+                <TableListRoom listRooms={listRooms} row={selectRow.value} onUpdate={this.onUpdate}/>
                 <AddRoomModal isShowModal={isShowModal} handleClosePopUp={this.handleClosePopUp}/>
             </div>
         );

@@ -27,4 +27,19 @@ export function createRoomsCatalog(data, successCallback, failCallback) {
     });
 }
 
+export function upDateRoomsCatalog(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/room-catalog',
+        headers: { 'Content-Type': 'application/json'},
+        data: data
+    };
+
+    Services.makePutRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
+
 

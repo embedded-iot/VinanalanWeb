@@ -1,0 +1,58 @@
+.report_management {
+  padding: 18px;
+  fontFamily: AvenirNext-Bold;
+  background-color: #f2f2f2;
+  font-weight: bold;
+
+  .title {
+    font-size: 26px;
+  }
+
+  .date_time {
+    font-size: 16px;
+    text-align: right;
+    .active_span{
+      color: #252525;
+    }
+    span {
+      margin-left: 15px;
+      border-right: 2px solid #7f7d7d;
+      padding-right: 15px;
+      cursor: pointer;
+      color: rgba(57, 57, 57, 0.5);
+    }
+  }
+
+  .content-number {
+    margin-top: 47px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 39px 44px;
+    font-size: 30px;
+    color: #0e9aff;
+    border: 1px solid #ccc;
+
+    .number {
+      font-size: 48px;
+      color: #0cfe00;
+      margin-bottom: 31px;
+    }
+  }
+
+  .myClass ul > li > a {
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background-color: #fff;
+    color: #3b3b3c;
+  }
+
+  .myClass ul > li.active > a,
+  .myClass ul > li.active > a:hover,
+  .myClass ul > li.active > a:focus {
+    border: 1px solid #307bff;
+    border-bottom: none;
+    color: #307bff;
+  }
+
+}

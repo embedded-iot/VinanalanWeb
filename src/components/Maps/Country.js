@@ -3,6 +3,7 @@ import Select from "react-select";
 import * as Service from "./MapsServices";
 
 class Country extends Component {
+    _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -11,12 +12,13 @@ class Country extends Component {
     }
 
     componentWillMount() {
+        this._isMounted = true;
         this.getListContries();
     }
 
     getListContries = () => {
         Service.getContries(response => {
-            if (response.data.isSucess) {
+            if (response.data.isSucess && response.data.data.length > 0 && this._isMounted) {
                 let listData = response.data.data.map(item => {
                     const data = {};
                     data.label = item.name;
@@ -31,7 +33,9 @@ class Country extends Component {
             // this.props.error(error);
         })
     }
-
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
     render() {
         const {listData} = this.state;
         const {onChangeCountry} = this.props;

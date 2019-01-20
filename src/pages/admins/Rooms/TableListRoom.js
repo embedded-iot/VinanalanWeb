@@ -1,44 +1,119 @@
 import React, {Component} from "react";
-import {Link} from 'react-router-dom';
 import user_ic from "../../../public/images/icons/user_ic.png";
 import iconLookUp from '../../../public/images/icons/group-5@2x.png';
 import iconLook from '../../../public/images/icons/group-6@2x.png';
 import iconSetup from '../../../public/images/icons/group-5-copy@2x.png';
-import iconMouse from '../../../public/images/icons/16-px-shape-arrow@2x.png';
 import {error, showModal, success} from "../../../actions";
 import {connect} from 'react-redux';
 import * as CONSTANTS from '../../../constants/commonConstant';
 import ModalConfirm from './ModalConfirm';
+import {withRouter, Link} from 'react-router-dom';
+import * as Service from './RoomServices';
+
+const styleUpRow = {
+    width: '250px'
+}
+
+
+const styleHanna = {
+    width: '100%',
+    borderRight: 'none',
+    borderRadius: '10px'
+}
 
 const RoomItem = props => {
-    const {data, handlelookUp, handleConstructingRoom} = props;
+    const {data, revervation} = props;
+    const isUserInfo = data.roomStatus === 2 || data.roomStatus === 3;
+    const styleClass = data.roomStatus;
+    const handleAciton = (key) => {
+        props.showModal(`Are you sure you want to ${key} the room?`, confirm => {
+            switch (key) {
+                case 'finish':
+                    Service.unLookRoom(data.id, res => {
+                        props.success("Success");
+                    }, er => {})
+                    break;
+                case 'edit':
+                        Service.lookRoom(data.id, res => {
+                            props.success("Success");
+                        }, er => {})
+                    break;
+                case 'checkin':
+                        Service.checkInRoom(revervation.id, res => {
+                            props.success("Success");
+                        }, er => {})
+                    break;
+                case 'checkout':
+                        Service.checkOutRoom(revervation.id, res => {
+                            props.success("Success");
+                        }, er => {})
+                    break;
+                default :break;
+            }
+            props.onUpdate();
+        })
+    }
+
     return (
-        <div className='room-item' style={props.style ? {marginLeft: '0px'} : {}}>
-            <img src={user_ic}/>
-            <div><span>{data.roomName}</span></div>
-            <div className="up-arrow">
-                <div className='hanna-confirmed'>
-                    <div className='header'>
+        <div className={`room-item backgroud_color${styleClass}`}
+             style={props.style ? {marginLeft: '0px'} : {}}>
+            <div className="content" onClick={() => props.onClick(data.id)}
+                 onMouseOver={() => props.getRevervationByID(data.currentReservation)}>
+                <img src={user_ic}/>
+                <div>{data.roomName}</div>
+            </div>
+
+            <div className="up-arrow" style={!isUserInfo ? styleUpRow : {}}>
+                <div className='hanna-confirmed' style={!isUserInfo ? styleHanna : {}}>
+                    <div className='header' style={!isUserInfo ? {borderTopRightRadius: '10px'} : {}}>
                         <div className='row'>
                             <div className='col-lg-12'><span>Hanna-Confirmed</span></div>
                         </div>
                     </div>
                     <div className='content'>
-                        <div className='row'>
-                            <div className='col-lg-12'><span>Checkin/out: </span></div>
-                        </div>
+                        {isUserInfo && <div className='row'>
+                            <div className='col-lg-12'><span>Checkin/out:  </span></div>
+                        </div>}
+
+                        {!isUserInfo && <div className='row'>
+                            <div className='col-lg-12'><span>Description: {data.roomDescription}</span></div>
+                        </div>}
+
                         <div className='row'>
                             <div className='col-lg-12'><span>Guest: {data.maxGuest}</span></div>
                         </div>
+
                         <div className='row'>
                             <div className='col-lg-12'><span>Price: {data.roomPrice}</span></div>
                         </div>
-                        <div className='row'>
+
+                        {isUserInfo && <div className='row'>
                             <div className='col-lg-12'><span>Total: </span></div>
+                        </div>}
+
+                        {!isUserInfo &&
+                        <div className="row">
+                            {data.roomStatus === 4 ?
+                                <div className='col-lg-12'>
+                                    <button className='btn btn-finish finish'
+                                            onClick={() => handleAciton("finish")}>Finish
+                                    </button>
+                                </div> :
+                                (<div className='col-lg-12'>
+                                    <button className='btn btn-finish edit'
+                                            onClick={() => handleAciton("edit")}>Edit
+                                    </button>
+                                    <Link className='btn btn-finish  book'
+                                          to={`BookRoom/${data.id}`}>Book</Link>
+                                </div>)
+                            }
                         </div>
+                        }
                     </div>
+
                 </div>
-                <div className='contract-info' style={{float: 'left'}}>
+
+                {isUserInfo && <div className='contract-info' style={{float: 'left'}}>
                     <div className='header'>
                         <div className='row'>
                             <div className='col-lg-12'><span>Contract Info</span></div>
@@ -46,52 +121,66 @@ const RoomItem = props => {
                     </div>
                     <div className='content'>
                         <div className='row'>
-                            <div className='col-lg-12'><span>Customer: </span></div>
+                            <div className='col-lg-12'><span>Customer: {revervation.customerName}</span></div>
                         </div>
                         <div className='row'>
-                            <div className='col-lg-12'><span>Status: {data.status}</span></div>
+                            <div className='col-lg-12'><span>Status: {revervation.reservationStatus}</span></div>
                         </div>
                         <div className='row'>
-                            <div className='col-lg-12'><span>Pay: </span></div>
+                            <div className='col-lg-12'><span>Phone: {revervation.customerPhone}</span></div>
                         </div>
-                        <div className='row'>
-                            <div className='col-lg-6'><Link className='btn btn-finish' to={`RoomDetail/${data.id}`}>Detail</Link></div>
-                            <div className='col-lg-6'><Link className='btn btn-finish' to={`BookRoom/${data.id}`}>Check-In</Link></div>
-                        </div>
+                        {data.roomStatus === 2 ? <div className='row'>
+                                <div className='col-lg-6'><Link className='btn btn-finish edit'
+                                                                to={`RoomDetail/${data.id}`}>Cancel</Link>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <button className='btn btn-finish book'
+                                            onClick={() => handleAciton("checkin")}>Check-In
+                                    </button>
+                                </div>
+                            </div>
+                            :
+                            <div className='row'>
+                                <div className='col-lg-6'>
+                                    <button className='btn btn-finish edit'
+                                            onClick={() => handleAciton("checkout")}>Check Out
+                                    </button>
+                                </div>
+                                <div className='col-lg-6'><Link className='btn btn-finish book'
+                                                                to={`BookRoom/${data.id}`}>Expand</Link>
+                                </div>
+                            </div>
+                        }
                     </div>
-                </div>
+                </div>}
             </div>
-
-            <Tooltip handlelookUp={()=>handlelookUp(data.id)}
-                     handleConstructingRoom={()=>handleConstructingRoom(data.id)}/>
         </div>
     );
 }
 
-const Tooltip = (props) => {
-        return (
-            <div className="my-tooltip">
-                <img className='lookup' onClick={props.handlelookUp} src={iconLookUp}/>
-                <img className='mouse' src={iconMouse}/>
-                <img className='setup' onClick={props.handleConstructingRoom} src={iconSetup}/>
-            </div>
-        )
-    }
-;
 
 class TableListRoom extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             listRoom: [],
+            revervation: {},
             isShowModal: false,
-            modal :{
-                title : '',
+            modal: {
+                title: '',
                 message: ''
             }
         }
     }
 
+    listRevervation = [];
+
+    componentDidMount() {
+        Service.getAllRevervation(res => {
+            this.listRevervation = res.data.data;
+        })
+    }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.listRooms) {
@@ -101,31 +190,48 @@ class TableListRoom extends Component {
 
     handlelookUp = (id) => {
         this.setState({
-            modal : {
+            modal: {
                 title: CONSTANTS.LOCK_ROOM,
                 message: 'Do you want to lock this room?',
                 id: id
             },
-            isShowModal : true
+            isShowModal: true
         });
     }
 
     handleConstructingRoom = (id) => {
         this.setState({
-            modal : {
+            modal: {
                 title: CONSTANTS.CONSTRUCTING_ROOM,
                 message: 'Do you want to change this room to contructing state ?',
                 id: id
             },
-            isShowModal : true
+            isShowModal: true
         });
     }
-    handleClosePopUp = () =>{
-      this.setState({isShowModal: false});
+    handleClosePopUp = () => {
+        this.setState({isShowModal: false});
     }
+    onClick = (value) => {
+        this.props.history.push(`/RoomDetail/${value}`);
+    }
+
+    getRevervationByID = (value) => {
+        if (value) {
+            for (let i = 0; i < this.listRevervation.length; i++) {
+                if (this.listRevervation[i].id === value) {
+                    this.setState({revervation: this.listRevervation[i]});
+                    break;
+                }
+            }
+        } else {
+            if (this.state.revervation) this.setState({revervation: {}})
+        }
+    }
+
     render() {
-        const {listRoom, isShowModal, modal} = this.state;
-        const {row} = this.props;
+        const {listRoom, isShowModal, modal, revervation} = this.state;
+        const {row, showModal, success, onUpdate} = this.props;
         return (
             <div>
                 {listRoom.length ? <div className='table-room-list'>
@@ -134,13 +240,18 @@ class TableListRoom extends Component {
                             <RoomItem key={k} style={k % row === 0 ? true : false} data={item}
                                       handlelookUp={this.handlelookUp}
                                       handleConstructingRoom={this.handleConstructingRoom}
-
+                                      onClick={this.onClick}
+                                      showModal={showModal}
+                                      success={success}
+                                      onUpdate={onUpdate}
+                                      getRevervationByID={this.getRevervationByID}
+                                      revervation={revervation}
                             />
                         );
                     })}
                 </div> : <span>'is Load Data !</span>}
                 <ModalConfirm isShowModal={isShowModal}
-                              handleClosePopUp={this.handleClosePopUp}   modal={modal}/>
+                              handleClosePopUp={this.handleClosePopUp} modal={modal}/>
             </div>
         );
     }
@@ -152,13 +263,13 @@ const mapDispatchToProps = dispatch => {
         // error: (message) => {
         //     dispatch(error(message));
         // },
-        // success: (message) => {
-        //     dispatch(success(message));
-        // },
+        success: (message) => {
+            dispatch(success(message));
+        },
         showModal: (message, confirm) => {
             dispatch(showModal(message, confirm))
         }
     }
 };
 
-export default connect(null, mapDispatchToProps)(TableListRoom);
+export default withRouter(connect(null, mapDispatchToProps)(TableListRoom));

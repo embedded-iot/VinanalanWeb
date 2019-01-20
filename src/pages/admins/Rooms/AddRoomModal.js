@@ -8,6 +8,7 @@ import {success} from "../../../actions";
 import * as CONSTANTS from '../../../constants/commonConstant';
 import HomeDropDown from '../../../components/commons/dropdown/HomeDropDown';
 import DropDownRoomCatalog from '../../../components/commons/dropdown/DropDownRoomCatalog';
+import DropdownBathRoom from '../../../components/commons/dropdown/DropdownBathRoom';
 import HighLight from '../../../components/commons/dropdown/HighLight';
 import ic_add_images from "../../../public/images/icons/ic_add-images.png";
 import * as Service from "./RoomServices";
@@ -20,11 +21,13 @@ const defaultState = (props) => ({
     roomHighlight: {},
     homeId: '',
     maxGuest: '',
+    discount: '',
     isPrivate: false,
     roomTypeId: '',
     roomTypeName: 'Strings',
-    roomMedia: {images: []},
-    roomStatus: '',
+    // roomMedia: {images: []},
+    roomMedia: {},
+    roomStatus: 1,
     roomPrice: '',
     create_at: (new Date()).toISOString(),
     update_at: (new Date()).toISOString(),
@@ -87,11 +90,11 @@ class AddRoomModal extends Component {
         const {selected} = this.state;
         return (
             <Modal show={isShowModal}>
-                <Modal.Header><span>{CONSTANTS.CREATE_NEW_ROOM}</span></Modal.Header>
+                <Modal.Header><span><h2>{CONSTANTS.CREATE_NEW_ROOM}</h2></span></Modal.Header>
                 <Modal.Body>
 
                     <div className="row">
-                        <div className="col-lg-6"><Input value={selected.roomName} title={CONSTANTS.TiTLE}
+                        <div className="col-lg-6"><Input value={selected.roomName} title={CONSTANTS.ROOM_NUMBER}
                                                          name='roomName' onChangeData={this.onChangeData}/></div>
                         <div className="col-lg-6">
                             <div className="row">
@@ -103,12 +106,8 @@ class AddRoomModal extends Component {
                         </div>
                     </div>
 
-
                     <Textarea value={selected.roomDescription} title={CONSTANTS.DESCRIPTION} name='roomDescription'
                               flex={{title: 2, input: 10}} onChangeData={this.onChangeData} style={{height: '80px'}}/>
-
-                    {/*<Input value={selected.roomHighlight} title={CONSTANTS.HIGHT_LIGHT} flex={{title: 2, input: 10}}*/}
-                    {/*name='roomHighlight' onChangeData={this.onChangeData}/>*/}
 
                     <div className="row" style={{marginBottom: '16px'}}>
                         <div className="col-lg-2">
@@ -118,17 +117,10 @@ class AddRoomModal extends Component {
                             <HighLight name='roomHighlight' onChangeData={this.onChangeData}/>
                         </div>
                     </div>
-                    <div className="row" style={{marginBottom: '16px'}}>
+                    <div className="row">
                         <div className='col-lg-6'>
-                            <div className="row">
-                                <div className='col-lg-4'>
-                                    <span>{CONSTANTS.ROOM_NUMBER}</span>
-                                </div>
-                                <div className='col-lg-8'>
-                                    {/*<input checked={selected.isPrivate} type='checkbox' style={{zoom: 1.4}}*/}
-                                    {/*name='isPrivate' onChange={this.onChangeDataCheckBox}/>*/}
-                                </div>
-                            </div>
+                            <Input value={selected.roomPrice} title={CONSTANTS.PRICE}
+                                   name='roomPrice' onChangeData={this.onChangeData}/>
                         </div>
                         <div className='col-lg-6'>
                             <div className="row">
@@ -136,7 +128,6 @@ class AddRoomModal extends Component {
                                 <div className='col-lg-8'><HomeDropDown onChangeData={this.onChangeData} name='homeId'/>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div className="row">
@@ -150,26 +141,16 @@ class AddRoomModal extends Component {
                                     <span>{CONSTANTS.BATHROOM}</span>
                                 </div>
                                 <div className='col-lg-8'>
-                                    {/*<RoomMedia name='roomMedia' onChangeData={this.onChangeData}/>*/}
+                                    <DropdownBathRoom name='bathroomNumber'
+                                                      onChangeData={this.onChangeData}/>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className='col-lg-6'>
-                            <Input value={selected.roomPrice} title={CONSTANTS.PRICE}
-                                   name='roomPrice' onChangeData={this.onChangeData}/>
-                        </div>
-                        <div className='col-lg-6'>
-
-                            <Input value={selected.roomStatus} title={CONSTANTS.DISCOUNT}
-                                   name='roomStatus' value={0} onChangeData={this.onChangeData}/>
-                        </div>
-                    </div>
-                    <div className="row" style={{marginBottom: '16px'}}>
-                        <div className='col-lg-6'>
-                            <Input value={selected.maxGuest} title={CONSTANTS.MAX_GUEST}
-                                   name='maxGuest' onChangeData={this.onChangeData}/>
+                            <Input value={selected.discount} title={CONSTANTS.DISCOUNT}
+                                   name='discount' onChangeData={this.onChangeData}/>
                         </div>
                         <div className='col-lg-6'>
                             <div className="row">
@@ -179,16 +160,16 @@ class AddRoomModal extends Component {
                                                                  name='isPrivate' onChange={this.onChangeDataCheckBox}/>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+
                     <div className="row">
                         <div className='col-lg-2'>
                             <span>{CONSTANTS.IMAGES}</span>
                         </div>
                         <div className='col-lg-10'>
                             {
-                               selected.roomMedia.images && <div className="image-box">
+                                selected.roomMedia.images && <div className="image-box">
                                     {
                                         selected.roomMedia.images.map((image, index) => {
                                             return <div className="image-item" key={index}>
@@ -202,8 +183,8 @@ class AddRoomModal extends Component {
                                         selected.roomMedia.images.length > 0 ?
                                             <div className="add-image" onClick={this.onClickUploadImage}>
                                                 <i className="fas fa-plus"></i>
-                                            </div> :  <img style={{height: '35px', cursor: 'pointer'}}
-                                                           onClick={this.onClickUploadImage} src={ic_add_images}/>
+                                            </div> : <img style={{height: '35px', cursor: 'pointer'}}
+                                                          onClick={this.onClickUploadImage} src={ic_add_images}/>
                                     }
                                     <UploadImage onUpload={this.uploadImage}/>
                                 </div>

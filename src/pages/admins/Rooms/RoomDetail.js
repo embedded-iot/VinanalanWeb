@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import './RoomDetail.scss'
 import * as Service from './RoomServices'
 import {Link} from 'react-router-dom';
+import {showModal, success} from "../../../actions";
 
 class RoomDetail extends Component {
     constructor(props) {
@@ -16,17 +17,44 @@ class RoomDetail extends Component {
         const {roomId} = this.props.match.params;
         Service.getRoomById(roomId, res => {
             this.setState({selected: res.data.data});
-        }, er => {
-
-        })
+        }, er => {})
     }
-
+    handleAciton = (key) => {
+        const data = this.state.selected;
+        const props = this.props;
+        props.showModal(`Are you sure you want to ${key} the room?`, confirm => {
+            switch (key) {
+                case 'finish':
+                    Service.unLookRoom(data.id, res => {
+                        props.success("Success");
+                    }, er => {})
+                    break;
+                case 'edit':
+                    Service.lookRoom(data.id, res => {
+                        props.success("Success");
+                    }, er => {})
+                    break;
+                case 'check in':
+                    Service.checkInRoom(data.currentReservation, res => {
+                        props.success("Success");
+                    }, er => {})
+                    break;
+                case 'check out':
+                    Service.checkOutRoom(data.currentReservation, res => {
+                        props.success("Success");
+                    }, er => {})
+                    break;
+                default :break;
+            }
+        })
+        // props.history.push("/Room");
+    }
     render() {
         const {roomId} = this.props.match.params;
         const {selected} = this.state;
         return (
             <div className="room-detail">
-                <div className="title">{selected.roomName}</div>
+                <div className="title">Room Name: {selected.roomName}</div>
                 {/*<div className="gounp">*/}
                 <div className="group-roomdetail">
                     <div className="header">Room Detail</div>
@@ -37,7 +65,8 @@ class RoomDetail extends Component {
                         </div>
                         <div className="row">
                             <div className="col-lg-4">Image:</div>
-                            <div className="col-lg-8">{selected.roomMedia && selected.roomMedia.images && selected.roomMedia.images.map(item =>{
+                            <div
+                                className="col-lg-8">{selected.roomMedia && selected.roomMedia.images && selected.roomMedia.images.map(item => {
                                 return (
                                     <img style={{height: '80px'}} src={item}></img>
                                 );
@@ -92,16 +121,48 @@ class RoomDetail extends Component {
                         </div>
                         <div className="row">
                             <div className="col-lg-4">Note:</div>
-                            <div className="col-lg-8" style={{fontFamily: 'AvenirNext-MediumItalic'}}>Customer Notes</div>
+                            <div className="col-lg-8" style={{fontFamily: 'AvenirNext-MediumItalic'}}>Customer Notes
+                            </div>
                         </div>
+
+                        {selected.roomStatus === 1 &&
                         <div className="row">
                             <div className="col-lg-6">
-                                <Link className='btn btn-success' to={`/BookRoom/${roomId}`}>Expand Book</Link>
+                                <button className='btn btn-danger' onClick={()=> this.handleAciton('edit')}>Edit</button>
                             </div>
                             <div className="col-lg-6">
-                                <a className='btn btn-danger' href='/CheckOut'>Check out</a>
+                                <Link className='btn btn-success' to={`/BookRoom/${roomId}`}>Book</Link>
                             </div>
-                        </div>
+                        </div>}
+
+                        {selected.roomStatus === 2 &&
+                        <div className="row">
+                            <div className="col-lg-6">
+                                <Link className='btn btn-danger' to={`/BookRoom/${roomId}`}>Cancel</Link>
+                            </div>
+                            <div className="col-lg-6">
+                                <button className='btn btn-success' onClick={()=> this.handleAciton('check in')}>Check In</button>
+                            </div>
+                        </div>}
+
+                        {selected.roomStatus === 3 &&
+                        <div className="row">
+                            <div className="col-lg-6">
+                                <button className='btn btn-danger' onClick={()=> this.handleAciton('check out')}>Check Out</button>
+                            </div>
+                            <div className="col-lg-6">
+                                <Link className='btn btn-success' to={`/BookRoom/${roomId}`}>Expand</Link>
+                            </div>
+                        </div>}
+
+                        {selected.roomStatus === 4 &&
+                        <div className="row">
+                            <div className="col-lg-6"></div>
+                            <div className="col-lg-6">
+                                <button className='btn btn-success' onClick={()=> this.handleAciton('finish')}>Finish</button>
+                            </div>
+                        </div>}
+
                     </div>
                 </div>
                 <div className="group-history">
@@ -124,4 +185,19 @@ const mapStateToProps = (state) => ({
     router: state.router
 });
 
-export default connect(mapStateToProps, null)(RoomDetail);
+const mapDispatchToProps = dispatch => {
+    return {
+        // error: (message) => {
+        //     dispatch(error(message));
+        // },
+        success: (message) => {
+            dispatch(success(message));
+        },
+        showModal: (message, confirm) => {
+            dispatch(showModal(message, confirm))
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(RoomDetail);

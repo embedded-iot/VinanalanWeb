@@ -16,7 +16,8 @@ class HomeCatalog extends Component {
         this.state = {
             listCatalog: [],
             isShowModal: false,
-            searchText: ''
+            searchText: '',
+            data: {}
         }
     }
 
@@ -42,7 +43,10 @@ class HomeCatalog extends Component {
     }
 
     handleShowPopUp = () => {
-        this.setState({isShowModal: true});
+        this.setState({
+            isShowModal: true,
+            data: null
+        });
     }
     handleClosePopUp = (isUpdate) => {
         if (isUpdate) this.getHomeCatalog();
@@ -60,10 +64,17 @@ class HomeCatalog extends Component {
 
     onHandleCheckout = () => { }
     onHandleCheckin = () => { }
-    onHandleEdit = (home) => { }
+
+    onHandleEdit = (data) => {
+        this.setState({
+            data: data,
+            isShowModal: true
+        })
+    }
+
     onHandleDelete = () =>{ }
     render() {
-        const {listCatalog, isShowModal, searchText} = this.state;
+        const {listCatalog, isShowModal, searchText, data} = this.state;
         const columns = [
             {
                 Header: 'Title',
@@ -103,7 +114,7 @@ class HomeCatalog extends Component {
                         <span className="tooltiptext">Active/Deactive</span>
                     </div>
                     <div className="cus-tooltip">
-                        <img src={ic_edit} style={styleIcon} onClick={() => this.onHandleEdit(props.original.id)}/>
+                        <img src={ic_edit} style={styleIcon} onClick={() => this.onHandleEdit(props.original)}/>
                         <span className="tooltiptext">Update</span>
                     </div>
 
@@ -142,6 +153,7 @@ class HomeCatalog extends Component {
                 <AddRomCatalogModal
                     isShowModal={isShowModal}
                     handleClosePopUp={this.handleClosePopUp}
+                    data={data}
                 />
             </div>
         );

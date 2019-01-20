@@ -2,22 +2,59 @@ import React, {Component} from "react";
 import './BookRoom.scss';
 import DatePicker from "react-datepicker";
 import * as Service from "./RoomServices";
-import {Input} from '../../config/HomeCatalog/ComponentSetting';
+import {Input, Textarea} from '../../config/HomeCatalog/ComponentSetting';
 import {connect} from "react-redux";
 import {success} from "../../../actions";
+import DropdownPayMethod from '../../../components/commons/dropdown/DropdownPayMethod';
+import BookingSoure from '../../../components/commons/dropdown/BookingSoure';
+import Country from '../../../components/Maps/Country';
+import moment from 'moment';
 
+
+const defaultState = props => ({
+    roomId: "",
+    customerId: "",
+    bookingSource: "",
+    booking_code: "",
+    checkin: moment((new Date()).toISOString()),
+    checkout: moment((new Date()).toISOString()),
+    guestNumber: 0,
+    totalMoney: 0,
+    prePay: 0,
+    remainMoney: 0,
+    description: "",
+    customerPassportId: '',
+    payMethod: "",
+    periodPayment: 0,
+    create_at: (new Date()).toISOString(),
+    update_at: (new Date()).toISOString(),
+    create_by: "",
+    id: ""
+})
 
 class BookRoom extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: {},
+            selected: defaultState(this.props),
+            roomName: '',
+            disable: false
         }
     }
 
     componentWillMount = () => {
         const {roomId} = this.props.match.params;
         this.onChangeData({target: {name: 'roomId', value: roomId}});
+        Service.getRoomById(roomId, res => {
+            if (res.data.data.currentReservation) {
+                 Service.getRevervationById(res.data.data.currentReservation, res=>{
+                     this.setState({
+                         selected: res.data.data,
+                         disable: true
+                     });
+                 })
+            }
+        })
     }
 
     onChangeDataDateTime = (key, data) => {
@@ -31,43 +68,50 @@ class BookRoom extends Component {
 
     handleSubmit = () => {
         let data = {...this.state.selected};
-        const {id} = this.props;
-        data.userId = id;
-        data.checkin = this.state.selected.checkin.toISOString();
-        data.checkout = this.state.selected.checkout.toISOString();
-        data.customerPassportId = '32131231';
-        data.create_at = "2019-01-16T16:07:51.834Z";
+        const {userId, success} = this.props;
+        const {disable} = this.state;
+        data.userId = userId;
+        if(disable){
+            data.update_at = (new Date()).toISOString();
+            Service.UpDateReversation(data, res =>{
+                success("Update Success");
+            },er =>{})
+        }else{
+            Service.BookRoom(data, res => {
+                success("Creacte Success");
+            }, er => {});
+        }
+    }
 
-
-        data.update_at = "2019-01-16T16:07:51.834Z";
-        data.reservationStatus = 1;
-          data.totalMoney = 0,
-        console.log(data);
-        Service.BookRoom(data, res=>{
-
-        },er =>{
-
-        });
+    onChangeCountry = (e) => {
+        this.onChangeData({target: {name: 'customerCountry', value: e.value}});
     }
 
     render() {
-        const {selected} = this.state;
-        const {roomId} = this.props.match.params;
+
+        const {selected, disable} = this.state;
+        if(disable){
+            selected.checkin = moment(selected.checkin);
+            selected.checkout = moment(selected.checkout);
+
+        }
         return (
             <div className="book_room">
-                <div className="header"></div>
+                <div className="header"><h1>{selected.roomName}</h1></div>
                 <div className="contact-info">
-                    <div className="header">Contact Info</div>
-                    <div className="row">
-                        <div className="col-lg-4">Check in</div>
+                    <div className="header"><span>Contact Info</span></div>
+
+                    <div className="row" style={{marginBottom: '16px'}}>
+                        <div className="col-lg-4"><span>Check in</span></div>
                         <div className="col-lg-8">
                             <DatePicker className="form-control" isClearable={true} selected={selected.checkin}
                                         style={{width: '213px'}}
-                                        onChange={(e) => this.onChangeDataDateTime('checkin', e)}/>
+                                        onChange={(e) => this.onChangeDataDateTime('checkin', e)} disabled={disable}/>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-lg-4">Check out</div>
+
+                    <div className="row" style={{marginBottom: '16px'}}>
+                        <div className="col-lg-4"><span>Check out</span></div>
                         <div className="col-lg-8">
                             <DatePicker className="form-control" isClearable={true} selected={selected.checkout}
                                         style={{width: '213px'}}
@@ -76,59 +120,75 @@ class BookRoom extends Component {
                     </div>
 
                     <Input value={selected.guestNumber} title="Guests" name='guestNumber'
-                           onChangeData={this.onChangeData}/>
+                           disabled={disable}  onChangeData={this.onChangeData}/>
 
-                    <Input value={selected.guestNumber} title="Source" name='guestNumber'
-                           onChangeData={this.onChangeData}/>
+
+                    <div className="row">
+                        <div className="col-lg-4"><span>Source</span></div>
+                        <div className="col-lg-8">
+                            <BookingSoure onChangeData={this.onChangeData}  disabled={disable}
+                                          defaultValue={selected.bookingSource} name="bookingSource"/>
+                        </div>
+                    </div>
 
                     <Input value={selected.totalMoney} title="Total" name='totalMoney'
                            onChangeData={this.onChangeData}/>
 
-                    <Input value={selected.Prepay} title="Prepay" name='Prepay'
-                           onChangeData={this.onChangeData}/>
+                    <Input value={selected.prePay} title="Prepay" name='prePay'
+                     onChangeData={this.onChangeData}/>
 
-                    <Input value={selected.Prepay_rate} title="Prepay rate" name='Prepay_rate'
-                           onChangeData={this.onChangeData}/>
+                    <Input value={selected.prepay_rate} title="Prepay rate" name='prepay_rate'
+                           disabled={disable}   onChangeData={this.onChangeData}/>
 
-                    <Input value={selected.periodPayment} title="Pay Method" name='periodPayment'
-                           onChangeData={this.onChangeData}/>
+                    <div className="row">
+                        <div className="col-lg-4"><span>Pay Method</span></div>
+                        <div className="col-lg-8">
+                            <DropdownPayMethod name='payMethod' defaultValue={selected.payMethod}
+                                               disabled={disable}      onChangeData={this.onChangeData}/>
+                        </div>
+                    </div>
 
                 </div>
                 <div className="right-info">
                     <div className="customer-info">
-                        <div className="header">Customer Info</div>
+                        <div className="header"><span>Customer Info</span></div>
                         <Input value={selected.customerEmail} title="Email" name='customerEmail'
-                               onChangeData={this.onChangeData}/>
+                               disabled={disable}    onChangeData={this.onChangeData}/>
 
 
                         <Input value={selected.customerPhone} title="Phone" name='customerPhone'
-                               onChangeData={this.onChangeData}/>
+                               disabled={disable}  onChangeData={this.onChangeData}/>
 
-                        <Input value={selected.customerId} title="ID" name='customerId'
-                               onChangeData={this.onChangeData}/>
+                        <Input value={selected.customerPassportId} title="ID" name='customerPassportId'
+                               disabled={disable} onChangeData={this.onChangeData}/>
 
                         <div className="row">
-                            <div className="col-lg-4">Birth Day</div>
+                            <div className="col-lg-4"><span>Birth Day</span></div>
                             <div className="col-lg-8">
                                 <DatePicker className="form-control" isClearable={true} selected={selected.birthDay}
-                                            style={{width: '213px'}}
+                                            style={{width: '213px'}}   disabled={disable}
                                             onChange={(e) => this.onChangeDataDateTime('birthDay', e)}/>
                             </div>
                         </div>
 
-                        <Input value={selected.customerCountry} title="Country" name='customerCountry'
-                               onChangeData={this.onChangeData}/>
+                        <div className="row">
+                            <div className="col-lg-4"><span>Country</span></div>
+                            <div className="col-lg-8">
+                                <Country onChangeCountry={this.onChangeCountry} defaultValue={selected.country}/>
+                            </div>
+                        </div>
+
                     </div>
                     <div className="extra-info">
-                        <div className="header">Extra -Info</div>
-                        <Input value={selected.description} title="Description" name='description'
-                               onChangeData={this.onChangeData}/>
+                        <div className="header"><span>Extra -Info</span></div>
+                        <Textarea value={selected.description} title="Description" name='description'
+                                  onChangeData={this.onChangeData}/>
 
                         <Input value={selected.extraInfo} title="Customer Note" name='extraInfo'
                                onChangeData={this.onChangeData}/>
                     </div>
                 </div>
-                <button className='btn' onClick={this.handleSubmit}>Book</button>
+                <button className='btn' onClick={this.handleSubmit}><span>Book</span></button>
             </div>
         );
     }
@@ -136,15 +196,15 @@ class BookRoom extends Component {
 
 const mapStateToProps = state => {
     return {
-        user: state.authentication.user.id
+        userId: state.authentication.user.id
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        showAlert: (message) => {
-            dispatch(success(message))
-        }
+        success: (message) => {
+            dispatch(success(message));
+        },
     }
 }
 

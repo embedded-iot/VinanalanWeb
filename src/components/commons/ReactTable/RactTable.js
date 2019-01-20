@@ -8,11 +8,11 @@ const Table = (props) =>{
         defaultPageSize: 10,
         nextText: 'Next',
         previoustext: 'Previous',
-        minRows: 5,
+        // minRows: 5,
         // manual: true,
         ofText: '/',
         rowsText: 'Rows',
-        showPageSizeOptions: true,
+        // showPageSizeOptions: true,
     }
     return (
         <ReactTable

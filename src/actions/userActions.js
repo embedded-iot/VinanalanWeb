@@ -1,7 +1,6 @@
 import { userConstants } from '../constants';
 import * as services from '../pages/users/services/userService';
 import { alertActions } from './';
-import { history } from '../helper';
 import cookie from 'react-cookies';
 
 export const userActions = {
@@ -13,7 +12,7 @@ export const userActions = {
   // delete: _delete
 };
 
-function login(user, remember) {
+function login(user, remember, history) {
   return dispatch => {
     dispatch(request({ user }));
     services.login(user, response => {

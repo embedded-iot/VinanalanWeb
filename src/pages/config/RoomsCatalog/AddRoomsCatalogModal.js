@@ -1,7 +1,7 @@
 import {Modal} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import React, {Component} from "react";
-import {Input,Textarea} from "../HomeCatalog/ComponentSetting";
+import {Input, Textarea} from "../HomeCatalog/ComponentSetting";
 import * as Services from './RoomsCatalogServices';
 import {connect} from 'react-redux';
 import {success} from "../../../actions";
@@ -20,7 +20,17 @@ class AddHomeCatalogModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: defaultState(this.props)
+            selected: defaultState(this.props),
+
+        }
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            this.setState({selected: nextProps.data});
+        }else{
+            this.setState({selected: defaultState(this.props)});
         }
     }
 
@@ -36,17 +46,29 @@ class AddHomeCatalogModal extends Component {
     }
     handleSubmit = () => {
         const {selected} = this.state;
-        const {showAlert, handleClosePopUp} = this.props;
-        Services.createRoomsCatalog(selected, res => {
-            showAlert('Success');
-            handleClosePopUp(true);
-        }, er => {
-            showAlert(er.message);
-        })
+        const {showAlert, handleClosePopUp, data} = this.props;
+        if (data) {
+            let value = {...selected};
+            value.update_by = this.props.user;
+            value.update_at = (new Date()).toISOString();
+            Services.upDateRoomsCatalog(value, res => {
+                showAlert('Success');
+                handleClosePopUp(true);
+            }, er => {
+                showAlert(er.message);
+            })
+        } else {
+            Services.createRoomsCatalog(selected, res => {
+                showAlert('Success');
+                handleClosePopUp(true);
+            }, er => {
+                showAlert(er.message);
+            })
+        }
     }
 
     render() {
-        const {isShowModal} = this.props;
+        const {isShowModal, data} = this.props;
         const {selected} = this.state;
         return (
             <Modal show={isShowModal}>
@@ -55,11 +77,12 @@ class AddHomeCatalogModal extends Component {
                     <Input value={selected.catalogName} title={CONSTANTS.CATALOG_NAME}
                            name='catalogName' onChangeData={this.onChangeData}/>
                     <Textarea value={selected.catalogDescription} title={CONSTANTS.DESCRIPTION}
-                           name='catalogDescription' style={{height: '80px'}} onChangeData={this.onChangeData}/>
+                              name='catalogDescription' style={{height: '80px'}} onChangeData={this.onChangeData}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <button className="btn btn-close" onClick={this.handleClosePopUp}>{CONSTANTS.CLOSE}</button>
-                    <button className="btn btn-finish" onClick={this.handleSubmit}>{CONSTANTS.CREATE}</button>
+                    <button className="btn btn-finish" onClick={this.handleSubmit}>
+                        {!data ? CONSTANTS.CREATE : CONSTANTS.EDIT}</button>
                 </Modal.Footer>
             </Modal>
         );

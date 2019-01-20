@@ -23,12 +23,14 @@ export const LIST_HOME_CATALOG = "List Home Catalog";
 export const LIST_ROOMS_CATALOG = "List Rooms Catalog";
 export const DESCRIPTION = "Description";
 export const CREATE = "Create";
+export const EDIT = "Edit";
 export const CLOSE = "Close";
 export const TiTLE = "Title";
 export const ROOM_NUMBER = "Room number";
 export const CAPACITY = "Capacity";
 export const PRICE = "Price";
 export const HOME = "Home";
+export const ROOM = "Room";
 export const DISCOUNT = "Discount";
 export const BATHROOM = "Bathroom";
 export const IMAGES = "Images";
@@ -37,6 +39,14 @@ export const CREATE_NEW_ROOM_CATALOG = "Create New Room Catalog";
 export const PRIVATE = "Room Private";
 export const HIGHT_LIGHT = "Highlight";
 export const MAX_GUEST = "Max guest";
+export const REPORT_MANAMENT = "Report Manament";
+export const RESERVITON = "Reservation";
+export const LIVING = "Living";
+export const CHECK_IN = "Check-in";
+export const CHECK_OUT = "Check-out";
+export const CANCELED = "Canceled";
+export const ROOM_IS_BE_FILLED = "Room is be filled";
+
 
 
 

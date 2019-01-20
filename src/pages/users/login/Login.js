@@ -6,6 +6,7 @@ import validator from "validator";
 import loginImg from "../../../public/images/map.svg";
 import Checkbox from "../../../components/commons/checkbox/Checkbox";
 import cookie from 'react-cookies';
+import {withRouter} from 'react-router-dom';
 
 class Login extends React.Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class Login extends React.Component {
         email: email,
         password: password
       };
-      dispatch(userActions.login(user, this.state.remember));
+      dispatch(userActions.login(user, this.state.remember, this.props.history));
     }
   }
 
@@ -128,4 +129,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Login);
+export default withRouter(connect(mapStateToProps)(Login));

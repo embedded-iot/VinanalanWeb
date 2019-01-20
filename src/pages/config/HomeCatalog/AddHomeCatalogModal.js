@@ -25,6 +25,14 @@ class AddHomeCatalogModal extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.data){
+            this.setState({selected: nextProps.data});
+        }else{
+            this.setState({selected: defaultState(this.props)});
+        }
+    }
+
     onChangeData = (e) => {
         const {target} = e;
         const {name} = target;
@@ -37,20 +45,32 @@ class AddHomeCatalogModal extends Component {
     }
     handleSubmit = () => {
         const {selected} = this.state;
-        const {showAlert, handleClosePopUp} = this.props;
-        Services.createHomeCatalog(selected, res => {
-            showAlert('Success');
-            handleClosePopUp(true);
-        }, er => {
-            showAlert(er.message);
-        })
+        const {showAlert, handleClosePopUp, data} = this.props;
+        if(data){
+            let value = {...selected};
+            value.update_by = this.props.user;
+            value.update_at = (new Date()).toISOString();
+            Services.editHomeCatalog(value, res => {
+                showAlert('Success');
+                handleClosePopUp(true);
+            }, er => {
+                showAlert(er.message);
+            })
+        }else{
+            Services.createHomeCatalog(selected, res => {
+                showAlert('Success');
+                handleClosePopUp(true);
+            }, er => {
+                showAlert(er.message);
+            })
+        }
     }
 
     render() {
-        const {isShowModal} = this.props;
+        const {isShowModal, data} = this.props;
         const {selected} = this.state;
         return (
-            <Modal show={isShowModal}>
+            <Modal show={isShowModal} onHide={this.handleClosePopUp} >
                 <Modal.Header><span>Create New Home Catalog</span></Modal.Header>
                 <Modal.Body>
                     <Input value={selected.catalogName} title={CONSTANTS.CATALOG_NAME}
@@ -60,7 +80,8 @@ class AddHomeCatalogModal extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <button className="btn btn-close" onClick={this.handleClosePopUp}>{CONSTANTS.CLOSE}</button>
-                    <button className="btn btn-finish" onClick={this.handleSubmit}>{CONSTANTS.CREATE}</button>
+                    <button className="btn btn-finish" onClick={this.handleSubmit}>
+                        {!data ? CONSTANTS.CREATE : CONSTANTS.EDIT}</button>
                 </Modal.Footer>
             </Modal>
         );

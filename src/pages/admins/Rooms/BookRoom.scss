@@ -1,7 +1,9 @@
 .book_room {
   width: 70%;
   padding: 20px;
-  font-size: 20px;
+  span{
+    font-size: 20px;
+  }
   color: #393939;
 
   .row {
@@ -24,7 +26,7 @@
     width: 49%;
     position: relative;
     float: left;
-    height: 442px;
+    height: 465px;
     border: 2px solid #0496ff;
     border-radius: 7px;
     margin-right: 2%;

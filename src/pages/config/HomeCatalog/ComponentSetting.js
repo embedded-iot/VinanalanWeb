@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const Input = props => {
-    const {value, title, onChangeData, name, style, flex} = props;
+    const {value, title, onChangeData, name, style, flex, disabled} = props;
     return (
         <div className="row" style={{marginBottom: '16px'}}>
             <div className={flex ? `col-lg-${flex.title}` : 'col-lg-4'}>
@@ -16,6 +16,7 @@ export const Input = props => {
                        type='text'
                        onChange={(e) => onChangeData(e)}
                        name={name}
+                       disabled={disabled ? true : false}
                 />
             </div>
         </div>

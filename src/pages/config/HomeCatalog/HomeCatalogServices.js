@@ -27,4 +27,18 @@ export function createHomeCatalog(data, successCallback, failCallback) {
     });
 }
 
+export function editHomeCatalog(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/home-catalog',
+        headers: { 'Content-Type': 'application/json'},
+        data: data
+    };
+
+    Services.makePutRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
 
