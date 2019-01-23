@@ -10,6 +10,12 @@ class Provinces extends Component {
         }
     }
 
+    componentWillMount(){
+        if(this.props.value){
+            this.getListProvinces(this.props.value);
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.value && this.props.value !== nextProps.value)
             this.getListProvinces(nextProps.value);

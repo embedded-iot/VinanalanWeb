@@ -1,7 +1,11 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import HeaderAdmin from './components/header/HeaderAdmin'
 import LeftSideBar from './components/leftSideBar/LeftSideBar'
+import ConfirmModal from "./components/confirmModal/ConfirmModal";
+import AlertModal from "./components/AlertModal/AlertModal";
+import { injectIntl, FormattedMessage } from 'react-intl';
+
 import {
     PageNotFound,
     Login,
@@ -19,12 +23,43 @@ import {
     Home
 } from "./pages/admins";
 
-import {PrivateRoute, NotRequireLogin, RequireLogin} from './components/commons';
+// import {PrivateRoute, NotRequireLogin, RequireLogin} from './components/commons';
 
-const Routes = () => {
+const PrivateRoute = ({component: Component, ...rest}) => {
+    return (
+        <Route {...rest} render={(props) => (
+            localStorage.getItem('user')
+                ? <Component {...props} />
+                : <Redirect to='/Login'/>
+        )}/>
+    )
+}
+
+const Protected = (props) => <div>
+    <Switch>
+        <Route exact path="/" component={Home}/>
+        <Route exact path="/Home" component={Home}/>
+
+        <Route exact path="/HomeCatalog" component={HomeCatalog}/>
+        <Route exact path="/RoomsCatalog" component={RoomsCatalog}/>
+
+        <Route exact path="/Room" component={Rooms}/>
+        <Route exact path="/RoomDetail/:roomId" component={RoomDetail}/>
+        <Route exact path="/BookRoom/:roomId" component={BookRoom}/>
+
+        <Route exact path="/Report" component={ReportManament}/>
+        <PrivateRoute path="/protected" component={Protected}/>
+
+        <Route component={PageNotFound}></Route>
+    </Switch>
+</div>
+
+const Routes = (props) => {
     return (
         <Router>
             <div id="content">
+                <AlertModal/>
+                <ConfirmModal/>
                 <HeaderAdmin/>
                 <LeftSideBar/>
                 <div className="content-container">
@@ -32,21 +67,7 @@ const Routes = () => {
                         <Route exact path="/Login" component={Login}/>
                         <Route path="/Register" component={Register}/>
                         <Route path="/ForgotPw" component={ForgotPW}/>
-
-                        <Route exact path="/" component={Home}/>
-                        <Route exact path="/Home" component={Home}/>
-
-                        <Route exact path="/HomeCatalog" component={HomeCatalog}/>
-                        <Route exact path="/RoomsCatalog" component={RoomsCatalog}/>
-
-                        <Route exact path="/Room" component={Rooms}/>
-                        <Route exact path="/RoomDetail/:roomId" component={RoomDetail}/>
-                        <Route exact path="/BookRoom/:roomId" component={BookRoom}/>
-
-                        <Route exact path="/Report" component={ReportManament}/>
-
-
-                        <Route component={PageNotFound}></Route>
+                        <PrivateRoute component={Protected}/>
                     </Switch>
                 </div>
             </div>
@@ -54,4 +75,4 @@ const Routes = () => {
     );
 }
 
-export default Routes;
+export default injectIntl(Routes);

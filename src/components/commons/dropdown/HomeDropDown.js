@@ -13,11 +13,11 @@ class HomeDropDown extends Component {
     }
 
     componentWillMount() {
-        this.getListData();
+        this.getListData(null);
     }
 
-    getListData = () => {
-        Service.getListHome(response => {
+    getListData = (data) => {
+        Service.getListHome(data, response => {
             if (response.data.isSucess) {
                 let listData = response.data.data.map(item => {
                     const data = {};
@@ -33,6 +33,12 @@ class HomeDropDown extends Component {
             // this.props.error(error);
         })
     }
+
+    componentWillReceiveProps(nextProps){
+        if(!_.isEqual(this.props.data,nextProps.data)){
+            this.getListData(nextProps.data);
+        }
+    }
     onChangeData = (optionSelected, e) =>{
         const {onChangeData} = this.props;
         this.setState({selected: optionSelected});
@@ -45,7 +51,7 @@ class HomeDropDown extends Component {
         const {name} = this.props;
         return (
             <Select options={listData} onChange={this.onChangeData} name={name} className='home-select'
-                    value={selected}   placeholder='Select Country....'/>
+                    value={selected}   placeholder='Select Home....'/>
         );
     }
 }

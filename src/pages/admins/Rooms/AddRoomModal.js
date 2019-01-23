@@ -4,7 +4,7 @@ import React, {Component} from "react";
 import {Input, Textarea} from "../../config/HomeCatalog/ComponentSetting";
 // import * as Services from './HomeCatalogServices';
 import {connect} from 'react-redux';
-import {success} from "../../../actions";
+import {success, error} from "../../../actions";
 import * as CONSTANTS from '../../../constants/commonConstant';
 import HomeDropDown from '../../../components/commons/dropdown/HomeDropDown';
 import DropDownRoomCatalog from '../../../components/commons/dropdown/DropDownRoomCatalog';
@@ -25,8 +25,7 @@ const defaultState = (props) => ({
     isPrivate: false,
     roomTypeId: '',
     roomTypeName: 'Strings',
-    // roomMedia: {images: []},
-    roomMedia: {},
+    roomMedia: {images: []},
     roomStatus: 1,
     roomPrice: '',
     create_at: (new Date()).toISOString(),
@@ -58,12 +57,12 @@ class AddRoomModal extends Component {
     }
     handleSubmit = () => {
         const {selected} = this.state;
-        const {showAlert, handleClosePopUp} = this.props;
+        const {showAlert, handleClosePopUp, showError} = this.props;
         Service.createRoom(selected, res => {
             showAlert('Success');
             handleClosePopUp(true);
         }, er => {
-            showAlert(er.message);
+            showError(er.message);
         })
     }
     handleUpload = () => {
@@ -215,6 +214,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         showAlert: (message) => {
             dispatch(success(message))
+        },
+        showError: (message) => {
+            dispatch(error(message))
         }
     }
 }

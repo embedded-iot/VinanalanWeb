@@ -53,6 +53,7 @@ class RoomDetail extends Component {
         const {roomId} = this.props.match.params;
         const {selected} = this.state;
         return (
+
             <div className="room-detail">
                 <div className="title">Room Name: {selected.roomName}</div>
                 {/*<div className="gounp">*/}

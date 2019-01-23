@@ -74,7 +74,7 @@ function register(user) {
     services.register(user, response => {
       if (response.status === 200) {
         dispatch(success());
-        history.push('/login');
+        // history.push('/login');
         dispatch(alertActions.success('Please check your email and click on the verification link before logging in'));
       } else {
         dispatch(failure(response.data.description));

@@ -74,12 +74,12 @@ class HeaderAdmin extends Component {
         <div className="main-header">
           {
             <div className="branch-box mr-auto">
-              <img className="ic-logo" src={`/${logo_vinaland}`} />
+              <img className="ic-logo" src={logo_vinaland} />
             </div>
           }
           <div className="header-contents">
             <button className="locale-box" onClick={this.changeLanguage}>
-              <img className="header-icon" src={this.props.locale === "en" ? `/${ic_en}` : `/${ic_vi}`} />
+              <img className="header-icon" src={this.props.locale === "en" ? ic_en : ic_vi }/>
               {
                 this.props.locale
               }
@@ -87,11 +87,11 @@ class HeaderAdmin extends Component {
 
             <div className="user-box">
               <button className="btn-show-user-info dropdown-toggle" type="button" data-toggle="dropdown">{username}
-                <img src={`/${user_ic}`}/>
+                <img src={user_ic}/>
               </button>
               <div className="dropdown-menu profile">
                 <div className="profile-userpic">
-                  <img src={image_profile ? image_profile : `/${logo_vinaland}`} className="img-responsive" alt="" />
+                  <img src={image_profile ? image_profile : logo_vinaland} className="img-responsive" alt="" />
                 </div>
                 <div className="profile-usertitle">
                   <div className="profile-name">

@@ -9,6 +9,7 @@ import * as CONSTANTS from '../../../constants/commonConstant';
 import ModalConfirm from './ModalConfirm';
 import {withRouter, Link} from 'react-router-dom';
 import * as Service from './RoomServices';
+import UltimatePagination from "react-ultimate-pagination-bootstrap-4";
 
 const styleUpRow = {
     width: '250px'
@@ -31,39 +32,54 @@ const RoomItem = props => {
                 case 'finish':
                     Service.unLookRoom(data.id, res => {
                         props.success("Success");
-                    }, er => {})
+                    }, er => {
+                    })
                     break;
                 case 'edit':
-                        Service.lookRoom(data.id, res => {
-                            props.success("Success");
-                        }, er => {})
+                    Service.lookRoom(data.id, res => {
+                        props.success("Success");
+                    }, er => {
+                    })
                     break;
                 case 'checkin':
-                        Service.checkInRoom(revervation.id, res => {
-                            props.success("Success");
-                        }, er => {})
+                    Service.checkInRoom(revervation.id, res => {
+                        props.success("Success");
+                    }, er => {
+                    })
                     break;
                 case 'checkout':
-                        Service.checkOutRoom(revervation.id, res => {
-                            props.success("Success");
-                        }, er => {})
+                    Service.checkOutRoom(revervation.id, res => {
+                        props.success("Success");
+                    }, er => {
+                    })
                     break;
-                default :break;
+                default :
+                    break;
             }
             props.onUpdate();
         })
+    }
+    const romStatus2vs3 = {
+        marginLeft: '0',
+        left: '-40%'
+    }
+
+    const romStatus1vs4 = {
+        marginLeft: '0',
+        left: '-30%'
     }
 
     return (
         <div className={`room-item backgroud_color${styleClass}`}
              style={props.style ? {marginLeft: '0px'} : {}}>
-            <div className="content" onClick={() => props.onClick(data.id)}
+            <div className="content"
+                 onClick={() => props.onClick(data.id)}
                  onMouseOver={() => props.getRevervationByID(data.currentReservation)}>
                 <img src={user_ic}/>
                 <div>{data.roomName}</div>
             </div>
 
-            <div className="up-arrow" style={!isUserInfo ? styleUpRow : {}}>
+            <div className="up-arrow"  class={isUserInfo} style={!isUserInfo ? styleUpRow : {}}>
                 <div className='hanna-confirmed' style={!isUserInfo ? styleHanna : {}}>
                     <div className='header' style={!isUserInfo ? {borderTopRightRadius: '10px'} : {}}>
                         <div className='row'>
@@ -170,7 +186,7 @@ class TableListRoom extends Component {
             modal: {
                 title: '',
                 message: ''
-            }
+            },
         }
     }
 
@@ -231,25 +247,37 @@ class TableListRoom extends Component {
 
     render() {
         const {listRoom, isShowModal, modal, revervation} = this.state;
-        const {row, showModal, success, onUpdate} = this.props;
+        const {showModal, success, onUpdate, handleChangePage, currentPage, totalPage} = this.props;
         return (
             <div>
-                {listRoom.length ? <div className='table-room-list'>
-                    {listRoom.map((item, k) => {
-                        return (
-                            <RoomItem key={k} style={k % row === 0 ? true : false} data={item}
-                                      handlelookUp={this.handlelookUp}
-                                      handleConstructingRoom={this.handleConstructingRoom}
-                                      onClick={this.onClick}
-                                      showModal={showModal}
-                                      success={success}
-                                      onUpdate={onUpdate}
-                                      getRevervationByID={this.getRevervationByID}
-                                      revervation={revervation}
+                {listRoom.length ?
+                    <div className="content">
+                        <div className='table-room-list'>
+                            {listRoom.map((item, k) => {
+                                return (
+                                    <RoomItem key={k} style={k % 8 === 0 ? true : false} data={item}
+                                              handlelookUp={this.handlelookUp}
+                                              handleConstructingRoom={this.handleConstructingRoom}
+                                              onClick={this.onClick}
+                                              showModal={showModal}
+                                              success={success}
+                                              onUpdate={onUpdate}
+                                              getRevervationByID={this.getRevervationByID}
+                                              revervation={revervation}
+                                    />
+                                );
+                            })}
+                        </div>
+                        <div className="pagination-room">
+                            <UltimatePagination
+                                currentPage={currentPage}
+                                totalPages={totalPage ? totalPage : 16}
+                                onChange={handleChangePage}
                             />
-                        );
-                    })}
-                </div> : <span>'is Load Data !</span>}
+                        </div>
+                    </div> : <div className="box-nocontent">
+                        Select <span>Add New</span> to add new
+                    </div>}
                 <ModalConfirm isShowModal={isShowModal}
                               handleClosePopUp={this.handleClosePopUp} modal={modal}/>
             </div>

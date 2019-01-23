@@ -1,8 +1,8 @@
 import * as Services from "../../../utils/cuiResource";
 
-export function getListRooms(successCallback, failCallback) {
+export function getListRooms(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/rooms',
+        url: '/api/rooms/getAllRooms?skip=' + data.page + '&limit=' + data.pageSize,
         headers: {'Content-Type': 'application/json',}
     };
 
@@ -99,7 +99,8 @@ export function UpDateReversation(data, successCallback, failCallback) {
 
 export function getRoomByStatus(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/rooms/getRoomByStatus?status=' + data,
+        url: '/api/rooms/getRoomByStatus?status='+ data.status +
+        '&skip=' + data.page +'&limit=' + data.pageSize,
         headers: {'Content-Type': 'application/json'},
     };
 

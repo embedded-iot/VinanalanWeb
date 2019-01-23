@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Country from '../../../components/Maps/Country';
 import Provinces from '../../../components/Maps/Provinces';
 import Districts from '../../../components/Maps/Districts';
 import Wards from '../../../components/Maps/Wards';
@@ -11,11 +10,14 @@ import * as Services from './RoomServices'
 import Select from "react-select";
 import {Button} from "../../config/HomeCatalog/ComponentSetting";
 import AddRoomModal from './AddRoomModal'
+import {injectIntl} from 'react-intl';
+import HomeDropDown from '../../../components/commons/dropdown/HomeDropDown';
 
 const listRow = [
-    {label: 'Row 8', value: 8},
-    {label: 'Row 10', value: 10},
-    {label: 'Row 15', value: 15},
+    {label: 'Row 1', value: 8},
+    {label: 'Row 2', value: 16},
+    {label: 'Row 3', value: 24},
+    {label: 'Row 4', value: 32},
 ]
 
 class Rooms extends Component {
@@ -23,34 +25,29 @@ class Rooms extends Component {
         super(props);
         this.state = {
             selectedMap: {
-                country: {value: '', label: ''},
                 provinces: '',
                 districts: '',
-                wards: ''
+                // wards: ''
             },
+            homeId: '',
             searchText: '',
             listRooms: [],
-            selectRow: {label: 'Row 8', value: 8},
             isShowModal: false,
-            listCount: []
+            listCount: [],
+            pageSize: {label: 'Row 3', value: 24},
+            currentPage: 1
         }
+        this.status = '',
+            this.page = 0
     }
 
     componentDidMount() {
-        this.getListRooms();
-    }
-
-    getListRooms = () => {
-        Services.getListRooms(res => {
-            if (res.data.isSucess)
-                this.setState({listRooms: res.data.data})
-        }, er => {
-        });
-
-        Services.getCountRoomByStatus(res =>{
-           this.setState({listCount: res.data.data});
+        Services.getCountRoomByStatus(res => {
+            this.setState({listCount: res.data.data});
         })
     }
+
+
     onChangeSelectedMap = (key, value) => {
         this.setState({selectedMap: {...this.state.selectedMap, [key]: value}});
     }
@@ -70,33 +67,75 @@ class Rooms extends Component {
     handleSearch = () => {
         alert("Should do search: " + this.state.searchText);
     }
-    onChanRow = (optionSelected) => {
-        this.setState({selectRow: optionSelected});
-    }
+
     handleShowPopUp = () => {
         this.setState({isShowModal: true});
     }
 
-    handleClosePopUp = (isUpdate) => {
-        if (isUpdate) this.getListRooms();
+    handleClosePopUp = () => {
         this.setState({isShowModal: false});
     }
 
     onChangeSeacrhRoom = (value) => {
-        Services.getRoomByStatus(value, res => {
-            this.setState({listRooms: res.data.data});
-        }, er => {
-
-        })
+        const {pageSize} = this.state;
+        const data = {
+            status: value,
+            page: 0,
+            pageSize: pageSize.value
+        }
+        this.status = value;
+        this.getRoomByStatus(data);
     }
-    onUpdate = () =>{
+    onUpdate = () => {
         this.getListRooms();
     }
+
+    onChangeHome = (e) => {
+        this.setState({homeId: e.target.value});
+    }
+
+    getRoomByStatus = (data) => {
+        const {pageSize} = this.state;
+        Services.getRoomByStatus(data, res => {
+            const count = res.data.count;
+            if (res.data.count > 0) {
+                const currentPage = Math.ceil(count / pageSize.value) !== 0 ? Math.ceil(count / pageSize.value) : 1;
+                this.setState({
+                    listRooms: res.data.data,
+                    totalPage: currentPage,
+                    currentPage: this.state.currentPage > currentPage ? 1 : this.state.currentPage
+                });
+            }
+        }, er => {
+        })
+    }
+
+    handleChangePage = (pageNum) => {
+        this.setState({currentPage: pageNum});
+        const {pageSize} = this.state;
+        const data = {
+            status: this.status,
+            page: pageSize.value * (pageNum - 1),
+            pageSize: pageSize.value
+        }
+        this.getRoomByStatus(data);
+    }
+
+    onChanPageSize = (e) => {
+        this.setState({pageSize: e}, () => {
+            const data = {
+                status: this.status,
+                page: 0,
+                pageSize: e.value
+            }
+            this.getRoomByStatus(data);
+        });
+    }
+
     render() {
-
-        const {country, provinces, districts, wards} = this.state.selectedMap;
-        const {searchText, listRooms, selectRow, isShowModal, listCount} = this.state;
-
+        const {provinces, districts} = this.state.selectedMap;
+        const dataMaps = {province_code: provinces.value, district_code: districts.value}
+        const {searchText, listRooms, isShowModal, listCount, pageSize, totalPage, currentPage} = this.state;
         return (
             <div className='rooms' style={styles}>
                 <div className="row" style={{marginBottom: '25px'}}>
@@ -115,42 +154,47 @@ class Rooms extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-2">
-                        <Country onChangeCountry={this.onChangeMaps}/>
-                    </div>
-                    <div className="col-lg-2">
-                        <Provinces onChangeCountry={this.onChangeMaps} value={country.value}/>
+                        <Provinces onChangeCountry={this.onChangeMaps} value="VN"/>
                     </div>
                     <div className="col-lg-2">
                         <Districts onChangeCountry={this.onChangeMaps} value={provinces.value}/>
                     </div>
+                    {/*<div className="col-lg-2">*/}
+                    {/*<Wards onChangeCountry={this.onChangeMaps} value={districts.value}/>*/}
+                    {/*</div>*/}
                     <div className="col-lg-2">
-                        <Wards onChangeCountry={this.onChangeMaps} value={districts.value}/>
+                        <HomeDropDown onChangeData={this.onChangeHome} name="homeId" data={dataMaps}/>
                     </div>
-                    <div className="col-lg-3"></div>
+                    <div className="col-lg-5"></div>
                     <div className="col-lg-1">
-                        <Select options={listRow} onChange={this.onChanRow}
-                                value={selectRow} placeholder='Select Row'></Select>
+                        <Select options={listRow} onChange={this.onChanPageSize}
+                                value={pageSize} placeholder='Select Row'></Select>
                     </div>
                 </div>
 
                 <div className='imfomation-room'>
-                    <button type="button" onClick={this.getListRooms} className="btn button-all">
-                        All &nbsp;<span className="badge badge-light"></span>
+                    <button type="button" onClick={() => this.onChangeSeacrhRoom(0)} className="btn button-all">
+                        All &nbsp;<span className="badge badge-light">{listCount[0]}</span>
                     </button>
                     <button type="button" onClick={() => this.onChangeSeacrhRoom(1)} className="btn button-empty">
-                        Empty &nbsp; <span className="badge badge-dark">{listCount[0]}</span>
+                        Empty &nbsp; <span className="badge badge-dark">{listCount[1]}</span>
                     </button>
                     <button type="button" onClick={() => this.onChangeSeacrhRoom(2)} className="btn button-booking">
-                        Booking&nbsp;<span className="badge badge-light">{listCount[1]}</span>
+                        Booking&nbsp;<span className="badge badge-light">{listCount[2]}</span>
                     </button>
                     <button type="button" onClick={() => this.onChangeSeacrhRoom(3)} className="btn  button-staying">
-                         Staying&nbsp;<span className="badge badge-light">{listCount[2]}</span>
+                        Staying&nbsp;<span className="badge badge-light">{listCount[3]}</span>
                     </button>
                     <button type="button" onClick={() => this.onChangeSeacrhRoom(4)} className="btn button-close">
-                        Close &nbsp;<span className="badge badge-light">{listCount[3]}</span>
+                        Close &nbsp;<span className="badge badge-light">{listCount[4]}</span>
                     </button>
                 </div>
-                <TableListRoom listRooms={listRooms} row={selectRow.value} onUpdate={this.onUpdate}/>
+                <TableListRoom listRooms={listRooms}
+                               onUpdate={this.onUpdate}
+                               handleChangePage={this.handleChangePage}
+                               totalPage={totalPage}
+                               currentPage={currentPage}
+                />
                 <AddRoomModal isShowModal={isShowModal} handleClosePopUp={this.handleClosePopUp}/>
             </div>
         );
@@ -167,4 +211,4 @@ const styles = {
     fontFamily: 'AvenirNext-Bold',
 };
 
-export default Rooms;
+export default injectIntl(Rooms);

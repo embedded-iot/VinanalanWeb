@@ -21,7 +21,7 @@ class Country extends Component {
             if (response.data.isSucess && response.data.data.length > 0 && this._isMounted) {
                 let listData = response.data.data.map(item => {
                     const data = {};
-                    data.label = item.name;
+                    data.label = item.name || item.countryName;
                     data.value = item.countryCode;
                     return data;
                 });

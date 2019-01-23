@@ -4,12 +4,12 @@ import DatePicker from "react-datepicker";
 import * as Service from "./RoomServices";
 import {Input, Textarea} from '../../config/HomeCatalog/ComponentSetting';
 import {connect} from "react-redux";
-import {success} from "../../../actions";
+import {success, error} from "../../../actions";
 import DropdownPayMethod from '../../../components/commons/dropdown/DropdownPayMethod';
 import BookingSoure from '../../../components/commons/dropdown/BookingSoure';
 import Country from '../../../components/Maps/Country';
 import moment from 'moment';
-
+import {withRouter} from 'react-router-dom';
 
 const defaultState = props => ({
     roomId: "",
@@ -68,18 +68,20 @@ class BookRoom extends Component {
 
     handleSubmit = () => {
         let data = {...this.state.selected};
-        const {userId, success} = this.props;
+        const {userId, success, error} = this.props;
         const {disable} = this.state;
         data.userId = userId;
         if(disable){
             data.update_at = (new Date()).toISOString();
             Service.UpDateReversation(data, res =>{
                 success("Update Success");
-            },er =>{})
+                this.props.history.push("/Room");
+            },er =>{error(er)})
         }else{
             Service.BookRoom(data, res => {
                 success("Creacte Success");
-            }, er => {});
+                this.props.history.push("/Room");
+            }, er => {error(er)});
         }
     }
 
@@ -205,7 +207,10 @@ const mapDispatchToProps = (dispatch) => {
         success: (message) => {
             dispatch(success(message));
         },
+        error: (message) => {
+            dispatch(error(message));
+        },
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookRoom);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BookRoom));

@@ -13,19 +13,23 @@ const columnsRevertion = [
     },
     {
         Header: 'Room Type',
-        accessor: 'catalogName',
+        id: 'roomType',
+        accessor: d => d.room.roomCatalog.catalogName,
     },
     {
         Header: 'Room',
-        accessor: 'catalogName',
+        id: 'roomName',
+        accessor: d => d.room.roomName,
     },
     {
         Header: 'Tower',
-        accessor: 'catalogName',
+        id: 'roomHomeName',
+        accessor: d => d.room.homeId,
     },
     {
         Header: 'Customer',
-        accessor: 'catalogName',
+        id: 'customer',
+        accessor: d =>  d.customer.customerName,
     },
     {
         Header: 'Booking Source',
@@ -33,7 +37,8 @@ const columnsRevertion = [
     },
     {
         Header: 'Booking Date',
-        accessor: 'catalogName',
+        accessor: 'create_at',
+        Cell: props => <span>{(new Date(props.original.create_at)).toLocaleDateString()}</span>
     },
     {
         Header: 'From',
@@ -52,7 +57,7 @@ const columnsRevertion = [
     },
     {
         Header: 'Paid',
-        accessor: 'catalogName',
+        Cell: props => <span>{props.original.totalMoney  -  props.original.remainMoney}</span>
     },
 ]
 
@@ -93,10 +98,7 @@ class ReportManament extends Component {
             data.numDays = 1;
         }
         Service.getReportByStatus(data, res => {
-            this.setState({
-                key,
-                listRevertion: res.data.data
-            });
+            this.setState({key, listRevertion: res.data.data});
         })
     }
 

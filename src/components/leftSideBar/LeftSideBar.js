@@ -29,14 +29,14 @@ class LeftSideBar extends Component {
             <div className="left-side-bar">
                 <div>
                     <Link to="/Home" className={urlPage === "/home" ? "item-menu selected" : "item-menu"}>
-                        <img src={`/${icHome}`}/>
+                        <img src={icHome}/>
                         <span className="menu">Home</span>
                         <hr/>
                     </Link>
 
                     <Link to="/Room"
                          className={urlPage === "/room" ? "item-menu selected" : "item-menu"}>
-                        <img src={`/${icRoom}`}/>
+                        <img src={icRoom}/>
                         <span className="menu">Room</span>
                         <hr/>
                     </Link>
@@ -48,7 +48,7 @@ class LeftSideBar extends Component {
                     {/*</div>*/}
                     <Link to="/Report"
                          className={urlPage === "/report" ? "item-menu selected" : "item-menu"}>
-                        <img src={`/${icReport}`}/>
+                        <img src={icReport}/>
                         <span className="menu">Report</span>
                         <hr/>
                     </Link>
@@ -56,7 +56,7 @@ class LeftSideBar extends Component {
                     <div className={urlPage === "/service" ? "item-menu selected" : "item-menu"}>
                         <div className="item-menu" id="dropdownMenuButton" style={{textAlign: 'center'}}
                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src={`/${icSetting}`}/>
+                            <img src={icSetting}/>
                             <span className="menu">Config</span>
                         </div>
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
