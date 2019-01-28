@@ -1,6 +1,16 @@
+.modal-dialog{
+  min-width: 1110px !important;
+  .modal-footer{
+    padding-right: 30px;
+  }
+}
+.alert-modal{
+  min-width: 700px !important;
+}
 .book_room {
-  width: 70%;
+  width: 100%;
   padding: 20px;
+  height: 490px;
   span{
     font-size: 20px;
   }
@@ -15,7 +25,9 @@
     padding: 5px;
     font-size: 28px;
     background-color: #fff;
-    color: #0e9aff;
+    span{
+      color: #0e9aff;
+    }
   }
 
   font-family: AvenirNext-Bold;
@@ -26,14 +38,14 @@
     width: 49%;
     position: relative;
     float: left;
-    height: 465px;
+    height: 470px;
     border: 2px solid #0496ff;
     border-radius: 7px;
     margin-right: 2%;
 
     .header {
       left: 9%;
-      top: -7%;
+      top: -6%;
     }
   }
 
@@ -65,7 +77,7 @@
 
       .header {
         position: absolute;
-        top: -22%;
+        top: -16%;
         left: 5%;
       }
     }

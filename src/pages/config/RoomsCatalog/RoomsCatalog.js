@@ -6,8 +6,11 @@ import AddRomCatalogModal from './AddRoomsCatalogModal'
 import SearchBox from "../../../components/commons/searchBox/SearchBox";
 import ic_edit from "../../../public/images/icons/ic_edit.png";
 import ic_delete from "../../../public/images/icons/ic_delete.png";
-import ic_checkout from "../../../public/images/icons/ic_checkin.png";
+import ic_checkin from "../../../public/images/icons/ic_checkin.png";
+import ic_checkout from "../../../public/images/icons/ic_checkout.png";
 import * as CONSTANTS from '../../../constants/commonConstant';
+import {showModal, success, error} from "../../../actions";
+import {connect} from "react-redux";
 
 
 class HomeCatalog extends Component {
@@ -62,8 +65,10 @@ class HomeCatalog extends Component {
         })
     }
 
-    onHandleCheckout = () => { }
-    onHandleCheckin = () => { }
+    onHandleCheckout = () => {
+    }
+    onHandleCheckin = () => {
+    }
 
     onHandleEdit = (data) => {
         this.setState({
@@ -72,7 +77,18 @@ class HomeCatalog extends Component {
         })
     }
 
-    onHandleDelete = () =>{ }
+    onHandleDelete = (id) => {
+        const {showModal, success, error} = this.props;
+        showModal("Are you sure you want to delete ?", confirm => {
+            Services.deleteRoomCatalog(id, res => {
+                this.getHomeCatalog();
+                success("Success");
+            }, er => {
+                error(er.message);
+            });
+        })
+    }
+
     render() {
         const {listCatalog, isShowModal, searchText, data} = this.state;
         const columns = [
@@ -107,10 +123,7 @@ class HomeCatalog extends Component {
                 Header: 'Action',
                 Cell: props => <div className="action">
                     <div className="cus-tooltip">
-                        {
-                            // item.status ? <img src={ic_checkin} onClick={() => this.onHandleCheckout()}/> :
-                            <img src={ic_checkout} style={styleIcon} onClick={() => this.onHandleCheckin()}/>
-                        }
+                        <img src={ic_checkout} style={styleIcon} onClick={() => this.onHandleCheckin()}/>
                         <span className="tooltiptext">Active/Deactive</span>
                     </div>
                     <div className="cus-tooltip">
@@ -119,7 +132,7 @@ class HomeCatalog extends Component {
                     </div>
 
                     <div className="cus-tooltip">
-                        <img src={ic_delete} style={styleIcon} onClick={() => this.onHandleDelete()}/>
+                        <img src={ic_delete} style={styleIcon} onClick={() => this.onHandleDelete(props.original.id)}/>
                         <span className="tooltiptext">Delete</span>
                     </div>
                 </div>,
@@ -129,8 +142,11 @@ class HomeCatalog extends Component {
         return (
             <div className="rom_catalog" style={styles}>
                 <div className="row" style={{marginBottom: '25px'}}>
-                    <div className="col-lg-9"><span style={{fontSize: '28px', fontWeight: 'bold'}}>{CONSTANTS.ROOMS_CATALOG}</span></div>
-                    <div className="col-lg 3">  <SearchBox placeholder="Search" value={searchText} onChangeSearch={this.onChangeSearch} onSearch={this.handleSearch} /></div>
+                    <div className="col-lg-9"><span
+                        style={{fontSize: '28px', fontWeight: 'bold'}}>{CONSTANTS.ROOMS_CATALOG}</span></div>
+                    <div className="col-lg 3"><SearchBox placeholder="Search" value={searchText}
+                                                         onChangeSearch={this.onChangeSearch}
+                                                         onSearch={this.handleSearch}/></div>
                 </div>
                 <div className="row">
                     <div className="col-lg-8"
@@ -175,4 +191,19 @@ const styles = {
     fontFamily: 'AvenirNext-Bold',
 };
 
-export default HomeCatalog;
+
+const mapDispatchToProps = dispatch => {
+    return {
+        error: (message) => {
+            dispatch(error(message));
+        },
+        success: (message) => {
+            dispatch(success(message));
+        },
+        showModal: (message, confirm) => {
+            dispatch(showModal(message, confirm))
+        }
+    }
+};
+
+export default connect(null, mapDispatchToProps)(HomeCatalog);

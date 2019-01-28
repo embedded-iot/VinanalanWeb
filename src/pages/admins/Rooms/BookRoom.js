@@ -46,6 +46,7 @@ class BookRoom extends Component {
         const {roomId} = this.props.match.params;
         this.onChangeData({target: {name: 'roomId', value: roomId}});
         Service.getRoomById(roomId, res => {
+            console.log("BR");
             if (res.data.data.currentReservation) {
                  Service.getRevervationById(res.data.data.currentReservation, res=>{
                      this.setState({
@@ -133,10 +134,10 @@ class BookRoom extends Component {
                         </div>
                     </div>
 
-                    <Input value={selected.totalMoney} title="Total" name='totalMoney'
+                    <Input value={selected.totalMoney} title="Total (Vnd)" name='totalMoney'
                            onChangeData={this.onChangeData}/>
 
-                    <Input value={selected.prePay} title="Prepay" name='prePay'
+                    <Input value={selected.prePay} title="Prepay (%)" name='prePay'
                      onChangeData={this.onChangeData}/>
 
                     <Input value={selected.prepay_rate} title="Prepay rate" name='prepay_rate'

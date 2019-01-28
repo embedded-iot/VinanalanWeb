@@ -1,13 +1,13 @@
 .rooms {
-  .home-select{
-    .css-vj8t7z{
+  .home-select {
+    .css-vj8t7z {
       height: 38px;
-      min-height: 38px!important;
+      min-height: 38px !important;
     }
   }
-  .pagination-room{
+  .pagination-room {
     text-align: center;
-    .pagination{
+    .pagination {
       margin: 0px;
     }
   }
@@ -84,7 +84,7 @@
       border-radius: 10px;
       margin-bottom: 40px;
       cursor: pointer;
-      .content{
+      .content {
         padding: 25px;
       }
       span {
@@ -183,7 +183,12 @@
           }
         }
       }
-
+      .rowleft {
+        left: -40%;
+      }
+      .rowright {
+        left: -150%;
+      }
       &:hover {
         .up-arrow {
           display: block;
@@ -214,6 +219,19 @@
     height: 0;
     border: 9px solid transparent;
     border-top-color: white;
+  }
+
+  .rowleft:before {
+    left: 170px;
+  }
+  .rowleft:after {
+    left: 170px;
+  }
+  .rowright:before {
+    left: 365px;
+  }
+  .rowright:after {
+    left: 365px;
   }
 }
 

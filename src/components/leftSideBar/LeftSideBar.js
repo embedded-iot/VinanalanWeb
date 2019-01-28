@@ -14,7 +14,7 @@ class LeftSideBar extends Component {
         super(props);
 
         this.state = {
-            currentPage: ""
+            urlPage: "/Home"
         }
     }
 
@@ -22,32 +22,37 @@ class LeftSideBar extends Component {
         this.props.dispatch(userActions.logout());
     };
 
+
+    handleActive = (value) => {
+        this.setState({urlPage: value});
+    }
+
     render() {
-        const urlPage = window.location.pathname.toLowerCase();
-        const page = localStorage.getItem("page");
+        const {urlPage} = this.state;
         return (
             <div className="left-side-bar">
                 <div>
-                    <Link to="/Home" className={urlPage === "/home" ? "item-menu selected" : "item-menu"}>
+                    <Link to="/Home" className={urlPage === "/Home" ? "item-menu selected" : "item-menu"}
+                          onClick={() => this.handleActive("/Home")}>
                         <img src={icHome}/>
                         <span className="menu">Home</span>
                         <hr/>
                     </Link>
 
-                    <Link to="/Room"
-                         className={urlPage === "/room" ? "item-menu selected" : "item-menu"}>
+                    <Link to="/Room" onClick={() => this.handleActive("/Room")}
+                          className={urlPage === "/Room" ? "item-menu selected" : "item-menu"}>
                         <img src={icRoom}/>
                         <span className="menu">Room</span>
                         <hr/>
                     </Link>
                     {/*<div onClick={(e) => this.handleRedirectPage("/Service")}*/}
-                         {/*className={urlPage === "/service" ? "item-menu selected" : "item-menu"}>*/}
-                        {/*<img src={icService}/>*/}
-                        {/*<span className="menu">Service</span>*/}
-                        {/*<hr/>*/}
+                    {/*className={urlPage === "/service" ? "item-menu selected" : "item-menu"}>*/}
+                    {/*<img src={icService}/>*/}
+                    {/*<span className="menu">Service</span>*/}
+                    {/*<hr/>*/}
                     {/*</div>*/}
-                    <Link to="/Report"
-                         className={urlPage === "/report" ? "item-menu selected" : "item-menu"}>
+                    <Link to="/Report" onClick={() => this.handleActive("/Report")}
+                          className={urlPage === "/Report" ? "item-menu selected" : "item-menu"}>
                         <img src={icReport}/>
                         <span className="menu">Report</span>
                         <hr/>

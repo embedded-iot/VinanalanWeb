@@ -16,7 +16,7 @@ export function getListHome(data, successCallback, failCallback) {
   const province = data &&  data.province_code ? '&province_code=' + data.province_code: '';
   const district = data &&  data.district_code ? '&district_code=' + data.district_code : ''
   let requestOptions = {
-    url: !data ? '/api/homes' : '/api/homes/searchHome?skip=0' + '&limit=50' + province + district,
+    url: '/api/homes/searchHome?skip=0' + '&limit=30' + province + district,
     headers: { 'Content-Type': 'application/json', }
   };
 
@@ -67,3 +67,17 @@ export function deleteHome(id, successCallback, failCallback) {
     failCallback(error);
   });
 }
+
+export function changeStatus(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: `/api/homes/changeStatus?id=${data.id}&status=${data.status}`,
+        headers: { 'Content-Type': 'application/json', }
+    };
+
+    makeGetRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+

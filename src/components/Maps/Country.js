@@ -7,13 +7,20 @@ class Country extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listData: []
+            listData: [],
+            defaultValue: '',
+            value: ''
         }
     }
 
     componentWillMount() {
         this._isMounted = true;
         this.getListContries();
+        if(this.props.defaultValue){
+            this.setState({
+                defaultValue: this.props.defaultValue
+            });
+        }
     }
 
     getListContries = () => {
@@ -33,15 +40,23 @@ class Country extends Component {
             // this.props.error(error);
         })
     }
+
+    onChangeCountry = (e) =>{
+        const {onChangeCountry}  = this.props;
+        this.setState({
+            defaultValue: '',
+            value: e
+        })
+    }
     componentWillUnmount() {
         this._isMounted = false;
     }
     render() {
-        const {listData} = this.state;
-        const {onChangeCountry} = this.props;
+        const {listData, defaultValue, value} = this.state;
+
         return (
             <Select options={listData} onChange={onChangeCountry} name='country'
-                    placeholder='Select Country....'/>
+                value={defaultValue ? defaultValue : value}   placeholder='Select Country....'/>
         );
     }
 }

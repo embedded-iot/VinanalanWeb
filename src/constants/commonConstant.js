@@ -46,6 +46,7 @@ export const CHECK_IN = "Check-in";
 export const CHECK_OUT = "Check-out";
 export const CANCELED = "Canceled";
 export const ROOM_IS_BE_FILLED = "Room is be filled";
+export const BOOKING_ROOM = "Booking Room";
 
 
 

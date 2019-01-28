@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import "./DataTable.scss";
 import Checkbox from "../checkbox/Checkbox";
 import ic_checkin from "../../../public/images/icons/ic_checkin.png";
-import ic_checkout from "../../../public/images/icons/ic_checkin.png";
+import ic_checkout from "../../../public/images/icons/ic_checkout.png";
 import ic_delete from "../../../public/images/icons/ic_delete.png";
 import ic_edit from "../../../public/images/icons/ic_edit.png";
 import ic_view from "../../../public/images/icons/ic_view.png";
@@ -100,12 +100,13 @@ export default class DataTable extends Component {
                       this.props.action && <td>
                         <div className="action">
                           <div className="cus-tooltip">
-                            <img src={ic_view} onClick={() => this.props.onHandleView(item)} />
+                            <img src={ic_view} onClick={() => this.props.onHandleView(item.Id)} />
                             <span className="tooltiptext">View rooms</span>
                           </div>
                           <div className="cus-tooltip">
                             {
-                              item.status ? <img src={ic_checkin} onClick={() => this.props.onHandleCheckout(item)} /> : <img src={ic_checkout} onClick={() => this.props.onHandleCheckin(item)} />
+                              item.Status === 1 ? <img src={ic_checkin} onClick={() => this.props.onHandleAcive(item.Id, 2)} /> :
+                                  <img src={ic_checkout} onClick={() => this.props.onHandleAcive(item.Id, 1)} />
                             }
                             <span className="tooltiptext">Active/Deactive</span>
                           </div>

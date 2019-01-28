@@ -12,6 +12,7 @@ import {Button} from "../../config/HomeCatalog/ComponentSetting";
 import AddRoomModal from './AddRoomModal'
 import {injectIntl} from 'react-intl';
 import HomeDropDown from '../../../components/commons/dropdown/HomeDropDown';
+import {getHomeById} from '../home/HomeServices';
 
 const listRow = [
     {label: 'Row 1', value: 8},
@@ -30,6 +31,7 @@ class Rooms extends Component {
                 // wards: ''
             },
             homeId: '',
+            defaultHomeId: '',
             searchText: '',
             listRooms: [],
             isShowModal: false,
@@ -38,15 +40,48 @@ class Rooms extends Component {
             currentPage: 1
         }
         this.status = '',
+            this.homeName = JSON.parse(localStorage.getItem("home")) ? JSON.parse(localStorage.getItem("home")).label : 'Select Home...',
             this.page = 0
     }
 
     componentDidMount() {
-        Services.getCountRoomByStatus(res => {
+        if (this.props.match.params.homeId) {
+            getHomeById(this.props.match.params.homeId, res => {
+                this.setState({
+                        defaultHomeId: {value: res.data.data.id, label: res.data.data.homeName},
+                        homeId: res.data.data.id,
+                    });
+                this.getCountRoomByStatus(res.data.data.id);
+                const {pageSize} = this.state;
+                const data = {
+                    status: 0,
+                    page: 0,
+                    pageSize: pageSize.value,
+                    homeId: res.data.data.id
+                }
+                this.getRoomByStatus(data);
+                let item = data ;
+                item.label =  res.data.data.homeName;
+                this.homeName =  res.data.data.homeName;
+                window.localStorage.setItem("home", JSON.stringify(item));
+            })
+        }else{
+            if(localStorage.getItem("home")){
+                const home = JSON.parse(localStorage.getItem("home"));
+                this.setState({
+                    defaultHomeId: {value: home.value, label: home.label},
+                    homeId: home.value,
+                });
+                this.getCountRoomByStatus(home.value);
+                this.getRoomByStatus(home)
+            }
+        }
+    }
+    getCountRoomByStatus = (homeId) =>{
+        Services.getCountRoomByStatus(homeId, res => {
             this.setState({listCount: res.data.data});
         })
     }
-
 
     onChangeSelectedMap = (key, value) => {
         this.setState({selectedMap: {...this.state.selectedMap, [key]: value}});
@@ -77,21 +112,49 @@ class Rooms extends Component {
     }
 
     onChangeSeacrhRoom = (value) => {
-        const {pageSize} = this.state;
+        const {pageSize, homeId} = this.state;
         const data = {
             status: value,
             page: 0,
-            pageSize: pageSize.value
+            pageSize: pageSize.value,
+            homeId: homeId
         }
         this.status = value;
         this.getRoomByStatus(data);
+        let item = data ;
+        item.label = this.homeName;
+        window.localStorage.setItem("home", JSON.stringify(item));
     }
     onUpdate = () => {
-        this.getListRooms();
+        const {pageSize, homeId} = this.state;
+        const data = {
+            status: this.status,
+            page: pageSize.value * (this.state.currentPage - 1),
+            pageSize: pageSize.value,
+            homeId: homeId
+        }
+        this.getCountRoomByStatus(homeId);
+        this.getRoomByStatus(data);
     }
 
     onChangeHome = (e) => {
-        this.setState({homeId: e.target.value});
+        this.setState({
+            homeId: e.target.value,
+        });
+        this.getCountRoomByStatus(e.target.value);
+        const {pageSize} = this.state;
+        const data = {
+            status: 0,
+            page: 0,
+            pageSize: pageSize.value,
+            homeId: e.target.value
+        }
+        this.getRoomByStatus(data);
+        this.homeName =  e.target.label;
+        let item = data ;
+        item.label =  e.target.label;
+        this.homeName =  e.target.label;
+        window.localStorage.setItem("home", JSON.stringify(item));
     }
 
     getRoomByStatus = (data) => {
@@ -105,6 +168,8 @@ class Rooms extends Component {
                     totalPage: currentPage,
                     currentPage: this.state.currentPage > currentPage ? 1 : this.state.currentPage
                 });
+            }else{
+                this.setState({listRooms: []});
             }
         }, er => {
         })
@@ -112,21 +177,24 @@ class Rooms extends Component {
 
     handleChangePage = (pageNum) => {
         this.setState({currentPage: pageNum});
-        const {pageSize} = this.state;
+        const {pageSize, homeId} = this.state;
         const data = {
             status: this.status,
             page: pageSize.value * (pageNum - 1),
-            pageSize: pageSize.value
+            pageSize: pageSize.value,
+            homeId: homeId
         }
         this.getRoomByStatus(data);
     }
 
     onChanPageSize = (e) => {
+        const {homeId} = this.state;
         this.setState({pageSize: e}, () => {
             const data = {
                 status: this.status,
                 page: 0,
-                pageSize: e.value
+                pageSize: e.value,
+                homeId: homeId
             }
             this.getRoomByStatus(data);
         });
@@ -135,7 +203,7 @@ class Rooms extends Component {
     render() {
         const {provinces, districts} = this.state.selectedMap;
         const dataMaps = {province_code: provinces.value, district_code: districts.value}
-        const {searchText, listRooms, isShowModal, listCount, pageSize, totalPage, currentPage} = this.state;
+        const {searchText, listRooms, isShowModal, listCount, pageSize, totalPage, currentPage, homeId, defaultHomeId} = this.state;
         return (
             <div className='rooms' style={styles}>
                 <div className="row" style={{marginBottom: '25px'}}>
@@ -163,7 +231,8 @@ class Rooms extends Component {
                     {/*<Wards onChangeCountry={this.onChangeMaps} value={districts.value}/>*/}
                     {/*</div>*/}
                     <div className="col-lg-2">
-                        <HomeDropDown onChangeData={this.onChangeHome} name="homeId" data={dataMaps}/>
+                        <HomeDropDown onChangeData={this.onChangeHome} name="homeId"
+                                      defaultValue={defaultHomeId} data={dataMaps}/>
                     </div>
                     <div className="col-lg-5"></div>
                     <div className="col-lg-1">

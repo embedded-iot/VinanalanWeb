@@ -77,7 +77,11 @@ class Home extends Component {
   };
 
   getListHome = () => {
-    HomeServices.getListHome(response => {
+      const data = {
+          province_code: '',
+          district_code: '',
+      }
+    HomeServices.getListHome(null, response => {
       if (response.data.isSucess) {
         let data = [];
         for (let i = 0; i < response.data.data.length; i++) {
@@ -85,7 +89,7 @@ class Home extends Component {
             Id: response.data.data[i].id,
             Title: response.data.data[i].homeName,
             Description: response.data.data[i].homeDescription,
-            Status: response.data.data[i].homeStatus ? "Active" : "Deactive"
+            Status: response.data.data[i].homeStatus
           }
           data.push(item);
         }
@@ -150,7 +154,7 @@ class Home extends Component {
     LocationServices.getContries(response => {
       if (response.data.isSucess) {
         let listCountry = response.data.data.map(item => {
-          item.title = item.name;
+          item.title = item.name || item.countryName;
           return item;
         });
         this.setState({
@@ -263,9 +267,15 @@ class Home extends Component {
     this.setState(state);
   }
 
-  onHandleView = () => { }
-  onHandleCheckout = () => { }
-  onHandleCheckin = () => { }
+  onHandleView = (value) => {
+      this.props.history.push(`Room/${value}`);
+  }
+
+  onHandleAcive = (id, status) => {
+      HomeServices.changeStatus({id: id, status: status}, res =>{
+          this.getListHome();
+      })
+  }
   onHandleEdit = (home) => {
     this.setState({
       isUpdate: true
@@ -589,9 +599,11 @@ class Home extends Component {
           <button type="button" className="btn btn-add-new" data-toggle="modal" data-target="#add-new-home" onClick={this.resetData}>Add new</button>
         </div>
 
+
+
         <DataTable id="home-data-table" selected={selectedHome} data={listHome} onSelect={this.onSelectItem}
-          action={true} onHandleView={this.onHandleView} onHandleCheckin={this.onHandleCheckin}
-          onHandleCheckout={this.onHandleCheckout} onHandleEdit={this.onHandleEdit} onHandleDelete={this.onHandleDelete} />
+          action={true} onHandleView={this.onHandleView} onHandleAcive={this.onHandleAcive}
+                   onHandleEdit={this.onHandleEdit} onHandleDelete={this.onHandleDelete} />
 
         <div className="modal fade" id="add-new-home" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog add-home-modal" role="document">

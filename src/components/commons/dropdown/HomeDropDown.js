@@ -8,7 +8,8 @@ class HomeDropDown extends Component {
         super(props);
         this.state = {
             listData: [],
-            selected: ''
+            selected: '',
+            defaultValue: ''
         }
     }
 
@@ -38,20 +39,25 @@ class HomeDropDown extends Component {
         if(!_.isEqual(this.props.data,nextProps.data)){
             this.getListData(nextProps.data);
         }
+        const data = nextProps.defaultValue;
+        if (data !== this.props.defaultValue && !this.state.selected.length) {
+            this.setState({defaultValue: data});
+        }
     }
     onChangeData = (optionSelected, e) =>{
         const {onChangeData} = this.props;
-        this.setState({selected: optionSelected});
-        const data = { target: {value: optionSelected.value, name: e.name}};
+        this.setState({selected: optionSelected, defaultValue: ''});
+        const data = { target: {value: optionSelected.value, name: e.name, label: optionSelected.label}};
         onChangeData(data);
     }
 
     render() {
-        const {listData, selected} = this.state;
+        const {listData, selected, defaultValue} = this.state;
         const {name} = this.props;
         return (
             <Select options={listData} onChange={this.onChangeData} name={name} className='home-select'
-                    value={selected}   placeholder='Select Home....'/>
+                    value={defaultValue ? defaultValue : selected}
+                      placeholder='Select Home....'/>
         );
     }
 }

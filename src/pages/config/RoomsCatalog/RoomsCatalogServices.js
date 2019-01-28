@@ -41,5 +41,16 @@ export function upDateRoomsCatalog(data, successCallback, failCallback) {
     });
 }
 
+export function deleteRoomCatalog(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/room-catalog/' + data,
+        headers: { 'Content-Type': 'application/json'},
+    };
+    Services.makeDeleteRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
 
 

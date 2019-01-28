@@ -29,7 +29,7 @@ export function createRoom(data, successCallback, failCallback) {
 
 export function getRoomById(id, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/rooms/' + id,
+        url: '/api/rooms/roomDetail?roomId=' + id,
         headers: {'Content-Type': 'application/json',}
     };
 
@@ -98,9 +98,10 @@ export function UpDateReversation(data, successCallback, failCallback) {
 }
 
 export function getRoomByStatus(data, successCallback, failCallback) {
+    const homeId = data && data.homeId ? `&homeId=${data.homeId}` : '';
     let requestOptions = {
         url: '/api/rooms/getRoomByStatus?status='+ data.status +
-        '&skip=' + data.page +'&limit=' + data.pageSize,
+        '&skip=' + data.page +'&limit=' + data.pageSize + homeId,
         headers: {'Content-Type': 'application/json'},
     };
 
@@ -145,9 +146,10 @@ export function unLookRoom(data, successCallback, failCallback) {
 }
 
 
-export function getCountRoomByStatus(successCallback, failCallback) {
+export function getCountRoomByStatus(data, successCallback, failCallback) {
+    const homeId  =  data ? `?homeId=${data}`: '';
     let requestOptions = {
-        url: '/api/rooms/countRoomByStatus',
+        url: '/api/rooms/countRoomByStatus' + homeId,
         headers: {'Content-Type': 'application/json'},
     };
 
@@ -220,7 +222,3 @@ export function getAllRevervation(successCallback, failCallback) {
         failCallback(error);
     });
 }
-
-
-
-
