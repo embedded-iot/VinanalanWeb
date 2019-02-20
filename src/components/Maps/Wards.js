@@ -1,7 +1,11 @@
 import React, {Component} from "react";
 import Select from "react-select";
 import * as Service from "./MapsServices";
+import { FormattedMessage } from 'react-intl';
 
+const STRINGS = {
+    SELECTED:  <FormattedMessage id="SELECT_WARDS"/>,
+}
 class Wards extends Component {
     constructor(props) {
         super(props);
@@ -46,7 +50,7 @@ class Wards extends Component {
         const {listData, selected} = this.state;
         return (
             <Select options={listData} onChange={this.onChangeData} name='wards'
-                    value={selected} placeholder='Select Wards....'/>
+                    value={selected} placeholder={STRINGS.SELECTED}/>
         );
     }
 }

@@ -1,6 +1,11 @@
 import React, {Component} from "react";
 import Select from "react-select";
 import * as Service from "./MapsServices";
+import { FormattedMessage } from 'react-intl';
+
+const STRINGS = {
+    SELECTED_COUNTRY :  <FormattedMessage id="SELECT_COUNTRY"/>,
+}
 
 class Country extends Component {
     _isMounted = false;
@@ -41,12 +46,13 @@ class Country extends Component {
         })
     }
 
-    onChangeCountry = (e) =>{
+    onChangeCountry = (optionSelected, e) =>{
         const {onChangeCountry}  = this.props;
         this.setState({
             defaultValue: '',
-            value: e
+            value: optionSelected
         })
+        onChangeCountry(optionSelected, e);
     }
     componentWillUnmount() {
         this._isMounted = false;
@@ -55,8 +61,8 @@ class Country extends Component {
         const {listData, defaultValue, value} = this.state;
 
         return (
-            <Select options={listData} onChange={onChangeCountry} name='country'
-                value={defaultValue ? defaultValue : value}   placeholder='Select Country....'/>
+            <Select options={listData} onChange={this.onChangeCountry} name='country'
+                value={defaultValue ? defaultValue : value}   placeholder={STRINGS.SELECTED_COUNTRY}/>
         );
     }
 }

@@ -35,6 +35,7 @@ export const DISCOUNT = "Discount";
 export const BATHROOM = "Bathroom";
 export const IMAGES = "Images";
 export const CREATE_NEW_ROOM = "Create New Room";
+export const UPDATE_ROOM = "Update Room";
 export const CREATE_NEW_ROOM_CATALOG = "Create New Room Catalog";
 export const PRIVATE = "Room Private";
 export const HIGHT_LIGHT = "Highlight";

@@ -1,21 +1,30 @@
 import ReactTable from "react-table";
 import './ReactTable.scss';
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 
-const Table = (props) =>{
+const STRINGS = {
+    PAGE: <FormattedMessage id="PAGE" />,
+    PREVIOUS: <FormattedMessage id="PREVIOUS" />,
+    NEXT: <FormattedMessage id="NEXT" />,
+}
+
+const Table = (props) => {
     const defaultProps = {
         className: '-striped -highlight',
-        defaultPageSize: 10,
-        nextText: 'Next',
-        previoustext: 'Previous',
-        // minRows: 5,
-        // manual: true,
+        nextText: STRINGS.NEXT,
+        previousText: STRINGS.PREVIOUS,
+        minRows: 10,
+        manual: true,
         ofText: '/',
         rowsText: 'Rows',
-        // showPageSizeOptions: true,
+        pageText: STRINGS.PAGE,
+        showPageSizeOptions: false,
+        defaultPageSize: 10
     }
     return (
         <ReactTable
+
             {...props}
             {...defaultProps}
         />

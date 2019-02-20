@@ -1,12 +1,21 @@
-import {Modal} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import React, {Component} from "react";
-import {Input, Textarea} from "../HomeCatalog/ComponentSetting";
+import React, { Component } from "react";
+import { Input, Textarea } from "../HomeCatalog/ComponentSetting";
 import * as Services from './HomeCatalogServices';
-import {connect} from 'react-redux';
-import {success} from "../../../actions";
+import { connect } from 'react-redux';
+import { success } from "../../../actions";
 import * as CONSTANTS from '../../../constants/commonConstant';
+import { FormattedMessage } from 'react-intl';
 
+const STRINGS = {
+    HOME_CATALOG_NAME: <FormattedMessage id="HOME_CATALOG_NAME" />,
+    DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+    CREATE_NEW_HOME_CATALOG: <FormattedMessage id="CREATE_NEW_HOME_CATALOG" />,
+    CREATE: <FormattedMessage id="CREATE" />,
+    EDIT: <FormattedMessage id="EDIT" />,
+    CLOSE: <FormattedMessage id="CLOSE" />,
+}
 
 const defaultState = (props) => ({
     catalogName: '',
@@ -26,28 +35,28 @@ class AddHomeCatalogModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.data){
-            this.setState({selected: nextProps.data});
-        }else{
-            this.setState({selected: defaultState(this.props)});
+        if (nextProps.data) {
+            this.setState({ selected: nextProps.data });
+        } else {
+            this.setState({ selected: defaultState(this.props) });
         }
     }
 
     onChangeData = (e) => {
-        const {target} = e;
-        const {name} = target;
-        this.setState({selected: {...this.state.selected, [name]: target.value}})
+        const { target } = e;
+        const { name } = target;
+        this.setState({ selected: { ...this.state.selected, [name]: target.value } })
     }
     handleClosePopUp = () => {
-        const {handleClosePopUp} = this.props;
-        this.setState({selected: defaultState(this.props)});
+        const { handleClosePopUp } = this.props;
+        this.setState({ selected: defaultState(this.props) });
         handleClosePopUp();
     }
     handleSubmit = () => {
-        const {selected} = this.state;
-        const {showAlert, handleClosePopUp, data} = this.props;
-        if(data){
-            let value = {...selected};
+        const { selected } = this.state;
+        const { showAlert, handleClosePopUp, data } = this.props;
+        if (data) {
+            let value = { ...selected };
             value.update_by = this.props.user;
             value.update_at = (new Date()).toISOString();
             Services.editHomeCatalog(value, res => {
@@ -56,7 +65,7 @@ class AddHomeCatalogModal extends Component {
             }, er => {
                 showAlert(er.message);
             })
-        }else{
+        } else {
             Services.createHomeCatalog(selected, res => {
                 showAlert('Success');
                 handleClosePopUp(true);
@@ -67,21 +76,21 @@ class AddHomeCatalogModal extends Component {
     }
 
     render() {
-        const {isShowModal, data} = this.props;
-        const {selected} = this.state;
+        const { isShowModal, data } = this.props;
+        const { selected } = this.state;
         return (
             <Modal show={isShowModal} onHide={this.handleClosePopUp} >
-                <Modal.Header><span>Create New Home Catalog</span></Modal.Header>
+                <Modal.Header>{STRINGS.CREATE_NEW_HOME_CATALOG}</Modal.Header>
                 <Modal.Body>
-                    <Input value={selected.catalogName} title={CONSTANTS.CATALOG_NAME}
-                           name='catalogName' onChangeData={this.onChangeData}/>
-                    <Textarea value={selected.catalogDescription} title={CONSTANTS.DESCRIPTION}
-                           name='catalogDescription' style={{height: '80px'}} onChangeData={this.onChangeData}/>
+                    <Input value={selected.catalogName} title={STRINGS.HOME_CATALOG_NAME}
+                        name='catalogName' onChangeData={this.onChangeData} />
+                    <Textarea value={selected.catalogDescription} title={STRINGS.DESCRIPTION}
+                        name='catalogDescription' style={{ height: '80px' }} onChangeData={this.onChangeData} />
                 </Modal.Body>
                 <Modal.Footer>
-                    <button className="btn btn-close" onClick={this.handleClosePopUp}>{CONSTANTS.CLOSE}</button>
+                    <button className="btn btn-close" onClick={this.handleClosePopUp}>{STRINGS.CLOSE}</button>
                     <button className="btn btn-finish" onClick={this.handleSubmit}>
-                        {!data ? CONSTANTS.CREATE : CONSTANTS.EDIT}</button>
+                        {!data ? STRINGS.CREATE : STRINGS.EDIT}</button>
                 </Modal.Footer>
             </Modal>
         );

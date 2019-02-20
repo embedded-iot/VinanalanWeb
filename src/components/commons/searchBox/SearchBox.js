@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import "./SearchBox.scss";
 import go_btn from "../../../public/images/icons/go-btn.png";
+import { connect } from 'react-redux';
 
-export default class SearchBox extends Component {
+
+class SearchBox extends Component {
 	constructor(props) {
 		super(props);
 
@@ -16,9 +18,10 @@ export default class SearchBox extends Component {
 	}
 
 	render() {
+		const search_box = this.props.locale === "en" ? "Seacrch" : "Tìm kiếm";
 		return (
 			<div className="search-box">
-				<input placeholder={this.props.placeholder} type="text" className="form-control" value={this.props.value}
+				<input placeholder={search_box} type="text" className="form-control" value={this.props.value}
 					onChange={(e) => this.props.onChangeSearch(e.target.value)} onKeyPress={this._handleKeyPress} />
 				<img src={go_btn} onClick={this.props.onSearch} />
 			</div>
@@ -31,3 +34,9 @@ SearchBox.propTypes = {
 	onChangeSearch: PropTypes.func,
 	onSearch: PropTypes.func
 }
+
+const mapStateToProps = (state) => ({
+	locale: state.translation.locale
+});
+
+export default connect(mapStateToProps, null)(SearchBox);

@@ -6,7 +6,24 @@ import validator from "validator";
 import loginImg from "../../../public/images/map.svg";
 import Checkbox from "../../../components/commons/checkbox/Checkbox";
 import cookie from 'react-cookies';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+
+const STRINGS = {
+  LOGIN: <FormattedMessage id="LOGIN" />,
+  EMAIL: <FormattedMessage id="EMAIL" />,
+  REGISTER: <FormattedMessage id="REGISTER" />,
+  FORGOT_PASS: <FormattedMessage id="FORGOT_PASS" />,
+  LOG_OUT: <FormattedMessage id="LOG_OUT" />,
+  ADMIN_PORTAL: <FormattedMessage id="ADMIN_PORTAL" />,
+  PLEASE_LOGIN: <FormattedMessage id="PLEASE_LOGIN_BY_YOUR_SAREPI_ACCOUNT" />,
+  REMEMBER_ME: <FormattedMessage id="REMEMBER_ME" />,
+  REQUIRED_EMAIL: <FormattedMessage id="REQUIRED_EMAIL" />,
+  REQUIRED_PASSWORD: <FormattedMessage id="REQUIRED_PASSWORD" />,
+  PASSWORD: <FormattedMessage id="PASSWORD" />,
+}
+
+
 
 class Login extends React.Component {
   constructor(props) {
@@ -42,7 +59,7 @@ class Login extends React.Component {
   }
 
   handleInputEmail = (e) => {
-    let value = e.target.value.toLowerCase().trim();
+    let value = e.target.value.trim();
     this.setState({
       email: value
     })
@@ -81,37 +98,37 @@ class Login extends React.Component {
       <div className="page-content">
         <div className="login-form">
           <div className="login-container">
-            <div className="login-subtitle">Vinaland</div>
-            <div className="login-title">Admin Portal</div>
+            <div className="login-subtitle">Sarepi</div>
+            <div className="login-title">{STRINGS.ADMIN_PORTAL}</div>
 
             <div className="login-content">
               <div className="login-img">
                 <img src={loginImg} />
               </div>
               <form className="form">
-                <div className="login-notice">Please login by your Vinaland account!</div>
-                <div className="login-label">Email</div>
+                <div className="login-notice">{STRINGS.PLEASE_LOGIN}</div>
+                <div className="login-label">{STRINGS.EMAIL}</div>
                 <input type="text" className="login-input" value={email} onChange={this.handleInputEmail} />
                 {
-                  submitted && !email && <div className="help-block">Email is required</div>
+                  submitted && !email && <div className="help-block">{STRINGS.REQUIRED_EMAIL}</div>
                 }
 
-                <div className="login-label">Password</div>
+                <div className="login-label">{STRINGS.PASSWORD}</div>
                 <input type="password" className="login-input" value={password} onChange={this.handleInputPass} />
                 {
-                  submitted && !password && <div className="help-block">Password is required</div>
+                  submitted && !password && <div className="help-block">{STRINGS.REQUIRED_PASSWORD}</div>
                 }
 
                 <div className="remember-box">
-                  <Checkbox title="Remember me" onChange={this.handleRemember} />
-                  <a onClick={(e) => this.props.history.push("/ForgotPW")}>Forgot password?</a>
+                  <Checkbox title={STRINGS.REMEMBER_ME} onChange={this.handleRemember} />
+                  <a onClick={(e) => this.props.history.push("/ForgotPW")}>{STRINGS.FORGOT_PASS}</a>
                 </div>
 
-                <button className="btn btn-active" onClick={this.handleSubmit}>LOGIN</button>
+                <button className="btn btn-active" onClick={this.handleSubmit}>{STRINGS.LOGIN}</button>
                 {
                   loggingIn && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                 }
-                <button className="btn btn-normal" onClick={(e) => this.props.history.push("/Register")}>REGISTER</button>
+                <button className="btn btn-normal" onClick={(e) => this.props.history.push("/Register")}>{STRINGS.REGISTER}</button>
               </form>
             </div>
           </div>

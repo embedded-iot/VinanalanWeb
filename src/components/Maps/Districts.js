@@ -1,20 +1,30 @@
 import React, {Component} from "react";
 import Select from "react-select";
 import * as Service from "./MapsServices";
+import { FormattedMessage } from 'react-intl';
+
+const STRINGS = {
+    SELECTED:  <FormattedMessage id="SELECT_DISTRICS"/>,
+}
 
 class Districts extends Component {
     constructor(props) {
         super(props);
         this.state = {
             listData: [],
-            selected: ''
+            selected: '',
+            defaultValue: ''
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.value && this.props.value !== nextProps.value) {
+        if (this.props.value !== nextProps.value) {
             this.onChangeData('', {name: 'districts'});
             this.getDistricts(nextProps.value);
+        }
+
+        if(!_.isEqual(nextProps.defaultValue,this.props.defaultValue)){
+            this.setState({defaultValue: nextProps.defaultValue});
         }
     }
 
@@ -38,16 +48,16 @@ class Districts extends Component {
 
     onChangeData = (optionSelected, select) => {
         const {onChangeCountry} = this.props;
-        this.setState({selected: optionSelected});
+        this.setState({selected: optionSelected, defaultValue: ''});
         onChangeCountry(optionSelected, select);
     }
 
     render() {
-        const {listData, selected} = this.state;
+        const {listData, selected, defaultValue} = this.state;
         const {onChangeCountry} = this.props;
         return (
             <Select options={listData} onChange={this.onChangeData} name='districts'
-                    value={selected} placeholder='Select Districts....'/>
+                    value={defaultValue? defaultValue : selected} placeholder={STRINGS.SELECTED}/>
         );
     }
 }

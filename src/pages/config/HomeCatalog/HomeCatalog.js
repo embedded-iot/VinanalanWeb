@@ -1,16 +1,28 @@
-import React, {Component} from 'react'
-import {Button} from "../HomeCatalog/ComponentSetting";
+import React, { Component } from 'react'
+import { Button } from "../HomeCatalog/ComponentSetting";
 import Table from '../../../components/commons/ReactTable/RactTable';
 import * as Services from './HomeCatalogServices';
 import AddRomCatalogModal from './AddHomeCatalogModal'
 import SearchBox from "../../../components/commons/searchBox/SearchBox";
-import ic_view from "../../../public/images/icons/ic_view.png";
-import ic_checkin from "../../../public/images/icons/ic_checkin.png";
 import ic_edit from "../../../public/images/icons/ic_edit.png";
 import ic_delete from "../../../public/images/icons/ic_delete.png";
 import ic_checkout from "../../../public/images/icons/ic_checkin.png";
 import * as CONSTANTS from '../../../constants/commonConstant';
+import { FormattedMessage } from 'react-intl';
 
+const STRINGS = {
+    HOME_CATALOG_NAME: <FormattedMessage id="HOME_CATALOG_NAME" />,
+    DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+    CREATE_BY: <FormattedMessage id="CREATE_BY" />,
+    LAST_UPDATE: <FormattedMessage id="LAST_UPDATE" />,
+    CREATE: <FormattedMessage id="CREATE" />,
+    ACTION: <FormattedMessage id="ACTION" />,
+    ACTIVE_AND_DEACTIVE: <FormattedMessage id="ACTIVE_AND_DEACTIVE" />,
+    ACTION_UPDATE: <FormattedMessage id="ACTION_UPDATE" />,
+    ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
+    HOME_CATALOG: <FormattedMessage id="HOME_CATALOG" />,
+    LIST_HOME_CATALOG: <FormattedMessage id="LIST_HOME_CATALOG" />,
+}
 
 
 class HomeCatalog extends Component {
@@ -30,15 +42,15 @@ class HomeCatalog extends Component {
 
     getHomeCatalog = () => {
         Services.getHomeCatalog(response => {
-            this.setState({listRomCatalog: response.data.data});
+            this.setState({ listRomCatalog: response.data.data });
         }, er => {
             console.log(er);
         })
     }
     onchangeData = (e) => {
-        const {target} = e;
-        const name = {target}
-        this.setState({[name]: target.value})
+        const { target } = e;
+        const name = { target }
+        this.setState({ [name]: target.value })
     }
 
     onFetchData = (state, instance) => {
@@ -53,7 +65,7 @@ class HomeCatalog extends Component {
     }
     handleClosePopUp = (isUpdate) => {
         if (isUpdate) this.getHomeCatalog();
-        this.setState({isShowModal: false});
+        this.setState({ isShowModal: false });
     }
     handleSearch = () => {
         alert("Should do search: " + this.state.searchText);
@@ -69,61 +81,55 @@ class HomeCatalog extends Component {
     onHandleCheckin = () => { }
 
     onHandleEdit = (data) => {
-       this.setState({
-           data : data,
-           isShowModal: true
-       });
+        this.setState({
+            data: data,
+            isShowModal: true
+        });
     }
 
-    onHandleDelete = () =>{ }
+    onHandleDelete = () => { }
     render() {
-        const {listRomCatalog, isShowModal, searchText, data} = this.state;
+        const { listRomCatalog, isShowModal, searchText, data } = this.state;
         const columns = [
             {
-                Header: 'Title',
-                width: 200,
-                id: "row",
-                Cell: (row) => <div>{row.index + 1}</div>
-            },
-            {
-                Header: 'Catalog Name',
+                Header: STRINGS.HOME_CATALOG_NAME,
                 accessor: 'catalogName',
                 width: 300
             },
             {
-                Header: 'Description',
+                Header: STRINGS.DESCRIPTION,
                 accessor: 'catalogDescription',
                 minWidth: 300,
                 maxWidth: 574
             },
             {
-                Header: 'Create By',
+                Header: STRINGS.CREATE_BY,
                 accessor: 'create_by',
                 maxWidth: 300
             },
             {
-                Header: 'Last Update',
+                Header: STRINGS.LAST_UPDATE,
                 accessor: 'update_by',
                 maxWidth: 200
             },
             {
-                Header: 'Action',
+                Header: STRINGS.ACTION,
                 Cell: props => <div className="action">
                     <div className="cus-tooltip">
                         {
                             // item.status ? <img src={ic_checkin} onClick={() => this.onHandleCheckout()}/> :
-                                <img src={ic_checkout} style={styleIcon} onClick={() => this.onHandleCheckin()}/>
+                            <img src={ic_checkout} style={styleIcon} onClick={() => this.onHandleCheckin()} />
                         }
-                        <span className="tooltiptext">Active/Deactive</span>
+                        <span className="tooltiptext">{STRINGS.ACTIVE_AND_DEACTIVE}</span>
                     </div>
                     <div className="cus-tooltip">
-                        <img src={ic_edit} style={styleIcon} onClick={() => this.onHandleEdit(props.original)}/>
-                        <span className="tooltiptext">Update</span>
+                        <img src={ic_edit} style={styleIcon} onClick={() => this.onHandleEdit(props.original)} />
+                        <span className="tooltiptext">{STRINGS.LAST_UPDATE}</span>
                     </div>
 
                     <div className="cus-tooltip">
-                        <img src={ic_delete} style={styleIcon} onClick={() => this.onHandleDelete()}/>
-                        <span className="tooltiptext">Delete</span>
+                        <img src={ic_delete} style={styleIcon} onClick={() => this.onHandleDelete()} />
+                        <span className="tooltiptext">{STRINGS.ACTION_DELETE}</span>
                     </div>
                 </div>,
                 maxWidth: 200
@@ -131,27 +137,27 @@ class HomeCatalog extends Component {
         ]
         return (
             <div className="rom_catalog" style={styles}>
-                <div className="row" style={{marginBottom: '25px'}}>
-                    <div className="col-lg-9"><span style={{fontSize: '28px', fontWeight: 'bold'}}>{CONSTANTS.HOME_CATALOG}</span></div>
-                    <div className="col-lg 3">  <SearchBox placeholder="Search" value={searchText} onChangeSearch={this.onChangeSearch} onSearch={this.handleSearch} /></div>
+                <div className="row" style={{ marginBottom: '25px' }}>
+                    <div className="col-lg-9"><span style={{ fontSize: '28px', fontWeight: 'bold' }}>{STRINGS.HOME_CATALOG}</span></div>
+                    <div className="col-lg 3">  <SearchBox value={searchText} onChangeSearch={this.onChangeSearch} onSearch={this.handleSearch} /></div>
                 </div>
                 <div className="row">
                     <div className="col-lg-8"
-                         style={{fontSize: '20px', fontWeight: 'bold', fontFamily: 'AvenirNext', marginBottom: '16px'}}
-                    >{CONSTANTS.LIST_HOME_CATALOG}
+                        style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: 'AvenirNext', marginBottom: '16px' }}
+                    >{STRINGS.LIST_HOME_CATALOG}
                     </div>
                     <div className="col-lg-4">
                         <Button
                             style={styleButton}
                             onclick={this.handleShowPopUp}
-                            title="Create"
+                            title={STRINGS.CREATE}
                         /></div>
                 </div>
                 <Table
                     data={listRomCatalog}
                     columns={columns}
                     defaultPageSize={5}
-                    // onFetchData={this.onFetchData}
+                // onFetchData={this.onFetchData}
                 />
                 <AddRomCatalogModal
                     isShowModal={isShowModal}
@@ -165,8 +171,8 @@ class HomeCatalog extends Component {
 
 
 const styleIcon = {
-      height: '20px',
-      marginLeft: '20px',
+    height: '20px',
+    marginLeft: '20px',
 }
 const styleButton = {
     float: 'right',

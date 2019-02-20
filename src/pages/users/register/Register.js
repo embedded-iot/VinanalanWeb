@@ -4,7 +4,20 @@ import { userActions } from '../../../actions';
 import "./../styles/LoginForm.scss";
 import validator from 'validator';
 import loginImg from "../../../public/images/map.svg";
+import { withRouter } from "react-router-dom";
+import { FormattedMessage } from 'react-intl';
 
+const STRINGS = {
+  LOGIN: <FormattedMessage id="LOGIN" />,
+  EMAIL: <FormattedMessage id="EMAIL" />,
+  REGISTER: <FormattedMessage id="REGISTER" />,
+  REGISTER_NEW_ACCOUNT: <FormattedMessage id="REGISTER_NEW_ACCOUNT" />,
+  RE_TYPE_PASSWORD: <FormattedMessage id="RE_TYPE_PASSWORD" />,
+  PASSWORD_AGAIN: <FormattedMessage id="RE_TYPE_PASSWORD" />,
+  REGISTER_NEW_ACCOUNT_TO_ACCESS_SAREPI_SYSTEM: <FormattedMessage id="REGISTER_NEW_ACCOUNT_TO_ACCESS_SAREPI_SYSTEM" />,
+  USERNAME: <FormattedMessage id="USERNAME" />,
+  PASSWORD: <FormattedMessage id="PASSWORD" />,
+}
 class Register extends Component {
 
   constructor(props) {
@@ -41,7 +54,7 @@ class Register extends Component {
         email: this.state.email.value,
         userName: this.state.name.value,
       };
-      dispatch(userActions.register(user));
+      dispatch(userActions.register(user, this.props.history));
     }
   };
 
@@ -87,35 +100,35 @@ class Register extends Component {
       <div className="page-content">
         <div className="login-form">
           <div className="login-container">
-            <div className="login-title">Register new account</div>
+            <div className="login-title">{STRINGS.REGISTER_NEW_ACCOUNT}</div>
 
             <div className="login-content">
               <div className="login-img">
                 <img src={loginImg} />
               </div>
               <form className="form">
-                <div className="login-notice">Register new account to access vinaland system.</div>
+                <div className="login-notice">{STRINGS.REGISTER_NEW_ACCOUNT_TO_ACCESS_SAREPI_SYSTEM}</div>
                 <div className="login-label">Email</div>
                 <input type="text" className="login-input" name="email" value={email.value} onChange={this.onChange} autoFocus />
                 <span className="help-block">{email.message}</span>
 
-                <div className="login-label">Username</div>
+                <div className="login-label">{STRINGS.USERNAME}</div>
                 <input type="text" className="login-input" name="name" value={name.value} onChange={this.onChange} autoFocus />
                 <span className="help-block">{name.message}</span>
 
-                <div className="login-label">Password</div>
+                <div className="login-label">{STRINGS.PASSWORD}</div>
                 <input type="password" className="login-input" name="password" value={password.value} onChange={this.onChange} />
                 <span className="help-block">{password.message}</span>
 
-                <div className="login-label">Re-type password</div>
+                <div className="login-label">{STRINGS.PASSWORD_AGAIN}</div>
                 <input type="password" className="login-input" name="confirmPassword" value={confirmPassword.value} onChange={this.onChange} />
                 <span className="help-block">{confirmPassword.message}</span>
 
-                <button className="btn btn-active" onClick={this.onSubmit}>REGISTER</button>
+                <button className="btn btn-active" onClick={this.onSubmit}>{STRINGS.REGISTER}</button>
                 {
                   registering && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                 }
-                <button className="btn btn-normal" onClick={(e) => this.props.history.push("/Login")}>LOGIN</button>
+                <button className="btn btn-normal" onClick={(e) => this.props.history.push("/Login")}>{STRINGS.LOGIN}</button>
               </form>
             </div>
           </div>
@@ -133,4 +146,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Register);
+export default withRouter(connect(mapStateToProps)(Register));

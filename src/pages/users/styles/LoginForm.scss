@@ -92,11 +92,10 @@
             font-size: 14px;
             color: $textColor;
             display: flex;
-            margin-top: 23px;
             a {
               flex-grow: 1;
               text-align: right;
-              line-height: 40px;
+              line-height: 60px;
               &:hover {
                 color: $blueAsio;
                 text-decoration: underline;

@@ -2,7 +2,12 @@ import { userConstants } from '../constants';
 import * as services from '../pages/users/services/userService';
 import { alertActions } from './';
 import cookie from 'react-cookies';
+import { FormattedMessage } from 'react-intl';
+import React from "react";
 
+const STRINGS = {
+  CONGRATULATIONS_YOU_REGISTERED_SUCESSFULLY_PLEASE_LOGIN: <FormattedMessage id="CONGRATULATIONS_YOU_REGISTERED_SUCESSFULLY_PLEASE_LOGIN" />,
+}
 export const userActions = {
   resetPass,
   login,
@@ -22,7 +27,7 @@ function login(user, remember, history) {
         if (remember) {
           cookie.save("vinaland_email_login", user.email, { path: '/' });
         }
-        dispatch(success(user));
+        dispatch(success(response.data.data.user));
         history.push('/');
       } else {
         dispatch(failure(response.data.description));
@@ -31,7 +36,7 @@ function login(user, remember, history) {
     }
       , error => {
         dispatch(failure(error));
-        dispatch(alertActions.error(error));
+        dispatch(alertActions.error(error.response.data.error.message));
       });
   };
 
@@ -67,15 +72,15 @@ function logout() {
   return { type: userConstants.LOGOUT };
 }
 
-function register(user) {
+function register(user, history) {
   return dispatch => {
     dispatch(request(user));
 
     services.register(user, response => {
       if (response.status === 200) {
         dispatch(success());
-        // history.push('/login');
-        dispatch(alertActions.success('Please check your email and click on the verification link before logging in'));
+        history.push('/login');
+        dispatch(alertActions.success(STRINGS.CONGRATULATIONS_YOU_REGISTERED_SUCESSFULLY_PLEASE_LOGIN));
       } else {
         dispatch(failure(response.data.description));
         dispatch(alertActions.error(response.data.description));

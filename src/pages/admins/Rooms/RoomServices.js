@@ -27,6 +27,21 @@ export function createRoom(data, successCallback, failCallback) {
     });
 }
 
+
+export function upDateRoom(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/rooms',
+        headers: {'Content-Type': 'application/json'},
+        data: data
+    };
+
+    Services.makePutRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
 export function getRoomById(id, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/rooms/roomDetail?roomId=' + id,
@@ -194,6 +209,21 @@ export function checkOutRoom(data, successCallback, failCallback) {
     });
 }
 
+export function cancelRoom(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/reversation/cancel',
+        headers: {'Content-Type': 'application/json'},
+        data: {
+            reservationId: data
+        }
+    };
+
+    Services.makePostRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
 
 
 export function getRevervationById(data, successCallback, failCallback) {
@@ -212,7 +242,7 @@ export function getRevervationById(data, successCallback, failCallback) {
 
 export function getAllRevervation(successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/reversation',
+        url: '/api/reversation/getAllReservations',
         headers: {'Content-Type': 'application/json'},
     };
 
@@ -222,3 +252,22 @@ export function getAllRevervation(successCallback, failCallback) {
         failCallback(error);
     });
 }
+
+export function getLocationByHomeId(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/homes/homeInfo?id=' + data,
+        headers: {'Content-Type': 'application/json'},
+    };
+
+    Services.makeGetRequest(requestOptions, (response) => {
+        successCallback(response);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
+
+
+
+
+

@@ -1,17 +1,40 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import user_ic from "../../../public/images/icons/user_ic.png";
-import iconLookUp from '../../../public/images/icons/group-5@2x.png';
-import iconLook from '../../../public/images/icons/group-6@2x.png';
-import iconSetup from '../../../public/images/icons/group-5-copy@2x.png';
-import {error, showModal, success} from "../../../actions";
-import {connect} from 'react-redux';
+import { error, showModal, success } from "../../../actions";
+import { connect } from 'react-redux';
 import * as CONSTANTS from '../../../constants/commonConstant';
 import ModalConfirm from './ModalConfirm';
-import {withRouter, Link} from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import * as Service from './RoomServices';
 import UltimatePagination from "react-ultimate-pagination-bootstrap-4";
 import BookRoomModal from './BookRoomModal';
+import { FormattedMessage } from 'react-intl';
 
+const STRINGS = {
+    CHECK_IN_OUT: <FormattedMessage id="CHECK_IN_OUT" />,
+    NUMBER_OF_GUEST: <FormattedMessage id="NUMBER_OF_GUEST" />,
+    PRICE_OF_ROOM: <FormattedMessage id="PRICE_OF_ROOM" />,
+    TOTAL_COST: <FormattedMessage id="TOTAL_COST" />,
+    CUSTOMER_INFO: <FormattedMessage id="CUSTOMER_INFO" />,
+    TOTAL_COST: <FormattedMessage id="TOTAL_COST" />,
+    PHONE: <FormattedMessage id="PHONE" />,
+    CHECK_IN: <FormattedMessage id="CHECK_IN" />,
+    CHECK_OUT: <FormattedMessage id="CHECK_OUT" />,
+    DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+    STATUS: <FormattedMessage id="STATUS" />,
+    EXPAND: <FormattedMessage id="EXPAND" />,
+    EDIT: <FormattedMessage id="EDIT" />,
+    CLOSE: <FormattedMessage id="CLOSE" />,
+    FINISH: <FormattedMessage id="FINISH" />,
+    BOOK_ROOM: <FormattedMessage id="BOOK_ROOM" />,
+    CANCELED: <FormattedMessage id="CANCELED" />,
+    SELECT_ADD_NEW_TO_ADD_NEW_ROOM: <FormattedMessage id="SELECT_ADD_NEW_TO_ADD_NEW_ROOM" />,
+    CHECK_IN_ROOM: <FormattedMessage id="CHECK_IN_ROOM" />,
+    CHECK_OUT_ROOM: <FormattedMessage id="CHECK_OUT_ROOM" />,
+    LOOKING_ROOM: <FormattedMessage id="LOOKING_ROOM" />,
+    ROOM_INFOMATION: <FormattedMessage id="ROOM_INFOMATION" />,
+    CURRENT_INFOMATION: <FormattedMessage id="CURRENT_INFOMATION" />,
+}
 const styleUpRow = {
     width: '250px'
 }
@@ -24,7 +47,7 @@ const styleHanna = {
 }
 
 const RoomItem = props => {
-    const {data, revervation, fixHover} = props;
+    const { data, revervation, fixHover } = props;
     const isUserInfo = data.roomStatus === 2 || data.roomStatus === 3;
     const styleClass = data.roomStatus;
     const handleAciton = (key) => {
@@ -63,26 +86,27 @@ const RoomItem = props => {
                     })
                     break;
                 case 'cancel':
-                    Service.checkOutRoom(revervation.id, res => {
+                    Service.cancelRoom(revervation.id, res => {
                         props.onUpdate();
                         props.success("Success");
                     }, er => {
                         error("Error")
                     })
                     break;
-                default :
+                default:
                     break;
             }
         })
     }
-
+    const str = "room-item backgroud_color" + styleClass;
     return (
-        <div className={`room-item backgroud_color${styleClass}`}
-             style={props.style ? {marginLeft: '0px'} : {}}>
+        <div
+            className={str}
+            style={props.style ? { marginLeft: '0px' } : {}}>
             <div className="content"
-                 onClick={() => props.onClick(data.id)}
-                 onMouseOver={() => props.getRevervationByID(data.currentReservation)}>
-                <img src={user_ic}/>
+                onClick={() => props.onClick(data.id)}
+                onMouseOver={() => props.getRevervationByID(data.currentReservation)}>
+                <img src={user_ic} />
                 <div>{data.roomName}</div>
             </div>
 
@@ -90,90 +114,100 @@ const RoomItem = props => {
                 className={(fixHover === 1 && isUserInfo) ? "up-arrow rowright" : fixHover === 2 ? "up-arrow rowleft" : "up-arrow"}
                 style={!isUserInfo ? styleUpRow : {}}>
                 <div className='hanna-confirmed' style={!isUserInfo ? styleHanna : {}}>
-                    <div className='header' style={!isUserInfo ? {borderTopRightRadius: '10px'} : {}}>
+                    <div className='header' style={!isUserInfo ? { borderTopRightRadius: '10px' } : {}}>
                         <div className='row'>
-                            <div className='col-lg-12'><span>Hanna-Confirmed</span></div>
+                            <div className='col-lg-12'>{STRINGS.ROOM_INFOMATION}</div>
                         </div>
                     </div>
                     <div className='content'>
                         {isUserInfo && <div className='row'>
-                            <div className='col-lg-12'><span>Checkin/out:  </span></div>
+                            <div className='col-lg-12' style={styleCustomEmail}><span>{STRINGS.CHECK_IN_OUT}: &nbsp;
+                                {(new Date(revervation.checkin)).toLocaleDateString()}- {(new Date(revervation.checkout)).toLocaleDateString()}
+                            </span></div>
                         </div>}
 
                         {!isUserInfo && <div className='row'>
-                            <div className='col-lg-12'><span>Description: {data.roomDescription}</span></div>
+                            <div className='col-lg-12'><span>{STRINGS.DESCRIPTION}: {data.roomDescription}</span></div>
                         </div>}
 
                         <div className='row'>
-                            <div className='col-lg-12'><span>Guest: {data.maxGuest}</span></div>
+                            <div className='col-lg-12'><span>{STRINGS.NUMBER_OF_GUEST}: {data.maxGuest}</span></div>
                         </div>
 
                         <div className='row'>
-                            <div className='col-lg-12'><span>Price: {data.roomPrice}</span></div>
+                            <div className='col-lg-12'><span>{STRINGS.PRICE_OF_ROOM}: {data.roomPrice && data.roomPrice.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')} &nbsp;Vnd</span></div>
                         </div>
 
                         {isUserInfo && <div className='row'>
-                            <div className='col-lg-12'><span>Total: </span></div>
+                            <div className='col-lg-12'><span>{STRINGS.TOTAL_COST}: {revervation.totalMoney && revervation.totalMoney.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')} &nbsp;Vnd</span></div>
                         </div>}
 
                         {!isUserInfo &&
-                        <div className="row">
-                            {data.roomStatus === 4 ?
-                                <div className='col-lg-12'>
-                                    <button className='btn btn-finish finish'
-                                            onClick={() => handleAciton("finish")}>Finish
-                                    </button>
-                                </div> :
-                                (<div className='col-lg-12'>
-                                    <button className='btn btn-finish edit'
-                                            onClick={() => handleAciton("edit")}>Edit
-                                    </button>
-                                    <button className='btn btn-finish  book'
-                                            onClick={() => props.handleOpenPopUpBookRoom(data.id)}>Book</button>
-                                </div>)
-                            }
-                        </div>
+                            <div className="row">
+                                {data.roomStatus === 4 ?
+                                    <div className='col-lg-12'>
+                                        <button className='btn btn-finish finish'
+                                            onClick={() => handleAciton("finish")}>{STRINGS.FINISH}
+                                        </button>
+                                    </div> :
+                                    (<div className='col-lg-12'>
+                                        <button className='btn btn-finish edit'
+                                            onClick={() => handleAciton("edit")}>{STRINGS.LOOKING_ROOM}
+                                        </button>
+                                        <button className='btn btn-finish  book'
+                                            onClick={() => props.handleOpenPopUpBookRoom(data.id)}>{STRINGS.BOOK_ROOM}
+                                        </button>
+                                    </div>)
+                                }
+                            </div>
                         }
                     </div>
 
                 </div>
 
-                {isUserInfo && <div className='contract-info' style={{float: 'left'}}>
+                {isUserInfo && <div className='contract-info' style={{ float: 'left' }}>
                     <div className='header'>
                         <div className='row'>
-                            <div className='col-lg-12'><span>Contract Info</span></div>
+                            <div className='col-lg-12'>{STRINGS.CURRENT_INFOMATION}</div>
                         </div>
                     </div>
                     <div className='content'>
                         <div className='row'>
-                            <div className='col-lg-12'><span>Customer: {revervation.customerName}</span></div>
-                        </div>
-                        <div className='row'>
-                            <div className='col-lg-12'><span>Status: {revervation.reservationStatus}</span></div>
-                        </div>
-                        <div className='row'>
-                            <div className='col-lg-12'><span>Phone: {revervation.customerPhone}</span></div>
-                        </div>
-                        {data.roomStatus === 2 ? <div className='row'>
-                                <div className='col-lg-6'><button className='btn btn-finish edit'
-                                                               onClick={()=>this.handleAciton("cancel")}>Cancel</button>
-                                </div>
-                                <div className='col-lg-6'>
-                                    <button className='btn btn-finish book'
-                                            onClick={() => handleAciton("checkin")}>Check-In
-                                    </button>
-                                </div>
+                            <div className='col-lg-12' style={styleCustomEmail}>
+                                <span>{STRINGS.CUSTOMER_INFO}: {revervation.customer && revervation.customer.customerEmail}</span>
                             </div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-lg-12'>
+                                <span>{STRINGS.PHONE}: {revervation.customer && revervation.customer.customerPhone}</span></div>
+                        </div>
+
+                        <div className='row'>
+                            &nbsp; {/* <div className='col-lg-12'><span>{STRINGS.STATUS}: {revervation.reservationStatus}</span></div> */}
+                        </div>
+
+                        {data.roomStatus === 2 ? <div className='row'>
+                            <div className='col-lg-6'>
+                                <button className='btn btn-finish edit'
+                                    onClick={() => handleAciton("cancel")}>{STRINGS.CANCELED}
+                                </button>
+                            </div>
+                            <div className='col-lg-6'>
+                                <button className='btn btn-finish book'
+                                    onClick={() => handleAciton("checkin")}>{STRINGS.CHECK_IN_ROOM}
+                                </button>
+                            </div>
+                        </div>
                             :
                             <div className='row'>
                                 <div className='col-lg-6'>
                                     <button className='btn btn-finish edit'
-                                            onClick={() => handleAciton("checkout")}>Check Out
+                                        onClick={() => handleAciton("checkout")}>{STRINGS.CHECK_OUT_ROOM}
                                     </button>
                                 </div>
                                 <div className='col-lg-6'>
                                     <button className='btn btn-finish book'
-                                            onClick={() => props.handleOpenPopUpBookRoom(data.id)}>Expand
+                                        onClick={() => props.handleOpenPopUpBookRoom(data.id)}>{STRINGS.EXPAND}
                                     </button>
                                 </div>
                             </div>
@@ -213,7 +247,7 @@ class TableListRoom extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.listRooms) {
-            this.setState({listRoom: nextProps.listRooms});
+            this.setState({ listRoom: nextProps.listRooms });
         }
     }
 
@@ -239,14 +273,17 @@ class TableListRoom extends Component {
         });
     }
     handleClosePopUp = () => {
-        this.setState({isShowModal: false});
+        this.setState({ isShowModal: false });
     }
     handleClosePopUpBookRoom = () => {
+        Service.getAllRevervation(res => {
+            this.listRevervation = res.data.data;
+        })
         this.props.onUpdate();
-        this.setState({isShowModalBookRoom: false});
+        this.setState({ isShowModalBookRoom: false });
     }
     handleOpenPopUpBookRoom = (roomId) => {
-        this.setState({isShowModalBookRoom: true, roomId: roomId});
+        this.setState({ isShowModalBookRoom: true, roomId: roomId });
     }
 
     onClick = (value) => {
@@ -254,16 +291,15 @@ class TableListRoom extends Component {
     }
 
     getRevervationByID = (value) => {
-
         if (value) {
             for (let i = 0; i < this.listRevervation.length; i++) {
                 if (this.listRevervation[i].id === value) {
-                    this.setState({revervation: this.listRevervation[i]});
+                    this.setState({ revervation: this.listRevervation[i] });
                     break;
                 }
             }
         } else {
-            if (this.state.revervation) this.setState({revervation: {}})
+            if (this.state.revervation) this.setState({ revervation: {} })
         }
     }
 
@@ -287,8 +323,8 @@ class TableListRoom extends Component {
     }
 
     render() {
-        const {listRoom, isShowModal, modal, revervation, isShowModalBookRoom, roomId} = this.state;
-        const {showModal, success, onUpdate, handleChangePage, currentPage, totalPage} = this.props;
+        const { listRoom, isShowModal, modal, revervation, isShowModalBookRoom, roomId } = this.state;
+        const { showModal, success, onUpdate, handleChangePage, currentPage, totalPage } = this.props;
         return (
             <div>
                 {listRoom.length ?
@@ -298,16 +334,16 @@ class TableListRoom extends Component {
                                 let fix = this.fixHover(k);
                                 return (
                                     <RoomItem key={k} style={k % 8 === 0 ? true : false} data={item}
-                                              handlelookUp={this.handlelookUp}
-                                              handleConstructingRoom={this.handleConstructingRoom}
-                                              onClick={this.onClick}
-                                              showModal={showModal}
-                                              success={success}
-                                              onUpdate={onUpdate}
-                                              getRevervationByID={this.getRevervationByID}
-                                              revervation={revervation}
-                                              fixHover={fix}
-                                              handleOpenPopUpBookRoom={this.handleOpenPopUpBookRoom}
+                                        handlelookUp={this.handlelookUp}
+                                        handleConstructingRoom={this.handleConstructingRoom}
+                                        onClick={this.onClick}
+                                        showModal={showModal}
+                                        success={success}
+                                        onUpdate={onUpdate}
+                                        getRevervationByID={this.getRevervationByID}
+                                        revervation={revervation}
+                                        fixHover={fix}
+                                        handleOpenPopUpBookRoom={this.handleOpenPopUpBookRoom}
 
                                     />
                                 );
@@ -321,12 +357,12 @@ class TableListRoom extends Component {
                             />
                         </div>
                     </div> : <div className="box-nocontent">
-                        Select <span>Add New</span> to add new
+                        {STRINGS.SELECT_ADD_NEW_TO_ADD_NEW_ROOM}
                     </div>}
                 <ModalConfirm isShowModal={isShowModal}
-                              handleClosePopUp={this.handleClosePopUp} modal={modal}/>
+                    handleClosePopUp={this.handleClosePopUp} modal={modal} />
                 <BookRoomModal isShowModal={isShowModalBookRoom} roomId={roomId}
-                               handleClosePopUp={this.handleClosePopUpBookRoom}/>
+                    handleClosePopUp={this.handleClosePopUpBookRoom} />
             </div>
         );
     }
@@ -345,6 +381,12 @@ const mapDispatchToProps = dispatch => {
             dispatch(showModal(message, confirm))
         }
     }
-};
+}
+
+const styleCustomEmail = {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
+}
 
 export default withRouter(connect(null, mapDispatchToProps)(TableListRoom));

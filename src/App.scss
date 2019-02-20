@@ -103,11 +103,8 @@ html, body, #root {
   }
 
   .help-block {
-    position: absolute;
-    top: -16px;
     font-size: 13px;
     color: red;
-    left: 110px;
   }
 
   &.hidden-left-menu {
@@ -153,15 +150,26 @@ html, body, #root {
   min-width: 700px;
 
   span {
-    minWidth: '100px';
+    min-width: '100px';
     font-size: 16px;
     color: rgb(57, 57, 57);
     font-weight: bold;
     line-height: 35px;
   }
-
+  .home-select{
+    span{
+      min-width: '100px';
+      font-size: 14px;
+      color: rgb(57, 57, 57);
+      font-weight: 400;
+      line-height: 0;
+    }
+  } 
   .btn {
     min-width: 150px;
+    span{
+      color: inherit;
+    }
   }
 }
 
@@ -184,5 +192,16 @@ html, body, #root {
   span{
     color: #545454;
     font-family: "Roboto-Medium";
+  }
+}
+
+.modal-footer{
+  span{
+    line-height: 0;
+  }
+}
+.modal-header{
+  span{
+    font-size: 30px;
   }
 }

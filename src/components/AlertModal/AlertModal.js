@@ -1,8 +1,13 @@
 import { Modal, Button } from 'react-bootstrap';
 import React from "react";
 import { connect } from 'react-redux';
-import {clear} from "../../actions/index";
+import { clear } from "../../actions/index";
+import { FormattedMessage } from 'react-intl';
 
+const STRINGS = {
+    NOTIFICATION: <FormattedMessage id="NOTIFICATION" />,
+    CLOSE: <FormattedMessage id="CLOSE" />,
+}
 export class AlertModal extends React.Component {
     constructor(props) {
         super(props);
@@ -13,17 +18,17 @@ export class AlertModal extends React.Component {
     };
 
     render() {
-        const {alert} = this.props;
+        const { alert } = this.props;
         return (
-            <Modal show={alert.message ? true : false} style={{zIndex: 1051}} onHide={this.close}>
+            <Modal show={alert.message ? true : false} style={{ zIndex: 1051 }} onHide={this.close}>
                 <Modal.Header>
-                    <div>Notification</div>
+                    <div>{STRINGS.NOTIFICATION}</div>
                 </Modal.Header>
                 <Modal.Body>
-                    <div dangerouslySetInnerHTML={{__html: alert.message}}></div>
+                    <div> {alert.message}</div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button className="btn btn-primary" onClick={this.close}>Close</Button>
+                    <Button className="btn btn-primary" onClick={this.close}>{STRINGS.CLOSE}</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -31,8 +36,8 @@ export class AlertModal extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const {alert} = state;
-    return {alert};
+    const { alert } = state;
+    return { alert };
 }
 
 const mapDispatchToProps = dispatch => {

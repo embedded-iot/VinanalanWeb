@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import "./Header.scss";
 import { connect } from "react-redux";
-import logo_vinaland from "../../public/images/icons/vinaland-logo.png";
+import logo_vinaland from "../../public/images/icons/PNG2.png";
 import user_ic from "../../public/images/icons/user_ic.png";
 import { setLanguage, userActions } from "../../actions";
 import ic_en from "../../public/images/icons/en.png";
 import ic_vi from "../../public/images/icons/vi.png";
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+
+const STRINGS = {
+  USER_INFO: <FormattedMessage id="USER_INFO" />,
+  LOG_OUT: <FormattedMessage id="LOG_OUT" />,
+}
 
 class HeaderAdmin extends Component {
 
@@ -25,10 +31,17 @@ class HeaderAdmin extends Component {
     this.props.history.push("/Login");
   };
 
+  componentWillMount() {
+    if (localStorage.getItem("locale"))
+      this.props.setLanguage(localStorage.getItem("locale"));
+  }
+
   changeLanguage = () => {
     if (this.props.locale == "vi") {
+      localStorage.setItem("locale", "en")
       this.props.setLanguage("en");
     } else {
+      localStorage.setItem("locale", "vi")
       this.props.setLanguage("vi");
     }
   }
@@ -79,15 +92,15 @@ class HeaderAdmin extends Component {
           }
           <div className="header-contents">
             <button className="locale-box" onClick={this.changeLanguage}>
-              <img className="header-icon" src={this.props.locale === "en" ? ic_en : ic_vi }/>
+              <img className="header-icon" src={this.props.locale === "en" ? ic_en : ic_vi} />
               {
                 this.props.locale
               }
             </button>
 
-            <div className="user-box">
+            {localStorage.getItem('user') && <div className="user-box">
               <button className="btn-show-user-info dropdown-toggle" type="button" data-toggle="dropdown">{username}
-                <img src={user_ic}/>
+                <img src={user_ic} />
               </button>
               <div className="dropdown-menu profile">
                 <div className="profile-userpic">
@@ -102,11 +115,11 @@ class HeaderAdmin extends Component {
                   </div>
                 </div>
                 <div className="profile-userbuttons">
-                  <button type="button" className="btn btn-sm btn-become-host" onClick={(e) => this.props.history.push("/UserInfo")}>User Info</button>
-                  <button type="button" className="btn btn-sm btn-logout" onClick={this.handleLogOut}>Logout</button>
+                  <button type="button" className="btn btn-sm btn-become-host" onClick={(e) => this.props.history.push("/UserInfo")}>{STRINGS.USER_INFO}</button>
+                  <button type="button" className="btn btn-sm btn-logout" onClick={this.handleLogOut}>{STRINGS.LOG_OUT}</button>
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
