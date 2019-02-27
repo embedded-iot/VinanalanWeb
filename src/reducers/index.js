@@ -6,6 +6,7 @@ import { users } from './usersReducer';
 import { alert } from './alertReducer';
 import { confirmModal } from "./confirmReducer";
 import { translation } from "./translateReducer";
+import { spinState } from "./spinReducer";
 
 const rootReducer = combineReducers({
   authentication,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   users,
   alert,
   confirmModal,
-  translation
+  translation,
+  spinState
 });
 
 export default rootReducer;
