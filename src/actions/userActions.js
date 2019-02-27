@@ -1,6 +1,6 @@
 import { userConstants } from '../constants';
 import * as services from '../pages/users/services/userService';
-import { alertActions } from './';
+import {alertActions, spinActions} from './';
 import cookie from 'react-cookies';
 import { FormattedMessage } from 'react-intl';
 import React from "react";
@@ -20,6 +20,7 @@ export const userActions = {
 function login(user, remember, history) {
   return dispatch => {
     dispatch(request({ user }));
+    dispatch(spinActions.showSpin());
     services.login(user, response => {
       if (response.data.isSucess) {
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
@@ -28,10 +29,12 @@ function login(user, remember, history) {
           cookie.save("vinaland_email_login", user.email, { path: '/' });
         }
         dispatch(success(response.data.data.user));
+        dispatch(spinActions.hideSpin());
         history.push('/');
       } else {
         dispatch(failure(response.data.description));
         dispatch(alertActions.error(response.data.description));
+        dispatch(spinActions.hideSpin());
       }
     }
       , error => {

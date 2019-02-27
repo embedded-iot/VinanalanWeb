@@ -5,6 +5,7 @@ import LeftSideBar from './components/leftSideBar/LeftSideBar'
 import ConfirmModal from "./components/confirmModal/ConfirmModal";
 import AlertModal from "./components/AlertModal/AlertModal";
 import { injectIntl, FormattedMessage } from 'react-intl';
+import Loader from "./components/Progress/Progress";
 
 import {
     PageNotFound,
@@ -61,6 +62,7 @@ const Routes = (props) => {
     return (
         <Router>
             <div id="content">
+                <Loader/>
                 <AlertModal/>
                 <ConfirmModal/>
                 <HeaderAdmin/>
