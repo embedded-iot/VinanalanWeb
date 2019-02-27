@@ -1,9 +1,7 @@
 .left-side-bar {
   background-image: linear-gradient(201deg, #23a3ff, #0496ff 78%, #0396ff);
   width: 72px;
-  height: 100%;
-  float: left;
-  margin-top: 66px;
+  padding-top: 66px;
   .item-menu {
     display: flex;
     flex-direction: column;
