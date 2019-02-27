@@ -5,6 +5,8 @@ import App from "./App";
 import "./index.css";
 import './public/fonts/font.scss';
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
+import 'antd/dist/antd.css';
+
 
 import {store} from './helper';
 
