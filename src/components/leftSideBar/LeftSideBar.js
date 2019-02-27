@@ -24,7 +24,7 @@ class LeftSideBar extends Component {
         super(props);
 
         this.state = {
-            urlPage: "/Home"
+            urlPage: location.pathname
         }
     }
 
@@ -34,7 +34,6 @@ class LeftSideBar extends Component {
 
 
     handleActive = (value) => {
-        window.localStorage.removeItem("home");
         this.setState({ urlPage: value });
     }
 
@@ -50,7 +49,7 @@ class LeftSideBar extends Component {
         return (
             <div className={hideMenu ? "left-side-bar hide" : "left-side-bar"}>
                 <div>
-                    <Link to="/Home" className={urlPage === "/Home" ? "item-menu selected" : "item-menu"}
+                    <Link to="/Home" className={urlPage === "/Home" || urlPage === "/" ? "item-menu selected" : "item-menu"}
                         onClick={() => this.handleActive("/Home")}>
                         <img src={icHome} />
                         <span className="menu">{STRINGS.HOME}</span>
@@ -76,15 +75,15 @@ class LeftSideBar extends Component {
                         <hr />
                     </Link>
 
-                    <div className={urlPage === "/service" ? "item-menu selected" : "item-menu"}>
+                    <div className={urlPage === "/RoomsCatalog" || urlPage === "/HomeCatalog" ? "item-menu selected" : "item-menu"}>
                         <div className="item-menu" id="dropdownMenuButton" style={{ textAlign: 'center' }}
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src={icSetting} />
                             <span className="menu">{STRINGS.CONFIG}</span>
                         </div>
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <Link className="dropdown-item" to="/RoomsCatalog">{STRINGS.ROOM_CATALOG}</Link>
-                            <Link className="dropdown-item" to="/HomeCatalog">{STRINGS.HOME_CATALOG}</Link>
+                            <Link className="dropdown-item" to="/RoomsCatalog" onClick={() => this.handleActive("/RoomsCatalog")}>{STRINGS.ROOM_CATALOG}</Link>
+                            <Link className="dropdown-item" to="/HomeCatalog" onClick={() => this.handleActive("/HomeCatalog")}>{STRINGS.HOME_CATALOG}</Link>
                         </div>
                     </div>
                 </div>
