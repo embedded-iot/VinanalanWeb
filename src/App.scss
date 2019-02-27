@@ -86,19 +86,17 @@ html, body, #root {
   width: 100%;
 
   .wrapper {
-    //padding-top: 66px;
     height: 100%;
-    display: flex;
   }
 
   #content {
-    flex-grow: 1;
+    display: flex;
+    flex-flow: row wrap;
+    height: 100%;
     .content-container {
       height: 100%;
-      width: calc(100% - 72px);
-      margin-top: 66px;
-      //padding: 10px 16px;
-      float: left;
+      flex-grow: 1;
+      padding-top: 66px;
     }
   }
 
