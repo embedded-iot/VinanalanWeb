@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Button } from "../HomeCatalog/ComponentSetting";
 import Table from '../../../components/commons/ReactTable/RactTable';
 import * as Services from './HomeCatalogServices';
 import AddRomCatalogModal from './AddHomeCatalogModal'
@@ -9,6 +8,8 @@ import ic_delete from "../../../public/images/icons/ic_delete.png";
 import ic_checkout from "../../../public/images/icons/ic_checkin.png";
 import * as CONSTANTS from '../../../constants/commonConstant';
 import { FormattedMessage } from 'react-intl';
+import { Button } from "antd";
+import AddHomeCatalog from "./AddHomeCatalog";
 
 const STRINGS = {
     HOME_CATALOG_NAME: <FormattedMessage id="HOME_CATALOG_NAME" />,
@@ -33,6 +34,7 @@ class HomeCatalog extends Component {
             isShowModal: false,
             searchText: '',
             data: {},
+            visible: false
         }
     }
 
@@ -83,13 +85,28 @@ class HomeCatalog extends Component {
     onHandleEdit = (data) => {
         this.setState({
             data: data,
-            isShowModal: true
+            visible: true
         });
     }
 
     onHandleDelete = () => { }
+
+    modalConfig = {
+        onCancel: () => {
+            this.setState({ visible: false })
+        },
+        onOk: () => {
+            console.log("OK")
+        }
+    };
+
+    showAddHomeCatelog = (visible, data) => {
+        this.setState({ data: data, visible: visible });
+    }
+
     render() {
-        const { listRomCatalog, isShowModal, searchText, data } = this.state;
+        const { listRomCatalog, isShowModal, searchText, data, visible } = this.state;
+
         const columns = [
             {
                 Header: STRINGS.HOME_CATALOG_NAME,
@@ -149,7 +166,7 @@ class HomeCatalog extends Component {
                     <div className="col-lg-4">
                         <Button
                             style={styleButton}
-                            onclick={this.handleShowPopUp}
+                            onClick={this.handleShowPopUp}
                             title={STRINGS.CREATE}
                         /></div>
                 </div>
@@ -164,6 +181,8 @@ class HomeCatalog extends Component {
                     handleClosePopUp={this.handleClosePopUp}
                     data={data}
                 />
+                <Button onClick={ () => this.showAddHomeCatelog(true, {})}>Them home</Button>
+                <AddHomeCatalog data={data} visible={visible} onCancel={() => this.showAddHomeCatelog(false)}/>
             </div>
         );
     }
