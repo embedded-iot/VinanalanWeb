@@ -1,3 +1,4 @@
+
 .table-custom-wrapper {
   .table-header {
     margin-bottom: 15px;
@@ -7,6 +8,32 @@
       span {
         margin-right: 15px;
       }
+    }
+  }
+  .actions-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon {
+      display: block;
+      cursor: pointer;
+      margin: 0 10px;
+      background-size: contain !important;
+    }
+    .icon-view {
+      width: 21px;
+      height: 11px;
+      background: url(../../../public/images/icons/icon-view.png) no-repeat center center;
+    }
+    .icon-edit {
+      width: 17px;
+      height: 15px;
+      background: url(../../../public/images/icons/icon-edit.png) no-repeat center center;
+    }
+    .icon-delete {
+      width: 13px;
+      height: 15px;
+      background: url(../../../public/images/icons/icon-delete.png) no-repeat center center;
     }
   }
 }

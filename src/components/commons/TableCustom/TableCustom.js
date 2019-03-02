@@ -8,7 +8,7 @@ const defaultProps = {
   columns: [],
   dataSource: [],
   bordered: true,
-  rowKey: record => record.login.uuid,
+  rowKey: record => record.id,
   pagination: {},
   loading: false,
   onChange: () => { }
