@@ -84,6 +84,7 @@ class LeftSideBar extends Component {
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <Link className="dropdown-item" to="/RoomsCatalog" onClick={() => this.handleActive("/RoomsCatalog")}>{STRINGS.ROOM_CATALOG}</Link>
                             <Link className="dropdown-item" to="/HomeCatalog" onClick={() => this.handleActive("/HomeCatalog")}>{STRINGS.HOME_CATALOG}</Link>
+                            <Link className="dropdown-item" to="/IncomeUtilities" onClick={() => this.handleActive("/IncomeUtilities")}>Tiện ích trong</Link>
                         </div>
                     </div>
                 </div>
