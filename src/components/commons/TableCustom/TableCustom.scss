@@ -1,0 +1,12 @@
+.table-custom-wrapper {
+  .table-header {
+    margin-bottom: 15px;
+    display: flex;
+    .dropdown-page-size {
+      margin-left: auto;
+      span {
+        margin-right: 15px;
+      }
+    }
+  }
+}
