@@ -164,5 +164,8 @@
   "NOT_ACTION": "You do not have permission for this action.",
   "TYPES_OFF_UTILITIES": "Loại tiện ích",
   "INCOME_UTILITIES": "Danh sách loại tiện ích trong",
+  "DELETE_INCOME_UTILITY": "Bạn có chắc chắn muốn xóa tiện ích này không?",
+  "DELETE_UTILITY_SUCCESS": "Xóa tiện ích thành công!",
+  "DELETE_UTILITY_FAIL": "Xóa tiện ích thất bại!",
   "STT": "No."
 }

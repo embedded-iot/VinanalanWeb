@@ -12,3 +12,14 @@ export function getIncomeUtilities(params, successCallback, failCallback) {
         failCallback(error);
     });
 }
+
+export function deleteIncomeUtility(id, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/income_utilities/' + id
+    };
+    Services.makeDeleteRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
