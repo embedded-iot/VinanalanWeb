@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
-import * as Services from './IncomeUtilitiesServices';
+import * as Services from './OutcomeUtilitiesServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
 import {Modal, notification, Tooltip} from 'antd';
 import {spinActions} from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import AddIncomeUtility from "./AddIncomeUtility";
+import AddOutcomeUtility from "./AddOutcomeUtility";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
-import ViewIncomeUtility from "./ViewIncomeUtility";
+import ViewOutcomeUtility from "./ViewOutcomeUtility";
 
 const confirmModal = Modal.confirm;
 
 const STRINGS = {
-  INCOME_UTILITIES: <FormattedMessage id="INCOME_UTILITIES" />,
+  OUTCOME_UTILITIES: <FormattedMessage id="OUTCOME_UTILITIES" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_UTILITIES: <FormattedMessage id="TYPES_OFF_UTILITIES" />,
@@ -27,7 +27,7 @@ const STRINGS = {
   DELETE_UTILITY_QUESTION: <FormattedMessage id="DELETE_UTILITY_QUESTION" />,
 }
 
-class IncomeUtilities extends Component {
+class OutcomeUtilities extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -130,7 +130,7 @@ class IncomeUtilities extends Component {
       okType: 'danger',
       onOk: () => {
         dispatch(spinActions.showSpin());
-        Services.deleteIncomeUtility(id, response => {
+        Services.deleteOutcomeUtility(id, response => {
           dispatch(spinActions.hideSpin());
           this.openNotification('success', intl.formatMessage({ id: 'DELETE_UTILITY_SUCCESS' }));
           this.onReload()
@@ -170,7 +170,7 @@ class IncomeUtilities extends Component {
       tableSettings: tableSettings,
       loading: true });
     dispatch(spinActions.showSpin());
-    Services.getIncomeUtilities({...params,}, (response) => {
+    Services.getOutcomeUtilities({...params,}, (response) => {
       dispatch(spinActions.hideSpin());
       const tableSettings = {
         ...this.state.tableSettings,
@@ -219,19 +219,19 @@ class IncomeUtilities extends Component {
     return (
       <div className="page-wrapper">
         <div className="page-headding">
-          {STRINGS.INCOME_UTILITIES}
+          {STRINGS.OUTCOME_UTILITIES}
           <ButtonList list={buttonList}/>
         </div>
         <TableCustom {...TableConfig} />
         {
-          isShowAddOrEdit && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
+          isShowAddOrEdit && <AddOutcomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewIncomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewOutcomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
         }
       </div>
     );
   }
 }
 
-export default injectIntl(withRouter(connect()(IncomeUtilities)));
+export default injectIntl(withRouter(connect()(OutcomeUtilities)));
