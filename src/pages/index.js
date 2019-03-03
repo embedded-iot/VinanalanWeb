@@ -5,6 +5,7 @@ export { default as ForgotPW } from "./users/ForgotPW/ForgotPW";
 export { default as HomeCatalog } from "./config/HomeCatalog/HomeCatalog";
 export { default as RoomsCatalog } from "./config/RoomsCatalog/RoomsCatalog";
 export { default as IncomeUtilities } from "./config/IncomeUtilities/IncomeUtilities";
+export { default as OutcomeUtilities } from "./config/OutcomeUtilities/OutcomeUtilities";
 export { default as Rooms } from "./admins/Rooms/Rooms";
 export { default as RoomDetail } from "./admins/Rooms/RoomDetail";
 export { default as BookRoom } from "./admins/Rooms/BookRoom";
