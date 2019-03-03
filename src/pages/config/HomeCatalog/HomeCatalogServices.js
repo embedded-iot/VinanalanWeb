@@ -1,13 +1,24 @@
 import * as Services from "../../../utils/cuiResource";
 
-export function getHomeCatalog(successCallback, failCallback) {
+export function getHomeCatalog(params, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/home-catalog',
-        headers: { 'Content-Type': 'application/json', }
+        url: '/api/home-catalog/getAllHomeCatalogs',
+        params: params
     };
 
     Services.makeGetRequest(requestOptions, (response) => {
-        successCallback(response);
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
+export function deleteHomeCatalog(id, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/home-catalog/' + id
+    };
+    Services.makeDeleteRequest(requestOptions, (response) => {
+        successCallback(response.data);
     }, (error) => {
         failCallback(error);
     });
@@ -15,8 +26,7 @@ export function getHomeCatalog(successCallback, failCallback) {
 
 export function createHomeCatalog(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/home-catalog',
-        headers: { 'Content-Type': 'application/json'},
+        url: '/api/home-catalog/createHomeCatalog',
         data: data
     };
 
@@ -27,18 +37,15 @@ export function createHomeCatalog(data, successCallback, failCallback) {
     });
 }
 
-export function editHomeCatalog(data, successCallback, failCallback) {
+export function editHomeCatalog(id, data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/home-catalog',
-        headers: { 'Content-Type': 'application/json'},
+        url: '/api/home-catalog/' + id,
         data: data
     };
 
     Services.makePutRequest(requestOptions, (response) => {
-        successCallback(response);
+        successCallback(response.data);
     }, (error) => {
         failCallback(error);
     });
 }
-
-

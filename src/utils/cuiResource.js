@@ -78,6 +78,7 @@ export function makeGetRequest(config, successCallback, failCallback) {
     let requestConfig = {
         method: 'GET',
         url: link_api,
+        params: config.params,
         headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') }
     };
 
@@ -286,4 +287,19 @@ export function makeDeleteRequest(config, successCallback, failCallback) {
         }).catch(function (error) {
             failCallback(error);
         });
+}
+export function makeGetRequestNew(config, successCallback, failCallback) {
+    let requestConfig = {
+        method: 'GET',
+        url: config.url,
+        params: config.params,
+        headers: { 'Content-Type': 'application/json' }
+    };
+
+    axios(requestConfig)
+      .then(res => {
+          successCallback(res.data);
+      }).catch(function (error) {
+        failCallback(error);
+    });
 }

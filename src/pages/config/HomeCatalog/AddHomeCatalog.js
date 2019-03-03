@@ -1,106 +1,141 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { Modal } from "antd";
-import { Input, Textarea } from "../HomeCatalog/ComponentSetting";
+import {Modal, Row, Col, Input, Select, Button, notification} from "antd";
 import * as Services from "./HomeCatalogServices";
 import { connect } from "react-redux";
-import { success } from "../../../actions";
-import * as CONSTANTS from "../../../constants/commonConstant";
-import { FormattedMessage } from "react-intl";
+import {FormattedMessage, injectIntl} from "react-intl";
+import {spinActions} from "../../../actions";
+
+const Option = Select.Option;
+const { TextArea } = Input;
 
 const STRINGS = {
+  ADD_HOME_CATALOG: <FormattedMessage id="ADD_HOME_CATALOG" />,
+  EDIT_HOME_CATALOG: <FormattedMessage id="EDIT_HOME_CATALOG" />,
   HOME_CATALOG_NAME: <FormattedMessage id="HOME_CATALOG_NAME" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
-  CREATE_NEW_HOME_CATALOG: <FormattedMessage id="CREATE_NEW_HOME_CATALOG" />,
+  STATUS: <FormattedMessage id="STATUS" />,
+  ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
+  ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
+  REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
   CREATE: <FormattedMessage id="CREATE" />,
-  EDIT: <FormattedMessage id="EDIT" />,
+  SAVE: <FormattedMessage id="SAVE" />,
   CLOSE: <FormattedMessage id="CLOSE" />
 };
 
+
+const status = [
+  { title: STRINGS.ACTION_ACTIVE, value: 1},
+  { title: STRINGS.ACTION_DEACTIVE, value: 0}
+];
 
 class AddHomeCatalog extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selected: {
-        ...props.data
+        catalogName: '',
+        catalogDescription: '',
+        isActive: true,
+        ...props.selected
       },
-      visible: false
+      isEdit: Object.getOwnPropertyNames(props.selected).length,
+      isSubmitted: false
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data !== this.props.data) {
-      this.setState({
-        selected: nextProps.data || {},
-      });
-    }
-    if (nextProps.visible !== this.props.visible) {
-      this.setState({
-        visible: nextProps.visible
-      });
-    }
+  onChangeName = (e) => {
+    const { value } = e.target;
+    const selected = {...this.state.selected, catalogName: value };
+    this.setState({ selected: selected});
   }
 
-  onCancel = (close) => {
-    this.props.onCancel(close);
+  onChangeDescription = (e) => {
+    const { value } = e.target;
+    const selected = {...this.state.selected, catalogDescription: value };
+    this.setState({ selected: selected});
+  }
+
+  setStatus = status => {
+    const selected = {...this.state.selected, isActive: !!status };
+    this.setState({ selected: selected});
+  }
+
+  openNotification = (type, message, description) => {
+    notification[type]({
+      message: message,
+      description: description,
+    });
   };
 
-  onChangeData = (e) => {
-    const { target } = e;
-    const { name } = target;
-    this.setState({ selected: { ...this.state.selected, [name]: target.value } })
-  }
-
   handleSubmit = () => {
-    const { selected } = this.state;
-    const { onOk, onCancel, data } = this.props;
-    if (data) {
-      let value = { ...selected };
-      value.update_by = this.props.user;
-      value.update_at = new Date().toISOString();
-      Services.editHomeCatalog(
-        value,
-        res => {
-          onOk();
-        },
-        er => {}
-      );
+    const { selected, isEdit } = this.state;
+    const { onChangeVisible, intl, dispatch, user } = this.props;
+    this,this.setState({isSubmitted: true});
+    if (!selected.catalogName || !selected.catalogDescription) return;
+
+    dispatch(spinActions.showSpin());
+    if (isEdit) {
+      Services.editHomeCatalog(selected.id, selected, response => {
+        dispatch(spinActions.hideSpin());
+        this.openNotification('success', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_SUCCESS' }));
+        onChangeVisible(true);
+      }, error => {
+        dispatch(spinActions.hideSpin());
+        this.openNotification('error', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_FAIL' }));
+      });
     } else {
-      Services.createHomeCatalog(
-        selected,
-        res => {
-          showAlert("Success");
-          handleClosePopUp(true);
+      Services.createHomeCatalog({...selected, userId: user.id},response => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('success', intl.formatMessage({ id: 'ADD_HOME_CATALOG_SUCCESS' }));
+          onChangeVisible(true);
         },
         er => {
-          showAlert(er.message);
+          dispatch(spinActions.hideSpin());
+          this.openNotification('error', intl.formatMessage({ id: 'ADD_HOME_CATALOG_FAIL' }));
         }
       );
     }
   };
 
   render() {
-    const { selected, visible} = this.state;
+    const {selected, isEdit, isSubmitted} = this.state;
+    const { catalogName, catalogDescription, isActive} = selected;
+    const { onChangeVisible} = this.props;
     return (
-      <Modal title="ADD HOME CATEGORY"
+      <Modal title={ isEdit ? STRINGS.EDIT_HOME_CATALOG : STRINGS.ADD_HOME_CATALOG}
              centered
-             visible={this.state.visible}
+             width="600px"
+             visible={true}
+             okText={isEdit ? STRINGS.SAVE : STRINGS.CREATE}
+             cancelText={STRINGS.CLOSE}
+             maskClosable={false}
              onOk={() => this.handleSubmit()}
-             onCancel={() => this.onCancel()}>
-        <Input
-          value={selected.catalogName || ''}
-          title={STRINGS.HOME_CATALOG_NAME}
-          name="catalogName"
-          onChangeData={this.onChangeData}
-        />
-        <Textarea
-          value={selected.catalogDescription || ''}
-          title={STRINGS.DESCRIPTION}
-          name="catalogDescription"
-          style={{ height: "80px" }}
-          onChangeData={this.onChangeData}
-        />
+             onCancel={() => onChangeVisible()}
+      >
+        <Row>
+          <Col span={8}>{STRINGS.HOME_CATALOG_NAME}</Col>
+          <Col span={16}>
+            <Input value={catalogName} onChange={this.onChangeName} />
+            { isSubmitted && !catalogName && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>{ STRINGS.DESCRIPTION}</Col>
+          <Col span={16}>
+            <TextArea value={catalogDescription} autosize={{ minRows: 2, maxRows: 6 }}
+                      onChange={this.onChangeDescription}/>
+            { isSubmitted && !catalogDescription && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>{STRINGS.STATUS}</Col>
+          <Col span={16}>
+            <Select defaultValue={Number(isActive)} onChange={this.setStatus}>
+              {status.map((item, index) => <Option key={index} value={item.value}>{item.title}</Option>)}
+            </Select>
+          </Col>
+        </Row>
       </Modal>
     );
   }
@@ -111,10 +146,11 @@ AddHomeCatalog.propTypes = {
   onCancel: PropTypes.func
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = function (state) {
   return {
-    user: state.authentication.user.userName
-  };
-};
+    user: state.authentication.user
+  }
+}
 
-export default connect(mapStateToProps)(AddHomeCatalog);
+
+export default injectIntl(connect(mapStateToProps)(AddHomeCatalog));
