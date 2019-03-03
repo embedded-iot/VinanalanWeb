@@ -66,6 +66,7 @@ class IncomeUtilities extends Component {
         { text: STRINGS.ACTION_ACTIVE, value: true },
         { text: STRINGS.ACTION_DEACTIVE, value: false },
       ],
+      filterMultiple: false,
       width: '10%',
     }, {
       title: STRINGS.ACTION,
@@ -131,7 +132,7 @@ class IncomeUtilities extends Component {
         Services.deleteIncomeUtility(id, response => {
           dispatch(spinActions.hideSpin());
           this.openNotification('success', intl.formatMessage({ id: 'DELETE_UTILITY_SUCCESS' }));
-          this.onChange();
+          this.onReload()
         }, error => {
           dispatch(spinActions.hideSpin());
           this.openNotification('error', intl.formatMessage({ id: 'DELETE_UTILITY_FAIL' }))
@@ -153,13 +154,14 @@ class IncomeUtilities extends Component {
     };
     const { dispatch } = this.props;
 
+    let isActive =  Array.isArray(filters.isActive) && filters.isActive.length ? filters.isActive[0] : null;
     let params = {
       limit: pagination.pageSize || 10,
       skip: (pagination.current - 1) * pagination.pageSize || 0,
       sortField: sorter.field,
       sortOrder: sorter.order,
       searchText,
-      ...filters,
+      isActive
     };
 
 
@@ -185,10 +187,15 @@ class IncomeUtilities extends Component {
     })
   }
 
+  onReload = () => {
+    let { pagination, filters, sorter, searchText } = {...this.state.tableSettings};
+    this.onChange(pagination, filters, sorter, {}, searchText);
+  }
+
   onChangeVisible = (success) => {
     this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit})
     if (success) {
-      this.onChange();
+      this.onReload()
     }
   }
 
