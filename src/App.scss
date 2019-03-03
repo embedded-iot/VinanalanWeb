@@ -234,4 +234,12 @@ html, body, #root {
       }
     }
   }
+
+  .modal-view-details {
+    .ant-modal-footer {
+      .ant-btn-primary {
+        display: none;
+      }
+    }
+  }
 }

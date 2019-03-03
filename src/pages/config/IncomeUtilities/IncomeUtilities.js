@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AddIncomeUtility from "./AddIncomeUtility";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
+import ViewIncomeUtility from "./ViewIncomeUtility";
 
 const confirmModal = Modal.confirm;
 
@@ -37,7 +38,8 @@ class IncomeUtilities extends Component {
         sorter: {},
         searchText: ""
       },
-      isShowAddIncomeUtility: false,
+      isShowAddOrEdit: false,
+      isShowViewDetails: false,
       selected: {}
     }
   }
@@ -72,7 +74,7 @@ class IncomeUtilities extends Component {
         return (
           <div className="actions-column">
             <Tooltip title={STRINGS.VIEW}>
-              <span className="icon icon-view"></span>
+              <span className="icon icon-view" onClick={() =>this.viewIncomeUtility(id)}></span>
             </Tooltip>
             <Tooltip title={STRINGS.EDIT}>
               <span className="icon icon-edit" onClick={() =>this.editIncomeUtility(id)}></span>
@@ -100,7 +102,15 @@ class IncomeUtilities extends Component {
     if (!selectedUtility) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowAddIncomeUtility: !this.state.isShowAddIncomeUtility})
+    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+  }
+
+  viewIncomeUtility = (id) => {
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails})
   }
 
   deleteIncomeUtility = (id) => {
@@ -113,6 +123,7 @@ class IncomeUtilities extends Component {
     confirmModal({
       title: intl.formatMessage({ id: 'DELETE_INCOME_UTILITY' }),
       okText: intl.formatMessage({ id: 'YES' }),
+      centered: true,
       cancelText: intl.formatMessage({ id: 'NO' }),
       okType: 'danger',
       onOk: () => {
@@ -175,14 +186,18 @@ class IncomeUtilities extends Component {
   }
 
   onChangeVisible = (success) => {
-    this.setState({ selected: {}, isShowAddIncomeUtility: !this.state.isShowAddIncomeUtility})
+    this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit})
     if (success) {
       this.onChange();
     }
   }
 
+  onChangeVisibleViewDetails = () => {
+    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails})
+  }
+
   render() {
-    const { tableSettings, dataSource, isShowAddIncomeUtility, selected} = this.state;
+    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected} = this.state;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
@@ -201,7 +216,10 @@ class IncomeUtilities extends Component {
         </div>
         <TableCustom {...TableConfig} />
         {
-          isShowAddIncomeUtility && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
+          isShowAddOrEdit && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
+        }
+        {
+          isShowViewDetails && <ViewIncomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
         }
       </div>
     );
