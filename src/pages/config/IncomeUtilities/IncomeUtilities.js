@@ -123,6 +123,7 @@ class IncomeUtilities extends Component {
     }
     confirmModal({
       title: intl.formatMessage({ id: 'DELETE_INCOME_UTILITY' }),
+      content: <b>{selectedUtility.name}</b>,
       okText: intl.formatMessage({ id: 'YES' }),
       centered: true,
       cancelText: intl.formatMessage({ id: 'NO' }),
