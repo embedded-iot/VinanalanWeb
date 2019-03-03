@@ -206,11 +206,32 @@ html, body, #root {
 }
 
 .page-wrapper {
-  padding: 40px 30px 0;
+  margin: 40px 30px 0;
+  position: relative;
   .page-headding {
     font-family: Myriad Pro;
     font-size: 30px;
     margin-bottom: 20px;
     color: #000000;
+    display: flex;
+    flex-flow: row wrap;
+    & > span {
+      flex-grow: 1;
+    }
+  }
+}
+
+.ant-modal-wrap {
+  .ant-modal {
+    .ant-modal-content {
+      .ant-modal-close {
+        display: none;
+      }
+      .ant-modal-body {
+        .ant-row {
+          margin-bottom: 15px;
+        }
+      }
+    }
   }
 }
