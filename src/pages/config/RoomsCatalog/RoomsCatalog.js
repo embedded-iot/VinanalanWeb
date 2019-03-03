@@ -1,217 +1,242 @@
 import React, { Component } from 'react'
-import { Button } from "../HomeCatalog/ComponentSetting";
-import Table from '../../../components/commons/ReactTable/RactTable';
 import * as Services from './RoomsCatalogServices';
-import AddRomCatalogModal from './AddRoomsCatalogModal'
-import SearchBox from "../../../components/commons/searchBox/SearchBox";
-import ic_edit from "../../../public/images/icons/ic_edit.png";
-import ic_delete from "../../../public/images/icons/ic_delete.png";
-import ic_checkin from "../../../public/images/icons/ic_checkin.png";
-import ic_checkout from "../../../public/images/icons/ic_checkout.png";
-import * as CONSTANTS from '../../../constants/commonConstant';
-import { showModal, success, error } from "../../../actions";
-import { connect } from "react-redux";
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import TableCustom from "../../../components/commons/TableCustom/TableCustom";
+import {Modal, notification, Tooltip} from 'antd';
+import {spinActions} from "../../../actions/spinAction";
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import AddRoomsCatalog from "./AddRoomsCatalog";
+import ButtonList from "../../../components/commons/ButtonList/ButtonList";
+import ViewRoomsCatalog from "./ViewRoomsCatalog";
+
+const confirmModal = Modal.confirm;
 
 const STRINGS = {
-    ROOM_CATALOG_NAME: <FormattedMessage id="ROOM_CATALOG_NAME" />,
-    DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
-    CREATE_BY: <FormattedMessage id="CREATE_BY" />,
-    LAST_UPDATE: <FormattedMessage id="LAST_UPDATE" />,
-    CREATE: <FormattedMessage id="CREATE" />,
-    ACTION: <FormattedMessage id="ACTION" />,
-    ACTIVE_AND_DEACTIVE: <FormattedMessage id="ACTIVE_AND_DEACTIVE" />,
-    ACTION_UPDATE: <FormattedMessage id="ACTION_UPDATE" />,
-    ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
-    ROOM_CATALOG: <FormattedMessage id="ROOM_CATALOG" />,
-    LIST_ROOM_CATALOG: <FormattedMessage id="LIST_ROOM_CATALOG" />,
+  ROOM_CATALOGS: <FormattedMessage id="ROOM_CATALOGS" />,
+  DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+  CREATE_BY: <FormattedMessage id="CREATE_BY" />,
+  ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
+  ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
+  TYPES_OFF_ROOM_CATALOGS: <FormattedMessage id="TYPES_OFF_ROOM_CATALOGS" />,
+  ACTION: <FormattedMessage id="ACTION" />,
+  STATUS: <FormattedMessage id="STATUS" />,
+  YES: <FormattedMessage id="YES" />,
+  NO: <FormattedMessage id="NO" />,
+  VIEW: <FormattedMessage id="VIEW" />,
+  EDIT: <FormattedMessage id="EDIT" />,
+  ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
+  DELETE_ROOM_CATALOG_QUESTION: <FormattedMessage id="DELETE_ROOM_CATALOG_QUESTION" />,
 }
 
-class HomeCatalog extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            listCatalog: [],
-            isShowModal: false,
-            searchText: '',
-            data: {}
-        }
+class RoomsCatalog extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataSource: [],
+      tableSettings: {
+        pagination: {},
+        filters: {},
+        sorter: {},
+        searchText: ""
+      },
+      isShowAddOrEdit: false,
+      isShowViewDetails: false,
+      selected: {}
     }
+  }
 
-    componentWillMount() {
-        this.getHomeCatalog();
-    }
+  componentWillMount() {
+    this.onChange();
+  }
 
-    getHomeCatalog = () => {
-        Services.getRoomsCatalog(response => {
-            this.setState({ listCatalog: response.data.data });
-        }, er => {
-            console.log(er);
-        })
-    }
-    onchangeData = (e) => {
-        const { target } = e;
-        const name = { target }
-        this.setState({ [name]: target.value })
-    }
-
-    onFetchData = (state, instance) => {
-
-    }
-
-    handleShowPopUp = () => {
-        this.setState({
-            isShowModal: true,
-            data: null
-        });
-    }
-    handleClosePopUp = (isUpdate) => {
-        if (isUpdate) this.getHomeCatalog();
-        this.setState({ isShowModal: false });
-    }
-    handleSearch = () => {
-        alert("Should do search: " + this.state.searchText);
-    }
-
-    onChangeSearch = (value) => {
-        this.setState({
-            searchText: value
-        })
-    }
-
-    onHandleCheckout = () => {
-    }
-    onHandleCheckin = () => {
-    }
-
-    onHandleEdit = (data) => {
-        this.setState({
-            data: data,
-            isShowModal: true
-        })
-    }
-
-    onHandleDelete = (id) => {
-        const { showModal, success, error } = this.props;
-        showModal("Are you sure you want to delete ?", confirm => {
-            Services.deleteRoomCatalog(id, res => {
-                this.getHomeCatalog();
-                success("Success");
-            }, er => {
-                error(er.message);
-            });
-        })
-    }
-
-    render() {
-        const { listCatalog, isShowModal, searchText, data } = this.state;
-        const columns = [
-            {
-                Header: STRINGS.ROOM_CATALOG_NAME,
-                accessor: 'catalogName',
-                width: 300
-            },
-            {
-                Header: STRINGS.DESCRIPTION,
-                accessor: 'catalogDescription',
-                minWidth: 300,
-                maxWidth: 574
-            },
-            {
-                Header: STRINGS.CREATE_BY,
-                accessor: 'create_by',
-                maxWidth: 300
-            },
-            {
-                Header: STRINGS.LAST_UPDATE,
-                accessor: 'update_by',
-                maxWidth: 200
-            },
-            {
-                Header: STRINGS.ACTION,
-                Cell: props => <div className="action">
-                    <div className="cus-tooltip">
-                        <img src={ic_checkout} style={styleIcon} onClick={() => this.onHandleCheckin()} />
-                        <span className="tooltiptext">{STRINGS.ACTIVE_AND_DEACTIVE}</span>
-                    </div>
-                    <div className="cus-tooltip">
-                        <img src={ic_edit} style={styleIcon} onClick={() => this.onHandleEdit(props.original)} />
-                        <span className="tooltiptext">{STRINGS.LAST_UPDATE}</span>
-                    </div>
-
-                    <div className="cus-tooltip">
-                        <img src={ic_delete} style={styleIcon} onClick={() => this.onHandleDelete(props.original.id)} />
-                        <span className="tooltiptext">{STRINGS.ACTION_DELETE}</span>
-                    </div>
-                </div>,
-                maxWidth: 200
-            }
-        ]
+  columns = [
+    {
+      title: STRINGS.TYPES_OFF_ROOM_CATALOGS,
+      dataIndex: 'catalogName',
+      width: '15%',
+    }, {
+      title: STRINGS.DESCRIPTION,
+      dataIndex: 'catalogDescription'
+    }, {
+      title: STRINGS.CREATE_BY,
+      dataIndex: 'create_by',
+      width: '10%',
+      align: 'center'
+    }, {
+      title: STRINGS.STATUS,
+      dataIndex: 'isActive',
+      render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
+      filters: [
+        { text: STRINGS.ACTION_ACTIVE, value: true },
+        { text: STRINGS.ACTION_DEACTIVE, value: false },
+      ],
+      filterMultiple: false,
+      width: '10%',
+    }, {
+      title: STRINGS.ACTION,
+      dataIndex: 'id',
+      render: id => {
         return (
-            <div className="rom_catalog" style={styles}>
-                <div className="row" style={{ marginBottom: '25px' }}>
-                    <div className="col-lg-9"><span
-                        style={{ fontSize: '28px', fontWeight: 'bold' }}>{STRINGS.ROOM_CATALOG}</span></div>
-                    <div className="col-lg 3"><SearchBox value={searchText}
-                        onChangeSearch={this.onChangeSearch}
-                        onSearch={this.handleSearch} /></div>
-                </div>
-                <div className="row">
-                    <div className="col-lg-8"
-                        style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: 'AvenirNext', marginBottom: '16px' }}
-                    >{STRINGS.LIST_ROOM_CATALOG}
-                    </div>
-                    <div className="col-lg-4">
-                        <Button
-                            style={styleButton}
-                            onclick={this.handleShowPopUp}
-                            title={STRINGS.CREATE}
-                        /></div>
-                </div>
-                <Table
-                    data={listCatalog}
-                    columns={columns}
-                    defaultPageSize={5}
-                // onFetchData={this.onFetchData}
-                />
-                <AddRomCatalogModal
-                    isShowModal={isShowModal}
-                    handleClosePopUp={this.handleClosePopUp}
-                    data={data}
-                />
-            </div>
-        );
+          <div className="actions-column">
+            <Tooltip title={STRINGS.VIEW}>
+              <span className="icon icon-view" onClick={() =>this.viewIncomeUtility(id)}></span>
+            </Tooltip>
+            <Tooltip title={STRINGS.EDIT}>
+              <span className="icon icon-edit" onClick={() =>this.editIncomeUtility(id)}></span>
+            </Tooltip>
+            <Tooltip title={STRINGS.ACTION_DELETE}>
+              <span className="icon icon-delete" onClick={() =>this.deleteIncomeUtility(id)}></span>
+            </Tooltip>
+          </div>
+        )
+      },
+      width: '20%',
+      align: 'center'
     }
-}
+  ];
+
+  openNotification = (type, message, description) => {
+    notification[type]({
+      message: message,
+      description: description,
+    });
+  };
+
+  editIncomeUtility = (id) => {
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+  }
+
+  viewIncomeUtility = (id) => {
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails})
+  }
+
+  deleteIncomeUtility = (id) => {
+    const { intl, dispatch } = this.props;
+
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    confirmModal({
+      title: intl.formatMessage({ id: 'DELETE_ROOM_CATALOG_QUESTION' }),
+      content: <b>{selectedUtility.catalogName}</b>,
+      okText: intl.formatMessage({ id: 'YES' }),
+      centered: true,
+      cancelText: intl.formatMessage({ id: 'NO' }),
+      okType: 'danger',
+      onOk: () => {
+        dispatch(spinActions.showSpin());
+        Services.deleteRoomCatalog(id, response => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('success', intl.formatMessage({ id: 'DELETE_ROOM_CATALOG_SUCCESS' }));
+          this.onReload()
+        }, error => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('error', intl.formatMessage({ id: 'DELETE_ROOM_CATALOG_FAIL' }))
+        })
+      },
+      onCancel() {
+
+      },
+    });
+  };
+
+  onChange = (pagination = {}, filters = {}, sorter  = {}, extra, searchText) => {
+    const tableSettings = {
+      ...this.state.tableSettings,
+      pagination,
+      filters,
+      searchText,
+      sorter
+    };
+    const { dispatch } = this.props;
+
+    let isActive =  Array.isArray(filters.isActive) && filters.isActive.length ? filters.isActive[0] : null;
+    let params = {
+      limit: pagination.pageSize || 10,
+      skip: (pagination.current - 1) * pagination.pageSize || 0,
+      sortField: sorter.field,
+      sortOrder: sorter.order,
+      searchText,
+      isActive
+    };
 
 
-const styleIcon = {
-    height: '20px',
-    marginLeft: '20px',
-}
-const styleButton = {
-    float: 'right',
-    minWidth: '200px'
-}
+    this.setState({
+      tableSettings: tableSettings,
+      loading: true });
+    dispatch(spinActions.showSpin());
+    Services.getRoomsCatalog({...params,}, (response) => {
+      dispatch(spinActions.hideSpin());
+      const tableSettings = {
+        ...this.state.tableSettings,
+        pagination: { ...this.state.tableSettings.pagination, total: response.count }
+      };
 
-const styles = {
-    padding: '10px 16px',
-    fontFamily: 'AvenirNext-Bold',
-};
+      this.setState({
+        loading: false,
+        dataSource: response.data,
+        tableSettings,
+      });
+    }, (error) => {
+      dispatch(spinActions.hideSpin());
+      console.log("error:", error)
+    })
+  }
 
+  onReload = () => {
+    let { pagination, filters, sorter, searchText } = {...this.state.tableSettings};
+    this.onChange(pagination, filters, sorter, {}, searchText);
+  }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        error: (message) => {
-            dispatch(error(message));
-        },
-        success: (message) => {
-            dispatch(success(message));
-        },
-        showModal: (message, confirm) => {
-            dispatch(showModal(message, confirm))
+  onChangeVisible = (success) => {
+    this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+    if (success) {
+      this.onReload()
+    }
+  }
+
+  onChangeVisibleViewDetails = () => {
+    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails})
+  }
+
+  render() {
+    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected} = this.state;
+    const TableConfig = {
+      columns: this.columns,
+      dataSource: dataSource,
+      pagination: tableSettings.pagination,
+      onChange: this.onChange,
+      tableSettings: tableSettings
+    };
+    const buttonList = [
+      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onChangeVisible()}
+    ];
+    return (
+      <div className="page-wrapper">
+        <div className="page-headding">
+          {STRINGS.ROOM_CATALOGS}
+          <ButtonList list={buttonList}/>
+        </div>
+        <TableCustom {...TableConfig} />
+        {
+          isShowAddOrEdit && <AddRoomsCatalog selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
-    }
-};
+        {
+          isShowViewDetails && <ViewRoomsCatalog selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+        }
+      </div>
+    );
+  }
+}
 
-export default connect(null, mapDispatchToProps)(HomeCatalog);
+export default injectIntl(withRouter(connect()(RoomsCatalog)));
