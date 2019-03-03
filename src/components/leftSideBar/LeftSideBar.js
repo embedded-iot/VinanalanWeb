@@ -86,6 +86,7 @@ class LeftSideBar extends Component {
                             <Link className="dropdown-item" to="/HomeCatalog" onClick={() => this.handleActive("/HomeCatalog")}>{STRINGS.HOME_CATALOG}</Link>
                             <Link className="dropdown-item" to="/IncomeUtilities" onClick={() => this.handleActive("/IncomeUtilities")}>Tiện ích trong</Link>
                             <Link className="dropdown-item" to="/OutcomeUtilities" onClick={() => this.handleActive("/OutcomeUtilities")}>Tiện ích ngoài</Link>
+                            <Link className="dropdown-item" to="/ExtraFees" onClick={() => this.handleActive("/ExtraFees")}>Các loại phí khác</Link>
                         </div>
                     </div>
                 </div>

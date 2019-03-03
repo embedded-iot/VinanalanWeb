@@ -1,0 +1,237 @@
+import React, { Component } from 'react'
+import * as Services from './ExtraFeesServices';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import TableCustom from "../../../components/commons/TableCustom/TableCustom";
+import {Modal, notification, Tooltip} from 'antd';
+import {spinActions} from "../../../actions/spinAction";
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import AddExtraFee from "./AddExtraFee";
+import ButtonList from "../../../components/commons/ButtonList/ButtonList";
+import ViewExtraFee from "./ViewExtraFee";
+
+const confirmModal = Modal.confirm;
+
+const STRINGS = {
+  EXTRA_FEES: <FormattedMessage id="EXTRA_FEES" />,
+  ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
+  ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
+  TYPES_OFF_EXTRA_FEES: <FormattedMessage id="TYPES_OFF_EXTRA_FEES" />,
+  ACTION: <FormattedMessage id="ACTION" />,
+  STATUS: <FormattedMessage id="STATUS" />,
+  YES: <FormattedMessage id="YES" />,
+  NO: <FormattedMessage id="NO" />,
+  VIEW: <FormattedMessage id="VIEW" />,
+  EDIT: <FormattedMessage id="EDIT" />,
+  ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
+  DELETE_EXTRA_FEE_QUESTION: <FormattedMessage id="DELETE_EXTRA_FEE_QUESTION" />,
+}
+
+class ExtraFees extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataSource: [],
+      tableSettings: {
+        pagination: {},
+        filters: {},
+        sorter: {},
+        searchText: ""
+      },
+      isShowAddOrEdit: false,
+      isShowViewDetails: false,
+      selected: {}
+    }
+  }
+
+  componentWillMount() {
+    this.onChange();
+  }
+
+  columns = [
+    {
+      title: STRINGS.TYPES_OFF_EXTRA_FEES,
+      dataIndex: 'name'
+    }, {
+      title: 'Icon',
+      dataIndex: 'icon_link',
+      render: icon_link => icon_link && <img src={icon_link} style={{width: '32px', height: '32px'}}></img>,
+      width: '10%',
+      align: 'center'
+    }, {
+      title: STRINGS.STATUS,
+      dataIndex: 'isActive',
+      render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
+      filters: [
+        { text: STRINGS.ACTION_ACTIVE, value: true },
+        { text: STRINGS.ACTION_DEACTIVE, value: false },
+      ],
+      filterMultiple: false,
+      width: '10%',
+    }, {
+      title: STRINGS.ACTION,
+      dataIndex: 'id',
+      render: id => {
+        return (
+          <div className="actions-column">
+            <Tooltip title={STRINGS.VIEW}>
+              <span className="icon icon-view" onClick={() =>this.viewIncomeUtility(id)}></span>
+            </Tooltip>
+            <Tooltip title={STRINGS.EDIT}>
+              <span className="icon icon-edit" onClick={() =>this.editIncomeUtility(id)}></span>
+            </Tooltip>
+            <Tooltip title={STRINGS.ACTION_DELETE}>
+              <span className="icon icon-delete" onClick={() =>this.deleteIncomeUtility(id)}></span>
+            </Tooltip>
+          </div>
+        )
+      },
+      width: '20%',
+      align: 'center'
+    }
+  ];
+
+  openNotification = (type, message, description) => {
+    notification[type]({
+      message: message,
+      description: description,
+    });
+  };
+
+  editIncomeUtility = (id) => {
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+  }
+
+  viewIncomeUtility = (id) => {
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails})
+  }
+
+  deleteIncomeUtility = (id) => {
+    const { intl, dispatch } = this.props;
+
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    confirmModal({
+      title: intl.formatMessage({ id: 'DELETE_EXTRA_FEE_QUESTION' }),
+      content: <b>{selectedUtility.name}</b>,
+      okText: intl.formatMessage({ id: 'YES' }),
+      centered: true,
+      cancelText: intl.formatMessage({ id: 'NO' }),
+      okType: 'danger',
+      onOk: () => {
+        dispatch(spinActions.showSpin());
+        Services.deleteExtraFee(id, response => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('success', intl.formatMessage({ id: 'DELETE_EXTRA_FEE_SUCCESS' }));
+          this.onReload()
+        }, error => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('error', intl.formatMessage({ id: 'DELETE_EXTRA_FEE_FAIL' }))
+        })
+      },
+      onCancel() {
+
+      },
+    });
+  };
+
+  onChange = (pagination = {}, filters = {}, sorter  = {}, extra, searchText) => {
+    const tableSettings = {
+      ...this.state.tableSettings,
+      pagination,
+      filters,
+      searchText,
+      sorter
+    };
+    const { dispatch } = this.props;
+
+    let isActive =  Array.isArray(filters.isActive) && filters.isActive.length ? filters.isActive[0] : null;
+    let params = {
+      limit: pagination.pageSize || 10,
+      skip: (pagination.current - 1) * pagination.pageSize || 0,
+      sortField: sorter.field,
+      sortOrder: sorter.order,
+      searchText,
+      isActive
+    };
+
+
+    this.setState({
+      tableSettings: tableSettings,
+      loading: true });
+    dispatch(spinActions.showSpin());
+    Services.getExtraFees({...params,}, (response) => {
+      dispatch(spinActions.hideSpin());
+      const tableSettings = {
+        ...this.state.tableSettings,
+        pagination: { ...this.state.tableSettings.pagination, total: response.count }
+      };
+
+      this.setState({
+        loading: false,
+        dataSource: response.data,
+        tableSettings,
+      });
+    }, (error) => {
+      dispatch(spinActions.hideSpin());
+      console.log("error:", error)
+    })
+  }
+
+  onReload = () => {
+    let { pagination, filters, sorter, searchText } = {...this.state.tableSettings};
+    this.onChange(pagination, filters, sorter, {}, searchText);
+  }
+
+  onChangeVisible = (success) => {
+    this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+    if (success) {
+      this.onReload()
+    }
+  }
+
+  onChangeVisibleViewDetails = () => {
+    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails})
+  }
+
+  render() {
+    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected} = this.state;
+    const TableConfig = {
+      columns: this.columns,
+      dataSource: dataSource,
+      pagination: tableSettings.pagination,
+      onChange: this.onChange,
+      tableSettings: tableSettings
+    };
+    const buttonList = [
+      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onChangeVisible()}
+    ];
+    return (
+      <div className="page-wrapper">
+        <div className="page-headding">
+          {STRINGS.EXTRA_FEES}
+          <ButtonList list={buttonList}/>
+        </div>
+        <TableCustom {...TableConfig} />
+        {
+          isShowAddOrEdit && <AddExtraFee selected={selected} onChangeVisible={this.onChangeVisible}/>
+        }
+        {
+          isShowViewDetails && <ViewExtraFee selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+        }
+      </div>
+    );
+  }
+}
+
+export default injectIntl(withRouter(connect()(ExtraFees)));

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import {Modal, Row, Col, Input, Select, Button, notification} from "antd";
-import * as Services from "./OutcomeUtilitiesServices";
+import * as Services from "./ExtraFeesServices";
 import { connect } from "react-redux";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {spinActions} from "../../../actions";
@@ -9,9 +9,9 @@ import {spinActions} from "../../../actions";
 const Option = Select.Option;
 
 const STRINGS = {
-  ADD_OUTCOME_UTILITY: <FormattedMessage id="ADD_OUTCOME_UTILITY" />,
-  EDIT_OUTCOME_UTILITY: <FormattedMessage id="EDIT_OUTCOME_UTILITY" />,
-  UTILITY_NAME: <FormattedMessage id="UTILITY_NAME" />,
+  ADD_EXTRA_FEE: <FormattedMessage id="ADD_EXTRA_FEE" />,
+  EDIT_EXTRA_FEE: <FormattedMessage id="EDIT_EXTRA_FEE" />,
+  EXTRA_FEE_NAME: <FormattedMessage id="EXTRA_FEE_NAME" />,
   STATUS: <FormattedMessage id="STATUS" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
@@ -27,7 +27,7 @@ const status = [
   { title: STRINGS.ACTION_DEACTIVE, value: 0}
 ];
 
-class AddIOutcomeUtility extends Component {
+class AddExtraFee extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,23 +74,23 @@ class AddIOutcomeUtility extends Component {
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      Services.editOutcomeUtility(selected.id, selected, response => {
+      Services.editExtraFee(selected.id, selected, response => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('success', intl.formatMessage({ id: 'EDIT_UTILITY_SUCCESS' }));
+        this.openNotification('success', intl.formatMessage({ id: 'EXTRA_FEE_SUCCESS' }));
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_UTILITY_FAIL' }));
+        this.openNotification('error', intl.formatMessage({ id: 'EDIT_EXTRA_FEE_FAIL' }));
       });
     } else {
-      Services.createOutcomeUtility({...selected, userId: user.id},response => {
+      Services.createExtraFee({...selected, userId: user.id},response => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('success', intl.formatMessage({ id: 'ADD_UTILITY_SUCCESS' }));
+          this.openNotification('success', intl.formatMessage({ id: 'ADD_EXTRA_FEE_SUCCESS' }));
           onChangeVisible(true);
         },
         er => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_UTILITY_FAIL' }));
+          this.openNotification('error', intl.formatMessage({ id: 'ADD_EXTRA_FEE_FAIL' }));
         }
       );
     }
@@ -101,7 +101,7 @@ class AddIOutcomeUtility extends Component {
     const { name, icon_link, isActive} = selected;
     const { onChangeVisible} = this.props;
     return (
-      <Modal title={ isEdit ? STRINGS.EDIT_OUTCOME_UTILITY : STRINGS.ADD_OUTCOME_UTILITY}
+      <Modal title={ isEdit ? STRINGS.EDIT_EXTRA_FEE : STRINGS.ADD_EXTRA_FEE}
              centered
              width="600px"
              visible={true}
@@ -112,7 +112,7 @@ class AddIOutcomeUtility extends Component {
              onCancel={() => onChangeVisible()}
       >
         <Row>
-          <Col span={8}>{STRINGS.UTILITY_NAME}</Col>
+          <Col span={8}>{STRINGS.EXTRA_FEE_NAME}</Col>
           <Col span={16}>
             <Input value={name} onChange={this.onChangeName} />
             { isSubmitted && !name && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
@@ -135,7 +135,7 @@ class AddIOutcomeUtility extends Component {
   }
 }
 
-AddIOutcomeUtility.propTypes = {
+AddExtraFee.propTypes = {
   onOk: PropTypes.func,
   onCancel: PropTypes.func
 };
@@ -147,4 +147,4 @@ const mapStateToProps = function (state) {
 }
 
 
-export default injectIntl(connect(mapStateToProps)(AddIOutcomeUtility));
+export default injectIntl(connect(mapStateToProps)(AddExtraFee));
