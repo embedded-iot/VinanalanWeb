@@ -1,22 +1,32 @@
 import * as Services from "../../../utils/cuiResource";
 
-export function getRoomsCatalog(successCallback, failCallback) {
+export function getRoomsCatalog(params, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/room-catalog',
-        headers: { 'Content-Type': 'application/json', }
+        url: '/api/room-catalog/getAllRoomCatalogs',
+        params: params
     };
 
     Services.makeGetRequest(requestOptions, (response) => {
-        successCallback(response);
+        successCallback(response.data);
     }, (error) => {
         failCallback(error);
     });
 }
 
-export function createRoomsCatalog(data, successCallback, failCallback) {
+export function deleteRoomCatalog(id, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/room-catalog',
-        headers: { 'Content-Type': 'application/json'},
+        url: '/api/room-catalog/' + id
+    };
+    Services.makeDeleteRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
+export function createRoomCatalog(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/room-catalog/createRoomcatalog',
         data: data
     };
 
@@ -27,30 +37,15 @@ export function createRoomsCatalog(data, successCallback, failCallback) {
     });
 }
 
-export function upDateRoomsCatalog(data, successCallback, failCallback) {
+export function editRoomCatalog(id, data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/room-catalog',
-        headers: { 'Content-Type': 'application/json'},
+        url: '/api/room-catalog/' + id,
         data: data
     };
 
     Services.makePutRequest(requestOptions, (response) => {
-        successCallback(response);
+        successCallback(response.data);
     }, (error) => {
         failCallback(error);
     });
 }
-
-export function deleteRoomCatalog(data, successCallback, failCallback) {
-    let requestOptions = {
-        url: '/api/room-catalog/' + data,
-        headers: { 'Content-Type': 'application/json'},
-    };
-    Services.makeDeleteRequest(requestOptions, (response) => {
-        successCallback(response);
-    }, (error) => {
-        failCallback(error);
-    });
-}
-
-
