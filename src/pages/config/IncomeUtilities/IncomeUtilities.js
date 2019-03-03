@@ -2,22 +2,27 @@ import React, { Component } from 'react'
 import * as Services from './IncomeUtilitiesServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
-import { Modal, notification } from 'antd';
+import {Modal, notification, Tooltip} from 'antd';
 import {spinActions} from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import AddIncomeUtility from "./AddIncomeUtility";
+import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 
 const confirmModal = Modal.confirm;
 
 const STRINGS = {
   INCOME_UTILITIES: <FormattedMessage id="INCOME_UTILITIES" />,
-  ACTIVE: <FormattedMessage id="ACTIVE" />,
-  DEACTIVE: <FormattedMessage id="DEACTIVE" />,
+  ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
+  ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_UTILITIES: <FormattedMessage id="TYPES_OFF_UTILITIES" />,
   ACTION: <FormattedMessage id="ACTION" />,
   STATUS: <FormattedMessage id="STATUS" />,
   YES: <FormattedMessage id="YES" />,
   NO: <FormattedMessage id="NO" />,
+  VIEW: <FormattedMessage id="VIEW" />,
+  EDIT: <FormattedMessage id="EDIT" />,
+  ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
   DELETE_INCOME_UTILITY: <FormattedMessage id="DELETE_INCOME_UTILITY" />,
 }
 
@@ -31,7 +36,9 @@ class IncomeUtilities extends Component {
         filters: {},
         sorter: {},
         searchText: ""
-      }
+      },
+      isShowAddIncomeUtility: false,
+      selected: {}
     }
   }
 
@@ -51,11 +58,11 @@ class IncomeUtilities extends Component {
       align: 'center'
     }, {
       title: STRINGS.STATUS,
-      dataIndex: 'isStatus',
-      render: isStatus => isStatus ? STRINGS.ACTIVE : STRINGS.DEACTIVE,
+      dataIndex: 'isActive',
+      render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
       filters: [
-        { text: STRINGS.ACTIVE, value: true },
-        { text: STRINGS.DEACTIVE, value: false },
+        { text: STRINGS.ACTION_ACTIVE, value: true },
+        { text: STRINGS.ACTION_DEACTIVE, value: false },
       ],
       width: '10%',
     }, {
@@ -64,9 +71,15 @@ class IncomeUtilities extends Component {
       render: id => {
         return (
           <div className="actions-column">
-            <span className="icon icon-view"></span>
-            <span className="icon icon-edit"></span>
-            <span className="icon icon-delete" onClick={() =>this.deleteIncomeUtility(id)}></span>
+            <Tooltip title={STRINGS.VIEW}>
+              <span className="icon icon-view"></span>
+            </Tooltip>
+            <Tooltip title={STRINGS.EDIT}>
+              <span className="icon icon-edit" onClick={() =>this.editIncomeUtility(id)}></span>
+            </Tooltip>
+            <Tooltip title={STRINGS.ACTION_DELETE}>
+              <span className="icon icon-delete" onClick={() =>this.deleteIncomeUtility(id)}></span>
+            </Tooltip>
           </div>
         )
       },
@@ -81,6 +94,14 @@ class IncomeUtilities extends Component {
       description: description,
     });
   };
+
+  editIncomeUtility = (id) => {
+    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUtility) {
+      return;
+    }
+    this.setState({ selected: selectedUtility, isShowAddIncomeUtility: !this.state.isShowAddIncomeUtility})
+  }
 
   deleteIncomeUtility = (id) => {
     const { intl, dispatch } = this.props;
@@ -153,8 +174,15 @@ class IncomeUtilities extends Component {
     })
   }
 
+  onChangeVisible = (success) => {
+    this.setState({ selected: {}, isShowAddIncomeUtility: !this.state.isShowAddIncomeUtility})
+    if (success) {
+      this.onChange();
+    }
+  }
+
   render() {
-    const { tableSettings, dataSource} = this.state;
+    const { tableSettings, dataSource, isShowAddIncomeUtility, selected} = this.state;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
@@ -162,10 +190,19 @@ class IncomeUtilities extends Component {
       onChange: this.onChange,
       tableSettings: tableSettings
     };
+    const buttonList = [
+      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onChangeVisible()}
+    ];
     return (
       <div className="page-wrapper">
-        <div className="page-headding">{STRINGS.INCOME_UTILITIES}</div>
+        <div className="page-headding">
+          {STRINGS.INCOME_UTILITIES}
+          <ButtonList list={buttonList}/>
+        </div>
         <TableCustom {...TableConfig} />
+        {
+          isShowAddIncomeUtility && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
+        }
       </div>
     );
   }

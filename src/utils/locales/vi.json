@@ -168,5 +168,13 @@
   "DELETE_INCOME_UTILITY": "Bạn có chắc chắn muốn xóa tiện ích này không?",
   "DELETE_UTILITY_SUCCESS": "Xóa tiện ích thành công!",
   "DELETE_UTILITY_FAIL": "Xóa tiện ích thất bại!",
+  "UTILITY_NAME": "Tên loại tiện ích",
+  "ADD_INCOME_UTILITY": "Thêm mới tiện ích trong",
+  "EDIT_INCOME_UTILITY": "Chỉnh sửa tiện tích trong",
+  "ADD_UTILITY_SUCCESS": "Thêm mới tiện ích thành công!",
+  "ADD_UTILITY_FAIL": "Thêm mới tiện ích thất bại!",
+  "EDIT_UTILITY_SUCCESS": "Chỉnh sửa tiện ích thành công!",
+  "EDIT_UTILITY_FAIL": "Chỉnh sửa tiện ích thất bại!",
+  "REQUIRED_ALERT": "Trường này không để trống",
   "STT": "Stt"
 }

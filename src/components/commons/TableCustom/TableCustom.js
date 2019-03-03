@@ -46,7 +46,6 @@ export default class TableCustom extends Component {
           <Search
             placeholder="Nhập thông tin tìm kiếm"
             onSearch={this.onSearchText}
-            style={{ width: 300 }}
           />
           <div className="dropdown-page-size">
             <span>Hiển thị</span>
