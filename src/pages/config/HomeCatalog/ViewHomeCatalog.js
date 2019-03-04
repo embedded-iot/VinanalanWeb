@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import {Modal, Row, Col} from "antd";
 import {FormattedMessage} from "react-intl";
+import * as CONSTANTS from '../../Constants';
 
 const STRINGS = {
   VIEW_HOME_CATALOG: <FormattedMessage id="VIEW_HOME_CATALOG" />,
@@ -12,6 +13,11 @@ const STRINGS = {
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   CLOSE: <FormattedMessage id="CLOSE" />
 };
+
+const getNameByValue = (list, searchValue) => {
+  let result = list.find(item => item.value === searchValue);
+  return result ? result.text : '-';
+}
 
 const ViewHomeCatalog = (props) => {
   const { onChangeVisible, selected} = props;
@@ -36,7 +42,7 @@ const ViewHomeCatalog = (props) => {
       </Row>
       <Row>
         <Col span={8}>{STRINGS.STATUS}</Col>
-        <Col span={16}>{ isActive ? STRINGS.ACTION_ACTIVE: STRINGS.ACTION_DEACTIVE }</Col>
+        <Col span={16}>{ getNameByValue(CONSTANTS.STATUS, isActive) }</Col>
       </Row>
     </Modal>
   );

@@ -5,6 +5,7 @@ import * as Services from "./ExtraFeesServices";
 import { connect } from "react-redux";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {spinActions} from "../../../actions";
+import * as CONSTANTS from '../../Constants';
 
 const Option = Select.Option;
 
@@ -21,11 +22,6 @@ const STRINGS = {
   CLOSE: <FormattedMessage id="CLOSE" />
 };
 
-
-const status = [
-  { title: STRINGS.ACTION_ACTIVE, value: 1},
-  { title: STRINGS.ACTION_DEACTIVE, value: 0}
-];
 
 class AddExtraFee extends Component {
   constructor(props) {
@@ -100,6 +96,7 @@ class AddExtraFee extends Component {
     const {selected, isEdit, isSubmitted} = this.state;
     const { name, icon_link, isActive} = selected;
     const { onChangeVisible} = this.props;
+    const [, ...status] = CONSTANTS.STATUS;
     return (
       <Modal title={ isEdit ? STRINGS.EDIT_EXTRA_FEE : STRINGS.ADD_EXTRA_FEE}
              centered
@@ -126,7 +123,7 @@ class AddExtraFee extends Component {
           <Col span={8}>{STRINGS.STATUS}</Col>
           <Col span={16}>
             <Select defaultValue={Number(isActive)} onChange={this.setStatus}>
-              {status.map((item, index) => <Option key={index} value={item.value}>{item.title}</Option>)}
+              {status.map((item, index) => <Option key={index} value={Number(item.value)}>{item.text}</Option>)}
             </Select>
           </Col>
         </Row>
