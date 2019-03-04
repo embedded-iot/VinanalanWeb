@@ -12,6 +12,7 @@ import {
     Login,
     Register,
     ForgotPW,
+    Users,
     HomeCatalog,
     RoomsCatalog,
     IncomeUtilities,
@@ -44,6 +45,7 @@ const Protected = (props) => <div>
         <Route exact path="/" component={Home}/>
         <Route exact path="/Home" component={Home}/>
 
+        <Route exact path="/Users" component={Users}/>
         <Route exact path="/HomeCatalog" component={HomeCatalog}/>
         <Route exact path="/RoomsCatalog" component={RoomsCatalog}/>
         <Route exact path="/IncomeUtilities" component={IncomeUtilities}/>
