@@ -153,7 +153,7 @@ class ExtraFees extends Component {
     };
     const { dispatch } = this.props;
 
-    let isActive =  Array.isArray(filters.isActive) && filters.isActive.length ? filters.isActive[0] : null;
+    let isActive =  Array.isArray(filters.isActive) && filters.isActive.length && filters.isActive[0] !== ' ' ? filters.isActive[0] : null;
     let params = {
       limit: pagination.pageSize || 10,
       skip: (pagination.current - 1) * pagination.pageSize || 0,
