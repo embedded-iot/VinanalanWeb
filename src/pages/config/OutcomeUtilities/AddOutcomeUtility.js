@@ -5,6 +5,7 @@ import * as Services from "./OutcomeUtilitiesServices";
 import { connect } from "react-redux";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {spinActions} from "../../../actions";
+import * as CONSTANTS from '../../Constants';
 
 const Option = Select.Option;
 
@@ -100,6 +101,7 @@ class AddOutcomeUtility extends Component {
     const {selected, isEdit, isSubmitted} = this.state;
     const { name, icon_link, isActive} = selected;
     const { onChangeVisible} = this.props;
+    const [, ...status] = CONSTANTS.STATUS;
     return (
       <Modal title={ isEdit ? STRINGS.EDIT_OUTCOME_UTILITY : STRINGS.ADD_OUTCOME_UTILITY}
              centered
@@ -126,7 +128,7 @@ class AddOutcomeUtility extends Component {
           <Col span={8}>{STRINGS.STATUS}</Col>
           <Col span={16}>
             <Select defaultValue={Number(isActive)} onChange={this.setStatus}>
-              {status.map((item, index) => <Option key={index} value={item.value}>{item.title}</Option>)}
+              {status.map((item, index) => <Option key={index} value={Number(item.value)}>{item.text}</Option>)}
             </Select>
           </Col>
         </Row>

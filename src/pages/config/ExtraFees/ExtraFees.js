@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import AddExtraFee from "./AddExtraFee";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import ViewExtraFee from "./ViewExtraFee";
+import * as CONSTANTS from '../../Constants';
 
 const confirmModal = Modal.confirm;
 
@@ -62,10 +63,7 @@ class ExtraFees extends Component {
       title: STRINGS.STATUS,
       dataIndex: 'isActive',
       render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
-      filters: [
-        { text: STRINGS.ACTION_ACTIVE, value: true },
-        { text: STRINGS.ACTION_DEACTIVE, value: false },
-      ],
+      filters: CONSTANTS.STATUS,
       filterMultiple: false,
       width: '10%',
     }, {

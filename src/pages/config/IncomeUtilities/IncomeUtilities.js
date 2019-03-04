@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import AddIncomeUtility from "./AddIncomeUtility";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import ViewIncomeUtility from "./ViewIncomeUtility";
+import * as CONSTANTS from '../../Constants';
+
 
 const confirmModal = Modal.confirm;
 
@@ -62,10 +64,7 @@ class IncomeUtilities extends Component {
       title: STRINGS.STATUS,
       dataIndex: 'isActive',
       render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
-      filters: [
-        { text: STRINGS.ACTION_ACTIVE, value: true },
-        { text: STRINGS.ACTION_DEACTIVE, value: false },
-      ],
+      filters: CONSTANTS.STATUS,
       filterMultiple: false,
       width: '10%',
     }, {
