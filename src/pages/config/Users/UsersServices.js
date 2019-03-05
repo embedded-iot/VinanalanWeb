@@ -37,9 +37,9 @@ export function createUser(data, successCallback, failCallback) {
     });
 }
 
-export function editUser(id, data, successCallback, failCallback) {
+export function editUser(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/users/' + id,
+        url: '/api/users/updateUser',
         data: data
     };
 

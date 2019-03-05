@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import * as Services from './UsersServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
-import {Modal, notification, Tooltip} from 'antd';
-import {spinActions} from "../../../actions/spinAction";
+import { Modal, notification, Tooltip } from 'antd';
+import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AddUser from "./AddUser";
@@ -109,13 +109,13 @@ class Users extends Component {
         return (
           <div className="actions-column">
             <Tooltip title={STRINGS.VIEW}>
-              <span className="icon icon-view" onClick={() =>this.viewIncomeUtility(id)}></span>
+              <span className="icon icon-view" onClick={() => this.viewIncomeUtility(id)}></span>
             </Tooltip>
             <Tooltip title={STRINGS.EDIT}>
-              <span className="icon icon-edit" onClick={() =>this.editIncomeUtility(id)}></span>
+              <span className="icon icon-edit" onClick={() => this.editIncomeUtility(id)}></span>
             </Tooltip>
             <Tooltip title={STRINGS.ACTION_DELETE}>
-              <span className="icon icon-delete" onClick={() =>this.deleteIncomeUtility(id)}></span>
+              <span className="icon icon-delete" onClick={() => this.deleteIncomeUtility(id)}></span>
             </Tooltip>
           </div>
         )
@@ -137,7 +137,7 @@ class Users extends Component {
     if (!selectedUtility) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit })
   }
 
   viewIncomeUtility = (id) => {
@@ -145,7 +145,7 @@ class Users extends Component {
     if (!selectedUtility) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails})
+    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails })
   }
 
   deleteIncomeUtility = (id) => {
@@ -179,7 +179,7 @@ class Users extends Component {
     });
   };
 
-  onChange = (pagination = {}, filters = {}, sorter  = {}, extra, searchText) => {
+  onChange = (pagination = {}, filters = {}, sorter = {}, extra, searchText) => {
     const tableSettings = {
       ...this.state.tableSettings,
       pagination,
@@ -189,22 +189,30 @@ class Users extends Component {
     };
     const { dispatch } = this.props;
 
-    let isActive =  Array.isArray(filters.isActive) && filters.isActive.length && filters.isActive[0] !== ' ' ? filters.isActive[0] : null;
+    let isActive = Array.isArray(filters.isActive) && filters.isActive.length && filters.isActive[0] !== ' ' ? filters.isActive[0] : null;
+    let role = Array.isArray(filters.role) && filters.role.length && filters.role[0] !== ' ' ? filters.role[0] : null;
+    let typeJob = Array.isArray(filters.typeJob) && filters.typeJob.length && filters.typeJob[0] !== ' ' ? filters.typeJob[0] : null;
+    let title = Array.isArray(filters.title) && filters.title.length && filters.title[0] !== ' ' ? filters.title[0] : null;
+
     let params = {
       limit: pagination.pageSize || 10,
       skip: (pagination.current - 1) * pagination.pageSize || 0,
       sortField: sorter.field,
       sortOrder: sorter.order,
       searchText,
+      role,
+      typeJob,
+      title,
       isActive
     };
 
 
     this.setState({
       tableSettings: tableSettings,
-      loading: true });
+      loading: true
+    });
     dispatch(spinActions.showSpin());
-    Services.getUsers({...params,}, (response) => {
+    Services.getUsers({ ...params, }, (response) => {
       dispatch(spinActions.hideSpin());
       const tableSettings = {
         ...this.state.tableSettings,
@@ -223,23 +231,23 @@ class Users extends Component {
   }
 
   onReload = () => {
-    let { pagination, filters, sorter, searchText } = {...this.state.tableSettings};
+    let { pagination, filters, sorter, searchText } = { ...this.state.tableSettings };
     this.onChange(pagination, filters, sorter, {}, searchText);
   }
 
   onChangeVisible = (success) => {
-    this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+    this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit })
     if (success) {
       this.onReload()
     }
   }
 
   onChangeVisibleViewDetails = () => {
-    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails})
+    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails })
   }
 
   render() {
-    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected} = this.state;
+    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected } = this.state;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
@@ -248,20 +256,20 @@ class Users extends Component {
       tableSettings: tableSettings
     };
     const buttonList = [
-      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onChangeVisible()}
+      { title: "Thêm", type: "primary", icon: "plus", onClick: () => this.onChangeVisible() }
     ];
     return (
       <div className="page-wrapper">
         <div className="page-headding">
           {STRINGS.USERS}
-          <ButtonList list={buttonList}/>
+          <ButtonList list={buttonList} />
         </div>
         <TableCustom {...TableConfig} />
         {
-          isShowAddOrEdit && <AddUser selected={selected} onChangeVisible={this.onChangeVisible}/>
+          isShowAddOrEdit && <AddUser selected={selected} onChangeVisible={this.onChangeVisible} />
         }
         {
-          isShowViewDetails && <ViewUser selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewUser selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} />
         }
       </div>
     );

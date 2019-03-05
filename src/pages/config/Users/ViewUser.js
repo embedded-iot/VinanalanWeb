@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
-import {Modal, Row, Col} from "antd";
-import {FormattedMessage} from "react-intl";
+import { Modal, Row, Col } from "antd";
+import { FormattedMessage } from "react-intl";
 import * as CONSTANTS from '../../Constants';
 
 const STRINGS = {
@@ -27,14 +27,14 @@ const STRINGS = {
 
 const getNameByValue = (list, searchValue) => {
   let result = list.find(item => item.value === searchValue);
-  return result ? result.text : '-';
+  return result ? result.text : searchValue;
 }
 
 const ViewUser = (props) => {
-  const { onChangeVisible, selected} = props;
-  const { name, email, role, phoneNumber, title, isActive, typeJob} = selected;
+  const { onChangeVisible, selected } = props;
+  const { userName, email, role, phoneNumber, title, isActive, typeJob } = selected;
   return (
-    <Modal title={ STRINGS.VIEW_USER}
+    <Modal title={STRINGS.VIEW_USER}
            className="modal-view-details"
            centered
            width="600px"
@@ -45,7 +45,7 @@ const ViewUser = (props) => {
     >
       <Row>
         <Col span={8}>{STRINGS.USER_FULL_NAME}</Col>
-        <Col span={16}>{name}</Col>
+        <Col span={16}>{userName}</Col>
       </Row>
       <Row>
         <Col span={8}>{STRINGS.EMAIL}</Col>
@@ -56,11 +56,11 @@ const ViewUser = (props) => {
         <Col span={16}>{phoneNumber}</Col>
       </Row>
       <Row>
-        <Col span={8}>{ STRINGS.WORKING_TIME}</Col>
+        <Col span={8}>{STRINGS.WORKING_TIME}</Col>
         <Col span={16}>{getNameByValue(CONSTANTS.WORKING_TIME, typeJob)}</Col>
       </Row>
       <Row>
-        <Col span={8}>{ STRINGS.USER_TITLE}</Col>
+        <Col span={8}>{STRINGS.USER_TITLE}</Col>
         <Col span={16}>{getNameByValue(CONSTANTS.USER_TITLE, title)}</Col>
       </Row>
       <Row>
