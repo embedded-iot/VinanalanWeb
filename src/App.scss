@@ -92,12 +92,12 @@ html, body, #root {
   #content {
     display: flex;
     flex-flow: row wrap;
-    height: 100%;
+    min-width: 1350px;
     .content-container {
-      height: 100%;
-      width: calc(100% - 72px);
+      min-height: 100vh;
       flex-grow: 1;
       padding-top: 66px;
+      background: #f3f3f3;
     }
   }
 

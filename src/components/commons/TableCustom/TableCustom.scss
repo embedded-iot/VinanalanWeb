@@ -47,6 +47,30 @@
       background: url(../../../public/images/icons/icon-delete.png) no-repeat center center;
     }
   }
+  .ant-table-wrapper {
+    .ant-table-thead {
+      text-transform: uppercase;
+    }
+    .ant-table-tbody {
+      .ant-table-row {
+        border-radius: 4px;
+        &:nth-child(even) {
+          background-color: #ffffff;
+        }
+        &:nth-child(odd) {
+          background-color: rgba(255, 193, 7, 0.1);
+        }
+      }
+    }
+  }
+  .ant-pagination {
+    .ant-pagination-item-active {
+      border-radius: 2px;
+      background-color: #fecf3e;
+      color: #fafafa;
+      border: none;
+    }
+  }
 }
 
 .ant-table-filter-dropdown-btns {
