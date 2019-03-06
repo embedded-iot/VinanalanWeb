@@ -114,7 +114,7 @@ class AddIncomeUtility extends Component {
              onCancel={() => onChangeVisible()}
       >
         <Row>
-          <Col span={8}>{STRINGS.UTILITY_NAME}</Col>
+          <Col span={8}>{STRINGS.UTILITY_NAME}<span className="is-required">*</span></Col>
           <Col span={16}>
             <Input value={name} onChange={this.onChangeName} />
             { isSubmitted && !name && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}

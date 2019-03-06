@@ -116,14 +116,14 @@ class AddRoomsCatalog extends Component {
              onCancel={() => onChangeVisible()}
       >
         <Row>
-          <Col span={8}>{STRINGS.ROOM_CATALOG_NAME}</Col>
+          <Col span={8}>{STRINGS.ROOM_CATALOG_NAME} <span className="is-required">*</span></Col>
           <Col span={16}>
             <Input value={catalogName} onChange={this.onChangeName} />
             { isSubmitted && !catalogName && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
           </Col>
         </Row>
         <Row>
-          <Col span={8}>{ STRINGS.DESCRIPTION }</Col>
+          <Col span={8}>{ STRINGS.DESCRIPTION} <span className="is-required">*</span></Col>
           <Col span={16}>
             <TextArea value={catalogDescription} autosize={{ minRows: 2, maxRows: 6 }}
                       onChange={this.onChangeDescription}/>

@@ -30,7 +30,7 @@ const STRINGS = {
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
 
   ADD_USER: <FormattedMessage id="ADD_USER" />,
-  EDIT_USER: <FormattedMessage id="EDIT_HOME_CATALOG" />,
+  EDIT_USER: <FormattedMessage id="EDIT_USER" />,
   REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
   CREATE: <FormattedMessage id="CREATE" />,
   SAVE: <FormattedMessage id="SAVE" />,
@@ -155,7 +155,7 @@ class AddUser extends Component {
       return { label: text, value }
     });
     return (
-      <Modal title={isEdit ? STRINGS.EDIT_HOME_CATALOG : STRINGS.ADD_USER}
+      <Modal title={isEdit ? STRINGS.EDIT_USER : STRINGS.ADD_USER}
              centered
              width="600px"
              visible={true}
@@ -172,14 +172,14 @@ class AddUser extends Component {
           </Col>
         </Row>
         <Row>
-          <Col span={8}>{STRINGS.EMAIL}</Col>
+          <Col span={8}>{STRINGS.EMAIL}<span className="is-required">*</span></Col>
           <Col span={16}>
             <Input value={email} onChange={this.onChangeEmail} />
             {isSubmitted && !email && <span style={{ color: 'red' }}>{STRINGS.REQUIRED_ALERT}</span>}
           </Col>
         </Row>
         <Row>
-          <Col span={8}>Password</Col>
+          <Col span={8}>Password { !isEdit && <span className="is-required">*</span>}</Col>
           <Col span={16}>
             {!!isEdit && <span style={{ color: 'red' }}>Trường này chỉ dành cho Reset password cho User.</span>}
             <Input value={password} onChange={this.onChangePassword} />
