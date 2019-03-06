@@ -1,4 +1,3 @@
-
 .table-custom-wrapper {
   .table-header {
     margin-bottom: 15px;
@@ -50,17 +49,32 @@
   .ant-table-wrapper {
     .ant-table-thead {
       text-transform: uppercase;
+      th {
+        height: 70px;
+        font-weight: bold;
+        background: #ffffff;
+      }
     }
     .ant-table-tbody {
       .ant-table-row {
         border-radius: 4px;
-        &:nth-child(even) {
+        &:hover {
+          td {
+            background: transparent;
+          }
+        }
+        &:nth-child(even),
+        &:nth-child(even):hover {
           background-color: #ffffff;
         }
-        &:nth-child(odd) {
-          background-color: rgba(255, 193, 7, 0.1);
+        &:nth-child(odd),
+        &:nth-child(odd):hover {
+          background-color: #f5f5f5;
         }
       }
+    }
+    .ant-spin-nested-loading {
+      box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15);
     }
   }
   .ant-pagination {
@@ -75,4 +89,8 @@
 
 .ant-table-filter-dropdown-btns {
   display: none;
+}
+
+.ant-table-filter-dropdown {
+  box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.15);
 }

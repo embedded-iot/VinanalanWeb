@@ -1,14 +1,16 @@
 .left-side-bar {
   background: #fafafa;
-  //width: 290px;
   padding-top: 66px;
   .menu-content {
     position: fixed;
-     //width: 290px;
     z-index: 1;
-    /* width: 80px; */
     height: 100%;
     min-height: 650px;
+    box-shadow: inset -1px 0px 0 0 #e7e7e7;
+    background-color: #fafafa;
+    .ant-menu {
+      border: none;
+    }
   }
   .ant-menu {
     background-color: transparent !important;
@@ -25,22 +27,30 @@
   .ant-menu-vertical-left {
     border: none;
   }
-  .ant-menu-item-selected {
+  .ant-menu-item-selected, .ant-menu-item-selected:hover, .ant-menu-item-selected:active {
     background-color: #fbf4e3 !important;
-    a, span {
-      color: #ffc001;
+    border-left: 4px solid #ffc001 !important;
+    span, span:active, span:hover, a, a:active, a:hover {
+      color: #ffc001 !important;
     }
+  }
+  .ant-menu-inline .ant-menu-item {
+    width: calc(100% - 1px);
+  }
+  .ant-menu-item-active {
+    background-color: transparent !important;
   }
   .ant-menu-item {
     height: 50px !important;
     line-height: 50px !important;
-    a, span {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      &:hover {
-        color: #ffc001;
-      }
+    display: flex;
+    align-items: center;
+    border-left: 4px solid #ffffff;
+    span, span:active, span:hover, a, a:active, a:hover, a, a:active, a:hover {
+      color: #000000;
+    }
+    &::after {
+      display: none !important;
     }
   }
   .button-collapsed {
@@ -82,7 +92,7 @@
       bottom: 0;
     }
   }
-  .selected{
+  .selected {
     background-color: #0063aa;
   }
 }

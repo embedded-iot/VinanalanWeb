@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import "./LeftSideBar.scss";
 import { connect } from 'react-redux';
 import icHome from "../../public/images/icons/ic_home.png";
+import icHomeActive from "../../public/images/icons/ic_home_active.png";
 import icReport from "../../public/images/icons/ic_report.png";
 import icRoom from "../../public/images/icons/ic_room.png";
-import icSetting from "../../public/images/icons/menu-setting-icon-158259.png";
+import icSetting from "../../public/images/icons/ic_setting.png";
+import icSettingActive from "../../public/images/icons/ic_setting_active.png";
 import icService from "../../public/images/icons/ic_service.png";
-import { Link } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Menu, Icon, Button } from 'antd';
 
@@ -28,8 +30,12 @@ class LeftSideBar extends Component {
 
         this.state = {
             collapsed: false,
-            urlPage: location.pathname
+            urlPage: '/Home'
         }
+    }
+
+    componentDidMount() {
+        this.props.history.push("/Home");
     }
 
     toggleCollapsed = () => {
@@ -44,7 +50,8 @@ class LeftSideBar extends Component {
 
 
     handleActive = (value) => {
-        this.setState({ urlPage: value });
+        this.setState({urlPage: value})
+        this.props.history.push(value);
     }
 
     getClassNameLeftSideBar = () => {
@@ -70,11 +77,12 @@ class LeftSideBar extends Component {
                     theme="light"
                     inlineCollapsed={this.state.collapsed}
                   >
-                      {/*<Menu.Item key="1">
-                          <Icon type="pie-chart" />
-                          <span>Option 1</span>
+                      <Menu.Item key="1" onClick={() => this.handleActive("/Home")}>
+                          {/*<Icon type="pie-chart" />*/}
+                          <span style={{marginRight: "10px"}}><img style={{ width: '21px', height: "20px" }} src={ urlPage === '/Home' ? icHomeActive : icHome} /></span>
+                          <span>Tòa nhà</span>
                       </Menu.Item>
-                      <Menu.Item key="2">
+                      {/*<Menu.Item key="2">
                           <Icon type="desktop" />
                           <span>Option 2</span>
                       </Menu.Item>
@@ -82,7 +90,8 @@ class LeftSideBar extends Component {
                           <Icon type="inbox" />
                           <span>Option 3</span>
                       </Menu.Item>*/}
-                      <SubMenu key="sub1" title={<span><img className="anticon anticon-inbox" style={{ width: '19px', height: "19px" }} src="https://cdn0.iconfinder.com/data/icons/essen/32/settings.png" /><span>Cấu hình</span></span>}>
+                      <SubMenu key="sub1" title={<span><img className="anticon anticon-inbox" style={{ width: '19px', height: "19px", marginRight: '15px'}} src={ urlPage !== '/Home' ? icSettingActive : icSetting} />
+                      <span style={urlPage !== '/Home' ? { color: '#ffc001' }:{}}>Cấu hình</span></span>}>
                           <Menu.Item key="7"><Link className="dropdown-item" to="/Users" onClick={() => this.handleActive("/Users")}>Quản lý tài khoản</Link></Menu.Item>
                           <Menu.Item key="8"><Link className="dropdown-item" to="/RoomsCatalog" onClick={() => this.handleActive("/RoomsCatalog")}>Loại phòng</Link></Menu.Item>
                           <Menu.Item key="9"><Link className="dropdown-item" to="/HomeCatalog" onClick={() => this.handleActive("/HomeCatalog")}>Loại tòa nhà</Link></Menu.Item>
@@ -91,9 +100,9 @@ class LeftSideBar extends Component {
                           <Menu.Item key="12"><Link className="dropdown-item" to="/ExtraFees" onClick={() => this.handleActive("/ExtraFees")}>Các loại phí khác</Link></Menu.Item>
                       </SubMenu>
                   </Menu>
-                  <Button type="primary" className="button-collapsed" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
+                 {/* <Button type="primary" className="button-collapsed" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
                       <Icon type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} />
-                  </Button>
+                  </Button>*/}
               </div>
 
           </div>
@@ -158,4 +167,4 @@ class LeftSideBar extends Component {
     }*/
 }
 
-export default LeftSideBar;
+export default withRouter(LeftSideBar);
