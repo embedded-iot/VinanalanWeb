@@ -11,4 +11,5 @@ export { default as ExtraFees } from "./config/ExtraFees/ExtraFees";
 export { default as Rooms } from "./admins/Rooms/Rooms";
 export { default as RoomDetail } from "./admins/Rooms/RoomDetail";
 export { default as BookRoom } from "./admins/Rooms/BookRoom";
+export { default as Homes } from "./admins/Homes/Homes";
 export { default as ReportManament } from "./admins/ReportManagement/ReportManament";

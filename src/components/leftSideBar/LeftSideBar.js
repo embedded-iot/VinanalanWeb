@@ -66,7 +66,7 @@ class LeftSideBar extends Component {
     }
     render() {
         const { urlPage, collapsed } = this.state;
-        const widthLeftMenu = collapsed ? "80px" : "290px";
+        const widthLeftMenu = collapsed ? "80px" : "250px";
         return (
           <div className={this.getClassNameLeftSideBar()} style={{width: widthLeftMenu}}>
               <div className="menu-content" style={{width: widthLeftMenu}}>
