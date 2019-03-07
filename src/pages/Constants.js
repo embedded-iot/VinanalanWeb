@@ -43,7 +43,7 @@ export const USER_PERMISSION = [
   // { text: STRINGS.ALL, value: ' ' },
   { text: STRINGS.ADMIN, value: 'admin' },
   { text: STRINGS.MANAGER, value: "manager" },
-  { text: STRINGS.STAFF, value: "Staff" },
+  { text: STRINGS.STAFF, value: "staff" },
   { text: STRINGS.HOME_MANAGER, value: "home_manager" }
 ]
 
