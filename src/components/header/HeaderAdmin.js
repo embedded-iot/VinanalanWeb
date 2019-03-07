@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Header.scss";
 import { connect } from "react-redux";
-import logo_vinaland from "../../public/images/icons/PNG2.png";
+import logo_vinaland from "../../public/images/icons/logo.png";
 import user_ic from "../../public/images/icons/user_ic.png";
 import { setLanguage, userActions } from "../../actions";
 import ic_en from "../../public/images/icons/en.png";
@@ -87,7 +87,7 @@ class HeaderAdmin extends Component {
         <div className="main-header">
           {
             <div className="branch-box mr-auto">
-              <img className="ic-logo" src={logo_vinaland} />
+              {/*<img className="ic-logo" src={logo_vinaland} />*/}
             </div>
           }
           <div className="header-contents">
