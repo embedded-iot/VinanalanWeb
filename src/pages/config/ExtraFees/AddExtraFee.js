@@ -96,7 +96,7 @@ class AddExtraFee extends Component {
     const {selected, isEdit, isSubmitted} = this.state;
     const { name, icon_link, isActive} = selected;
     const { onChangeVisible} = this.props;
-    const [, ...status] = CONSTANTS.STATUS;
+    const [...status] = CONSTANTS.STATUS;
     return (
       <Modal title={ isEdit ? STRINGS.EDIT_EXTRA_FEE : STRINGS.ADD_EXTRA_FEE}
              centered

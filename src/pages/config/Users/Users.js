@@ -74,8 +74,7 @@ class Users extends Component {
       dataIndex: 'role',
       width: '10%',
       align: 'center',
-      filters: CONSTANTS.USER_PERMISSION,
-      filterMultiple: false,
+      filters: CONSTANTS.USER_PERMISSION
     }, {
       title: STRINGS.PHONE,
       dataIndex: 'phoneNumber',
@@ -86,21 +85,18 @@ class Users extends Component {
       dataIndex: 'typeJob',
       width: '10%',
       align: 'center',
-      filters: CONSTANTS.WORKING_TIME,
-      filterMultiple: false,
+      filters: CONSTANTS.WORKING_TIME
     }, {
       title: STRINGS.USER_TITLE,
       dataIndex: 'title',
       width: '10%',
       align: 'center',
-      filters: CONSTANTS.USER_TITLE,
-      filterMultiple: false,
+      filters: CONSTANTS.USER_TITLE
     }, {
       title: STRINGS.STATUS,
       dataIndex: 'isActive',
       render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
       filters: CONSTANTS.STATUS,
-      filterMultiple: false,
       width: '10%',
     }, {
       title: STRINGS.ACTION,

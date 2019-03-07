@@ -38,6 +38,9 @@ export function createIncomeUtility(data, successCallback, failCallback) {
 }
 
 export function editIncomeUtility(id, data, successCallback, failCallback) {
+    if (data.id) {
+        delete data.id;
+    }
     let requestOptions = {
         url: '/api/income_utilities/' + id,
         data: data

@@ -29,7 +29,7 @@ const STRINGS = {
 }
 
 export const STATUS = [
-  { text: STRINGS.ALL, value: " " },
+  // { text: STRINGS.ALL, value: " " },
   { text: STRINGS.ACTION_ACTIVE, value: true },
   { text: STRINGS.ACTION_DEACTIVE, value: false },
 ]
@@ -40,7 +40,7 @@ export const STATUS_NOT_ALL = [
 ]
 
 export const USER_PERMISSION = [
-  { text: STRINGS.ALL, value: ' ' },
+  // { text: STRINGS.ALL, value: ' ' },
   { text: STRINGS.ADMIN, value: 'admin' },
   { text: STRINGS.MANAGER, value: "manager" },
   { text: STRINGS.STAFF, value: "Staff" },
@@ -48,13 +48,13 @@ export const USER_PERMISSION = [
 ]
 
 export const WORKING_TIME = [
-  { text: STRINGS.ALL, value: ' ' },
+  // { text: STRINGS.ALL, value: ' ' },
   { text: STRINGS.FULL_TIME, value: 'full_time' },
   { text: STRINGS.PART_TIME, value: "part_time" },
 ]
 
 export const USER_TITLE = [
-  { text: STRINGS.ALL, value: ' ' },
+  // { text: STRINGS.ALL, value: ' ' },
   { text: "Giám đốc", value: 'director' },
   { text: "Trưởng phòng", value: "manager" },
   { text: "Nhân viên", value: "Staff" },

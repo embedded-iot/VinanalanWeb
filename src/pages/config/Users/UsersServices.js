@@ -38,6 +38,9 @@ export function createUser(data, successCallback, failCallback) {
 }
 
 export function editUser(data, successCallback, failCallback) {
+    if (data.id) {
+        delete data.id;
+    }
     let requestOptions = {
         url: '/api/users/updateUser',
         data: data

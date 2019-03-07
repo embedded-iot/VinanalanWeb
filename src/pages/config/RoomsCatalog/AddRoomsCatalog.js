@@ -103,7 +103,7 @@ class AddRoomsCatalog extends Component {
     const {selected, isEdit, isSubmitted} = this.state;
     const { catalogName, catalogDescription, isActive} = selected;
     const { onChangeVisible} = this.props;
-    const [, ...status] = CONSTANTS.STATUS;
+    const [...status] = CONSTANTS.STATUS;
     return (
       <Modal title={ isEdit ? STRINGS.EDIT_ROOM_CATALOG : STRINGS.ADD_ROOM_CATALOG}
              centered

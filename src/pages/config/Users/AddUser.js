@@ -37,10 +37,10 @@ const STRINGS = {
   CLOSE: <FormattedMessage id="CLOSE" />
 };
 
-const [, ...workingTimes] = CONSTANTS.WORKING_TIME;
-const [, ...titles] = CONSTANTS.USER_TITLE;
-const [, ...status] = CONSTANTS.STATUS;
-const [, ...permissions] = CONSTANTS.USER_PERMISSION;
+const [...workingTimes] = CONSTANTS.WORKING_TIME;
+const [...titles] = CONSTANTS.USER_TITLE;
+const [...status] = CONSTANTS.STATUS;
+const [...permissions] = CONSTANTS.USER_PERMISSION;
 
 class AddUser extends Component {
   constructor(props) {
