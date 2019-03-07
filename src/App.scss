@@ -228,16 +228,29 @@ html, body, #root {
       .ant-modal-close {
         display: none;
       }
+      .ant-modal-header {
+        padding: 27px 38px 22px 38px;
+        .ant-modal-title {
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+
       .ant-modal-body {
+        padding: 22px 38px 22px 38px;
         .ant-row {
           margin-bottom: 15px;
         }
+      }
+      .ant-modal-footer {
+        padding: 18px 38px 25px 38px;
       }
     }
   }
 
   .modal-view-details {
     .ant-modal-footer {
+      padding: 18px 38px 25px 38px;
       .ant-btn-primary {
         display: none;
       }
