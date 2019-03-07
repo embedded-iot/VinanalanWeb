@@ -97,8 +97,8 @@ class AddUser extends Component {
     this.setState({ selected: selected });
   }
 
-  onChangeRole = role => {
-    const selected = { ...this.state.selected, role: role };
+  onChangeRole = e => {
+    const selected = { ...this.state.selected, role: e.target.value };
     this.setState({ selected: selected });
   }
 
