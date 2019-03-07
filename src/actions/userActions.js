@@ -28,13 +28,13 @@ function login(user, remember, history) {
         if (remember) {
           cookie.save("vinaland_email_login", user.email, { path: '/' });
         }
-        dispatch(success(response.data.data.user));
+        // dispatch(success(response.data.data.user));
         dispatch(spinActions.hideSpin());
-        history.push('/');
+        history.push('/Home');
       } else {
-        dispatch(failure(response.data.description));
-        dispatch(alertActions.error(response.data.description));
         dispatch(spinActions.hideSpin());
+        // dispatch(failure(response.data.description));
+        dispatch(alertActions.error(response.data.description));
       }
     }
       , error => {
