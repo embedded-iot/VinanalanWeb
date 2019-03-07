@@ -185,10 +185,10 @@ class Users extends Component {
     };
     const { dispatch } = this.props;
 
-    let isActive = Array.isArray(filters.isActive) && filters.isActive.length && filters.isActive[0] !== ' ' ? filters.isActive[0] : null;
-    let role = Array.isArray(filters.role) && filters.role.length && filters.role[0] !== ' ' ? filters.role[0] : null;
-    let typeJob = Array.isArray(filters.typeJob) && filters.typeJob.length && filters.typeJob[0] !== ' ' ? filters.typeJob[0] : null;
-    let title = Array.isArray(filters.title) && filters.title.length && filters.title[0] !== ' ' ? filters.title[0] : null;
+    let isActive = filters.isActive;
+    let role = filters.role;
+    let typeJob = filters.typeJob;
+    let title = filters.title;
 
     let params = {
       limit: pagination.pageSize || 10,
