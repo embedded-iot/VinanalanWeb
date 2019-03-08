@@ -12,7 +12,7 @@ export class Progress extends React.Component {
   render() {
     const antIcon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
     return (
-      <div className="loader-element">
+      <div className="loader-element" style={{display: this.props.isShow ? '' : 'none'}}>
         <Spin indicator={antIcon} spinning={this.props.isShow} />
       </div>
     );

@@ -68,8 +68,8 @@ class Homes extends Component {
       width: '10%'
     }, {
       title: "Địa chỉ",
-      dataIndex: 'location',
-      render: location => location && location.address_text ? location.address_text : '-',
+      dataIndex: 'address',
+      render: address => address && address.address_text ? address.address_text : '-',
       width: '20%'
     }, {
       title: "Số tầng",

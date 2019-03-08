@@ -7,7 +7,7 @@ const Search = Input.Search;
 const defaultProps = {
   columns: [],
   dataSource: [],
-  bordered: true,
+  bordered: false,
   rowKey: record => record.id,
   pagination: {},
   loading: false,
@@ -28,7 +28,7 @@ export default class TableCustom extends Component {
 
   setPageSize = pageSize => {
     let { pagination, filters, sorter, searchText } = {...this.props.tableSettings};
-    let newPagination = { ...pagination, pageSize};
+    let newPagination = { ...pagination, pageSize, current: 1};
     this.props.onChange(newPagination, filters, sorter, {}, searchText);
   }
 

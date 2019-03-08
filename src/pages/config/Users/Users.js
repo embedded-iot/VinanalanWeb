@@ -61,6 +61,11 @@ class Users extends Component {
     this.onChange();
   }
 
+  getNameByValue = (list, searchValue) => {
+    let result = list.find(item => item.value === searchValue);
+    return result ? result.text : searchValue;
+  }
+
   columns = [
     {
       title: STRINGS.USER_FULL_NAME,
@@ -74,6 +79,7 @@ class Users extends Component {
       dataIndex: 'role',
       width: '10%',
       align: 'center',
+      render: role => this.getNameByValue(CONSTANTS.USER_PERMISSION, role),
       filters: CONSTANTS.USER_PERMISSION
     }, {
       title: STRINGS.PHONE,
@@ -85,12 +91,14 @@ class Users extends Component {
       dataIndex: 'typeJob',
       width: '10%',
       align: 'center',
+      render: typeJob => this.getNameByValue(CONSTANTS.WORKING_TIME, typeJob),
       filters: CONSTANTS.WORKING_TIME
     }, {
       title: STRINGS.USER_TITLE,
       dataIndex: 'title',
       width: '10%',
       align: 'center',
+      render: title => this.getNameByValue(CONSTANTS.USER_TITLE, title),
       filters: CONSTANTS.USER_TITLE
     }, {
       title: STRINGS.STATUS,

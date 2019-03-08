@@ -62,50 +62,50 @@ class AddUser extends Component {
     };
   }
 
-  onChangeName = (e) => {
+  onChangeName = e => {
     const selected = { ...this.state.selected, userName: e.target.value };
     this.setState({ selected: selected });
-  }
+  };
 
-  onChangeEmail = (e) => {
+  onChangeEmail = e => {
     const selected = { ...this.state.selected, email: e.target.value };
     this.setState({ selected: selected });
-  }
+  };
 
-  onChangePassword = (e) => {
+  onChangePassword = e => {
     const selected = { ...this.state.selected, password: e.target.value };
     this.setState({ selected: selected });
-  }
+  };
 
-  onChangePhone = (e) => {
+  onChangePhone = e => {
     const selected = { ...this.state.selected, phoneNumber: e.target.value };
     this.setState({ selected: selected });
-  }
+  };
 
   setWorkingTime = typeJob => {
     const selected = { ...this.state.selected, typeJob: typeJob };
     this.setState({ selected: selected });
-  }
+  };
 
   setUserTitle = title => {
     const selected = { ...this.state.selected, title: title };
     this.setState({ selected: selected });
-  }
+  };
 
   setStatus = status => {
     const selected = { ...this.state.selected, isActive: !!status };
     this.setState({ selected: selected });
-  }
+  };
 
   onChangeRole = e => {
     const selected = { ...this.state.selected, role: e.target.value };
     this.setState({ selected: selected });
-  }
+  };
 
   openNotification = (type, message, description) => {
     notification[type]({
       message: message,
-      description: description,
+      description: description
     });
   };
 
@@ -113,7 +113,7 @@ class AddUser extends Component {
     const { selected, isEdit } = this.state;
     const { onChangeVisible, intl, dispatch, user } = this.props;
     this.setState({ isSubmitted: true });
-    if (!selected.email) return;
+    if (!selected.userName || !selected.email) return;
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
@@ -122,26 +122,44 @@ class AddUser extends Component {
         delete selected.password;
       }
 
-      Services.editUser(selected, response => {
-        dispatch(spinActions.hideSpin());
-        this.openNotification('success', intl.formatMessage({ id: 'EDIT_USER_SUCCESS' }));
-        onChangeVisible(true);
-      }, error => {
-        dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_USER_FAIL' }));
-      });
+      Services.editUser(
+        selected,
+        response => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification(
+            "success",
+            intl.formatMessage({ id: "EDIT_USER_SUCCESS" })
+          );
+          onChangeVisible(true);
+        },
+        error => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification(
+            "error",
+            intl.formatMessage({ id: "EDIT_USER_FAIL" })
+          );
+        }
+      );
     } else {
       if (!selected.password) return;
       selected.name = selected.userName;
       delete selected.userName;
-      Services.createUser({ ...selected, userId: user.id }, response => {
+      Services.createUser(
+        { ...selected, userId: user.id },
+        response => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('success', intl.formatMessage({ id: 'ADD_USER_SUCCESS' }));
+          this.openNotification(
+            "success",
+            intl.formatMessage({ id: "ADD_USER_SUCCESS" })
+          );
           onChangeVisible(true);
         },
         er => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_USER_FAIL' }));
+          this.openNotification(
+            "error",
+            intl.formatMessage({ id: "ADD_USER_FAIL" })
+          );
         }
       );
     }
@@ -152,57 +170,93 @@ class AddUser extends Component {
     const { userName, email, password, role, phoneNumber, title, isActive, typeJob } = selected;
     const { onChangeVisible } = this.props;
     const roles = permissions.map(({ text, value }) => {
-      return { label: text, value }
+      return { label: text, value };
     });
     return (
-      <Modal title={isEdit ? STRINGS.EDIT_USER : STRINGS.ADD_USER}
-             centered
-             width="600px"
-             visible={true}
-             okText={isEdit ? STRINGS.SAVE : STRINGS.CREATE}
-             cancelText={STRINGS.CLOSE}
-             maskClosable={false}
-             onOk={() => this.handleSubmit()}
-             onCancel={() => onChangeVisible()}
+      <Modal
+        title={isEdit ? STRINGS.EDIT_USER : STRINGS.ADD_USER}
+        centered
+        width="600px"
+        visible={true}
+        okText={isEdit ? STRINGS.SAVE : STRINGS.CREATE}
+        cancelText={STRINGS.CLOSE}
+        maskClosable={false}
+        onOk={() => this.handleSubmit()}
+        onCancel={() => onChangeVisible()}
       >
         <Row>
-          <Col span={8}>{STRINGS.USER_FULL_NAME}</Col>
+          <Col span={8}>
+            {STRINGS.USER_FULL_NAME}
+            <span className="is-required">*</span>
+          </Col>
           <Col span={16}>
             <Input value={userName} onChange={this.onChangeName} />
+            {isSubmitted && !email && (
+              <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
+            )}
           </Col>
         </Row>
         <Row>
-          <Col span={8}>{STRINGS.EMAIL}<span className="is-required">*</span></Col>
+          <Col span={8}>
+            {STRINGS.EMAIL}
+            <span className="is-required">*</span>
+          </Col>
           <Col span={16}>
             <Input value={email} onChange={this.onChangeEmail} />
-            {isSubmitted && !email && <span style={{ color: 'red' }}>{STRINGS.REQUIRED_ALERT}</span>}
+            {isSubmitted && !email && (
+              <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
+            )}
           </Col>
         </Row>
         <Row>
-          <Col span={8}>Password { !isEdit && <span className="is-required">*</span>}</Col>
+          <Col span={8}>
+            Password {!isEdit && <span className="is-required">*</span>}
+          </Col>
           <Col span={16}>
-            {!!isEdit && <span style={{ color: 'red' }}>Trường này chỉ dành cho Reset password cho User.</span>}
+            {!!isEdit && (
+              <span style={{ color: "red" }}>
+                Trường này chỉ dành cho Reset password cho User.
+              </span>
+            )}
             <Input value={password} onChange={this.onChangePassword} />
-            {!isEdit && isSubmitted && !password && <span style={{ color: 'red' }}>{STRINGS.REQUIRED_ALERT}</span>}
+            {!isEdit && isSubmitted && !password && (
+              <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
+            )}
           </Col>
         </Row>
         <Row>
           <Col span={8}>{STRINGS.PHONE}</Col>
-          <Col span={16}><Input value={phoneNumber} onChange={this.onChangePhone} /></Col>
+          <Col span={16}>
+            <Input value={phoneNumber} onChange={this.onChangePhone} />
+          </Col>
         </Row>
         <Row>
           <Col span={8}>{STRINGS.WORKING_TIME}</Col>
           <Col span={16}>
-            <Select defaultValue={typeJob || workingTimes[0].value} onChange={this.setWorkingTime}>
-              {workingTimes.map((item, index) => <Option key={index} value={item.value}>{item.text}</Option>)}
+            <Select
+              defaultValue={typeJob || workingTimes[0].value}
+              onChange={this.setWorkingTime}
+            >
+              {workingTimes.map((item, index) => (
+                <Option key={index} value={item.value}>
+                  {item.text}
+                </Option>
+              ))}
             </Select>
           </Col>
         </Row>
         <Row>
           <Col span={8}>{STRINGS.USER_TITLE}</Col>
           <Col span={16}>
-            <Select defaultValue={title || titles[0].value} onChange={this.setUserTitle}>
-              {titles.map((item, index) => <Option key={index} value={item.value}>{item.text}</Option>)}
+            <Select
+              defaultValue={title || titles[0].value}
+              onChange={this.setUserTitle}
+            >
+              {titles.map((item, index) => (
+                <Option key={index} value={item.value}>
+                  {item.text}
+                </Option>
+              ))}
             </Select>
           </Col>
         </Row>
@@ -210,14 +264,22 @@ class AddUser extends Component {
           <Col span={8}>{STRINGS.STATUS}</Col>
           <Col span={16}>
             <Select defaultValue={Number(isActive)} onChange={this.setStatus}>
-              {status.map((item, index) => <Option key={index} value={Number(item.value)}>{item.text}</Option>)}
+              {status.map((item, index) => (
+                <Option key={index} value={Number(item.value)}>
+                  {item.text}
+                </Option>
+              ))}
             </Select>
           </Col>
         </Row>
         <Row>
           <Col span={8}>{STRINGS.USER_PERMISSION}</Col>
           <Col span={16}>
-            <RadioGroup options={roles} onChange={this.onChangeRole} value={role} />
+            <RadioGroup
+              options={roles}
+              onChange={this.onChangeRole}
+              value={role}
+            />
           </Col>
         </Row>
       </Modal>
@@ -230,11 +292,10 @@ AddUser.propTypes = {
   onCancel: PropTypes.func
 };
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function(state) {
   return {
     user: state.authentication.user
-  }
-}
-
+  };
+};
 
 export default injectIntl(connect(mapStateToProps)(AddUser));

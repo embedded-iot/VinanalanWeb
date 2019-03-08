@@ -33,7 +33,11 @@ class LeftSideBar extends Component {
 
   getClassNameLeftSideBar = () => {
     let classNameLeftSideBar = "left-side-bar";
-    if (location.pathname === "/Login" || location.pathname === "/Register" || location.pathname === "/ForgotPW") {
+    if (
+      location.pathname === "/Login" ||
+      location.pathname === "/Register" ||
+      location.pathname === "/ForgotPW"
+    ) {
       classNameLeftSideBar += " hide";
     }
     if (this.state.collapsed) {
@@ -55,12 +59,8 @@ class LeftSideBar extends Component {
 
   render() {
     const { urlPage, collapsed } = this.state;
-    const widthLeftMenu = collapsed ? "80px" : "250px";
     return (
-      <div
-        className={this.getClassNameLeftSideBar()}
-        style={{ width: widthLeftMenu }}
-      >
+      <div className={this.getClassNameLeftSideBar()}>
         <div className="branch-box">
           <img className="ic-logo" src={logo_vinaland} />
         </div>

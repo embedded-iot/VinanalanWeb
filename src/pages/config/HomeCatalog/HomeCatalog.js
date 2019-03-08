@@ -63,6 +63,7 @@ class HomeCatalog extends Component {
       title: STRINGS.CREATE_BY,
       dataIndex: 'create_by',
       width: '10%',
+      render: create_by => typeof create_by === "object" ? create_by.userName : '-',
       align: 'center'
     }, {
       title: STRINGS.STATUS,
