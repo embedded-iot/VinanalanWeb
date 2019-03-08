@@ -77,6 +77,8 @@ class AddRoomsCatalog extends Component {
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
+      var id = typeof selected.create_by === "object" ? selected.create_by.id : '';
+      selected.create_by = id;
       Services.editRoomCatalog(selected.id, selected, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_ROOM_CATALOG_SUCCESS' }));

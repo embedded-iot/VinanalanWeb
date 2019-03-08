@@ -36,10 +36,10 @@ module.exports = {
   },
   plugins: [
     // uncomment when build production and comment when dev
-    new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('production')
-      }),
-    new webpack.optimize.UglifyJsPlugin(),
+    // new webpack.DefinePlugin({
+    //     'process.env.NODE_ENV': JSON.stringify('production')
+    //   }),
+    // new webpack.optimize.UglifyJsPlugin(),
     ////////////////
     new webpack.HotModuleReplacementPlugin(),
     HtmlWebpackPluginConfig,

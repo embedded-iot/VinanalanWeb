@@ -77,6 +77,8 @@ class AddHome extends Component {
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
+      var id = typeof selected.create_by === "object" ? selected.create_by.id : '';
+      selected.create_by = id;
       Services.editHomeCatalog(selected.id, selected, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_SUCCESS' }));
