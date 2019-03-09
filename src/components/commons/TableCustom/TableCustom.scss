@@ -7,12 +7,18 @@
       margin-right: auto;
       width: 100%;
       margin-bottom: 10px;
+      box-shadow: none;
       input {
         padding-left: 30px;
         width: 320px;
-        &:focus {
+        &:hover {
+          border: none;
+        }
+        &:focus, &:active {
           width: 100%;
           flex-grow: 1;
+          border: 1px solid #000000;
+          box-shadow: none;
         }
       }
       .ant-input-suffix {
