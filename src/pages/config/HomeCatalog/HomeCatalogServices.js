@@ -38,11 +38,8 @@ export function createHomeCatalog(data, successCallback, failCallback) {
 }
 
 export function editHomeCatalog(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
     let requestOptions = {
-        url: '/api/home-catalog/' + id,
+        url: '/api/home-catalog/updateHomeCatalog',
         data: data
     };
 

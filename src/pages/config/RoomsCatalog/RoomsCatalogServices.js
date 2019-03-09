@@ -38,11 +38,8 @@ export function createRoomCatalog(data, successCallback, failCallback) {
 }
 
 export function editRoomCatalog(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
     let requestOptions = {
-        url: '/api/room-catalog/' + id,
+        url: '/api/room-catalog/updateRoomCatalog',
         data: data
     };
 
