@@ -40,7 +40,7 @@ class AddHomeCatalog extends Component {
         isActive: true,
         ...props.selected
       },
-      isEdit: Object.getOwnPropertyNames(props.selected).length,
+      isEdit: props.selected && Object.getOwnPropertyNames(props.selected).length,
       isSubmitted: false
     };
   }

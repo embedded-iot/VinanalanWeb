@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {spinActions} from "../../../actions";
 import * as CONSTANTS from '../../Constants';
+import UploadImageList from "../../../components/commons/UploadImageList/UploadImageList";
+import * as UploadService from "../../../components/commons/UploadService";
 
 const Option = Select.Option;
 
@@ -38,7 +40,8 @@ class AddOutcomeUtility extends Component {
         isActive: true,
         ...props.selected
       },
-      isEdit: Object.getOwnPropertyNames(props.selected).length,
+      isEdit: props.selected && Object.getOwnPropertyNames(props.selected).length,
+      fileList: [],
       isSubmitted: false
     };
   }
@@ -70,7 +73,6 @@ class AddOutcomeUtility extends Component {
   handleSubmit = () => {
     const { selected, isEdit } = this.state;
     const { onChangeVisible, intl, dispatch, user } = this.props;
-    this,this.setState({isSubmitted: true});
     if (!selected.name) return;
 
     dispatch(spinActions.showSpin());
@@ -99,8 +101,38 @@ class AddOutcomeUtility extends Component {
     }
   };
 
+  handleUpload = (fileList, callback) => {
+    const { dispatch } = this.props;
+    const formData = new FormData();
+    const { selected } = this.state;
+
+    this.setState({isSubmitted: true});
+    if (!selected.name) return;
+    if (fileList.length) {
+      fileList.forEach((file) => {
+        formData.append('file', file);
+      });
+      dispatch(spinActions.showSpin());
+      UploadService.postIcon(formData, response => {
+        dispatch(spinActions.hideSpin());
+        var icon_link = response.file  && response.file.length ? response.file[0].name : '';
+        const select = {...selected, icon_link: icon_link};
+        this.setState({selected: select}, () => callback())
+      }, errors => {
+        dispatch(spinActions.hideSpin());
+        this.openNotification('error', "Tải hình ảnh thất bại. Vui lòng chọn hình ảnh khác!");
+      })
+    } else {
+      callback();
+    }
+  }
+
+  onChangeUpload = fileList => {
+    this.setState({fileList: fileList});
+  }
+
   render() {
-    const {selected, isEdit, isSubmitted} = this.state;
+    const {selected, isEdit, isSubmitted, fileList} = this.state;
     const { name, icon_link, isActive} = selected;
     const { onChangeVisible} = this.props;
     const [...status] = CONSTANTS.STATUS;
@@ -112,7 +144,7 @@ class AddOutcomeUtility extends Component {
              okText={isEdit ? STRINGS.SAVE : STRINGS.CREATE}
              cancelText={STRINGS.CLOSE}
              maskClosable={false}
-             onOk={() => this.handleSubmit()}
+             onOk={() => this.handleUpload(fileList, this.handleSubmit)}
              onCancel={() => onChangeVisible()}
       >
         <Row>
@@ -124,7 +156,9 @@ class AddOutcomeUtility extends Component {
         </Row>
         <Row>
           <Col span={8}>Icon</Col>
-          <Col span={16}><Input value={icon_link} onChange={this.onChangeIconLink} /></Col>
+          <Col span={16}>
+            <UploadImageList onChange={this.onChangeUpload}/>
+          </Col>
         </Row>
         <Row>
           <Col span={8}>{STRINGS.STATUS}</Col>
