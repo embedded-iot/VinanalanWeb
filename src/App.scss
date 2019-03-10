@@ -301,3 +301,64 @@ body,
     border: 1px solid #f5222d !important;
   }
 }
+
+.group-box {
+  position: relative;
+  margin-bottom: 30px;
+  clear: both;
+  .group-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin: 15px 0 10px;
+    .group-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .group-action {
+      text-decoration: underline;
+      color: #37b3ff;
+      font-weight: bold;
+      &:hover {
+      }
+    }
+  }
+  .group-sub-heading {
+    position: absolute;
+    top: -13px;
+    left: 16px;
+    background: #f3f3f3;
+    padding: 0 6px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .group-content {
+    border-radius: 6px;
+    padding: 10px 20px;
+    border: 1px solid #40404040;
+    min-height: 125px;
+    .sub-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
+
+.input-text-wrapper, .dropdown-list-wrapper, .sub-title-wrapper, .dropdown-input-search-wrapper, .input-text-area-wrapper,
+.input-number-wrapper, .output-text-wrapper {
+  margin: 10px 0 20px;
+  max-width: 400px;
+  .heading {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 17px;
+    margin-bottom: 10px;
+    .is-required {
+      margin-left: 7px;
+    }
+    .anticon {
+      margin-left: 7px;
+      cursor: pointer;
+    }
+  }
+}

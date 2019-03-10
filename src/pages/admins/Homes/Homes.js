@@ -214,11 +214,9 @@ class Homes extends Component {
     this.onChange(pagination, filters, sorter, {}, searchText);
   }
 
-  onChangeVisible = (success) => {
-    this.setState({ selected: {}, isShowAddOrEdit: !this.state.isShowAddOrEdit})
-    if (success) {
-      this.onReload()
-    }
+  onAddHome = (success) => {
+     const { history} = this.props;
+    history.push('/AddHome')
   }
 
   onChangeVisibleViewDetails = () => {
@@ -235,7 +233,7 @@ class Homes extends Component {
       tableSettings: tableSettings
     };
     const buttonList = [
-      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onChangeVisible()}
+      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onAddHome()}
     ];
     return (
       <div className="page-wrapper">

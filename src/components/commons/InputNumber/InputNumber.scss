@@ -1,0 +1,13 @@
+.input-number-wrapper {
+  .ant-input-number {
+    border: solid 1px #CCCCCC;
+    width: 100%;
+    &:hover {
+      border: solid 1px #CCCCCC;
+    }
+    &:focus {
+      box-shadow: none;
+      border: 1px solid #000000;
+    }
+  }
+}

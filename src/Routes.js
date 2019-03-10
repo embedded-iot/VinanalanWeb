@@ -27,7 +27,7 @@ import {
 
 import {
     Home,
-
+    AddHome
 } from "./pages/admins";
 
 // import {PrivateRoute, NotRequireLogin, RequireLogin} from './components/commons';
@@ -46,6 +46,8 @@ const Protected = (props) => <div>
     <Switch>
         <Route exact path="/" component={Homes}/>
         <Route exact path="/Home" component={Homes}/>
+        <Route exact path="/HomeOld" component={Home}/>
+        <Route exact path="/AddHome" component={AddHome}/>
 
         <Route exact path="/Users" component={Users}/>
         <Route exact path="/HomeCatalog" component={HomeCatalog}/>
