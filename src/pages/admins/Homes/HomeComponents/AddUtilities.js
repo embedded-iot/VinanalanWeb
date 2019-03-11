@@ -25,7 +25,9 @@ class AddUtilities extends Component {
     super(props);
     this.state = {
       list: [],
-      nameModal: ''
+      nameModal: '',
+      selectedIdList: [],
+      selectedList: []
     }
   }
 
@@ -47,11 +49,11 @@ class AddUtilities extends Component {
     const { type} = this.props;
 
     switch (type) {
-      case 'income_utilities':
+      case 'income_service':
         this.setState( {nameModal: 'Xin mời chọn tiện ích trong cho toà nhà'});
         this.fetchInitData(getIncomeUtilities);
         break;
-      case 'outcome_utilities':
+      case 'outcome_service':
         this.setState( {nameModal: 'Xin mời chọn tiện ích ngoài cho toà nhà'});
         this.fetchInitData(getOutcomeUtilities);
         break;
@@ -63,8 +65,18 @@ class AddUtilities extends Component {
 
   onChange = checkedValues => {
     console.log(checkedValues);
+    this.setState({ selectedIdList: checkedValues});
   }
 
+  saveUtilities = () => {
+    const { type, onOk, onCancel} = this.props;
+    const { list, selectedIdList, selectedList} = this.state;
+    const selectList = list.filter(item => {
+      return selectedIdList.indexOf(item.id) >= 0;
+    });
+    onOk(type, selectedIdList, selectList);
+    onCancel();
+  }
 
   render() {
     const { onCancel, selected} = this.props;
@@ -83,7 +95,7 @@ class AddUtilities extends Component {
       >
         <div className="add-utilities-wrapper">
           { list.length && (
-            <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange}>
+            <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange} defaultValue={selected}>
               <Row>
                 {
                   list.map(item => (

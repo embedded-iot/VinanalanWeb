@@ -26,7 +26,7 @@ export function deleteHomeCatalog(id, successCallback, failCallback) {
 
 export function createHomeCatalog(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/createHomeCatalog',
+        url: '/api/homes/addNewHome',
         data: data
     };
 

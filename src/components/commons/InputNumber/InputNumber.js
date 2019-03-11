@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 class InputNumber extends Component {
 
-  handleOnChange = (e) => {
-    this.props.onChange(this.props.name, e.target.value);
+  handleOnChange = (value) => {
+    this.props.onChange(this.props.name, value);
   }
 
   render() {
@@ -20,7 +20,7 @@ class InputNumber extends Component {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
         </div>
-        <InputNumberAntd min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />
+        <InputNumberAntd defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />
       </div>
     );
   }

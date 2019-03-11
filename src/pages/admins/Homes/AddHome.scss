@@ -1,0 +1,10 @@
+.add-home-page-wrapper {
+  .button-list-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin: 25px 0 30px;
+    .button-list {
+      display: inline-block;
+    }
+  }
+}

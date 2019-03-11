@@ -21,7 +21,7 @@ class InputTextArea extends Component {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
         </div>
-        <TextArea value={value} autosize={{ minRows: 2, maxRows: 6 }}
+        <TextArea defaultValue={value} autosize={{ minRows: 2, maxRows: 6 }}
                   placeholder={placeholder}
                   onChange={this.handleOnChange}/>
       </div>
