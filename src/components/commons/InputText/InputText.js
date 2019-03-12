@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import {Input, Icon, Tooltip} from "antd";
 import "./InputText.scss"
 import PropTypes from 'prop-types';
+import {FormattedMessage} from "react-intl";
 
+const STRINGS = {
+  REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
+}
 
 class InputText extends Component {
 
@@ -11,7 +15,7 @@ class InputText extends Component {
   }
 
   render() {
-    const { title, isRequired, defaultValue, placeholder, titleInfo, placeholderInfo} = this.props;
+    const { title, isRequired, value, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
     return (
       <div className="input-text-wrapper">
         <div className="heading">{ title }
@@ -20,7 +24,8 @@ class InputText extends Component {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
         </div>
-        <Input defaultValue={defaultValue} onChange={ this.handleOnChange } placeholder={placeholder}/>
+        <Input value={value} onChange={ this.handleOnChange } placeholder={placeholder} disabled={disabled}/>
+        {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );
   }

@@ -2,8 +2,14 @@ import React, { Component } from "react";
 import {Input, Icon, Tooltip} from "antd";
 import "./InputTextArea.scss"
 import PropTypes from 'prop-types';
+import {FormattedMessage} from "react-intl";
 
 const { TextArea } = Input;
+
+const STRINGS = {
+  REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
+}
+
 
 class InputTextArea extends Component {
 
@@ -12,7 +18,7 @@ class InputTextArea extends Component {
   }
 
   render() {
-    const { title, value, isRequired, placeholder, titleInfo, placeholderInfo, style} = this.props;
+    const { title, value, defaultValue, isRequired, placeholder, titleInfo, placeholderInfo, style, isSubmitted, disabled} = this.props;
     return (
       <div className="input-text-area-wrapper" style={style}>
         <div className="heading">{ title }
@@ -21,9 +27,12 @@ class InputTextArea extends Component {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
         </div>
-        <TextArea defaultValue={value} autosize={{ minRows: 2, maxRows: 6 }}
+        <TextArea value={value} autosize={{ minRows: 2, maxRows: 6 }}
+                  defaultValue={defaultValue}
                   placeholder={placeholder}
+                  disabled={disabled}
                   onChange={this.handleOnChange}/>
+        {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );
   }

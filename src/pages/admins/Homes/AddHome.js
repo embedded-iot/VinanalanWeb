@@ -31,6 +31,7 @@ import {getIncomeUtilities} from "../../config/IncomeUtilities/IncomeUtilitiesSe
 import {getOutcomeUtilities} from "../../config/OutcomeUtilities/OutcomeUtilitiesServices";
 import {getExtraFees} from "../../config/ExtraFees/ExtraFeesServices";
 import ViewTopUtilities from "./HomeComponents/ViewTopUtilities";
+import {getHomeDetails} from "./HomesServices";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -88,7 +89,7 @@ class AddHome extends Component {
       outcome_service: [],
       income_service: [],
       extra_service: [],
-      isEdit: props.selected && Object.getOwnPropertyNames(props.selected).length,
+      isEdit: false,
       isSubmitted: false,
       utilitiesModal: {
         type: "",
@@ -102,7 +103,37 @@ class AddHome extends Component {
   }
 
   componentWillMount() {
-    this.getInnitData();
+    const { homeId, mode } = this.props.match.params;
+    if (homeId) {
+      this.getHomeDetails(homeId, this.getInnitData);
+    } else {
+      this.getInnitData();
+    }
+    if (mode === 'Edit') {
+      this.setState({isEdit: true})
+    }
+    if (mode === 'View') {
+      this.setState({isView: true})
+    }
+  }
+
+  getHomeDetails = (id, callback)  => {
+    const { dispatch } = this.props;
+    dispatch(spinActions.showSpin());
+    getHomeDetails(id, response => {
+      dispatch(spinActions.hideSpin());
+      if (response.data) {
+        let selected = { ...this.state.selected, ...response.data};
+        this.setState({selected: selected});
+        const { address_text, country_code, district_code, province_code, ward_code } = selected.address;
+        this.getProvincesByCountry(country_code);
+        this.getDistrictsByProvince(province_code);
+        this.getWardsByDistrict(district_code);
+        callback();
+      }
+    }, error => {
+      dispatch(spinActions.hideSpin());
+    })
   }
 
   getInnitData = () => {
@@ -124,7 +155,13 @@ class AddHome extends Component {
           text: item.userName,
           value: item.id
         }));
-        this.setState({users: users});
+        this.setState({users: users}, () => {
+          const { selected } = this.state;
+          if (selected.managerId) {
+            this.findHomeManageById(selected.managerId);
+          }
+        });
+
       }
     });
 
@@ -168,16 +205,14 @@ class AddHome extends Component {
     const {selected, isEdit} = this.state;
     const {intl, dispatch, user, history} = this.props;
     this.setState({isSubmitted: true});
-    // if (!selected.catalogName || !selected.catalogDescription) return;
+    if (!selected.homeDescription) return;
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
       var id =
         typeof selected.create_by === "object" ? selected.create_by.id : "";
       selected.create_by = id;
-      Services.editHomeCatalog(
-        selected.id,
-        selected,
+      Services.editHome(selected,
         response => {
           dispatch(spinActions.hideSpin());
           this.openNotification(
@@ -292,16 +327,23 @@ class AddHome extends Component {
     const selected = { ...this.state.selected, address: address};
     this.setState({ selected: { ...selected}});
     switch (name) {
-      case "country":
+      case "country_code":
         this.getProvincesByCountry(value);
         break;
-      case "province":
+      case "province_code":
         this.getDistrictsByProvince(value);
         break;
-      case "district":
+      case "district_code":
         this.getWardsByDistrict(value);
         break;
     }
+  }
+
+  findHomeManageById = id => {
+    const {users} = this.state;
+    const manager = users.find(item => (item.value === id));
+    if (!manager) return;
+    this.setState({ homeManager: manager});
   }
 
   onChangeDropdownManager = (name, value) => {
@@ -332,17 +374,35 @@ class AddHome extends Component {
     this.setState({selected: selected});
   };
 
+
+
   selectedStep = step => {
-    this.setState({selectedStep: step});
+    const { selected } = this.state;
+    const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
+      isActive} = selected;
+    if (step === 1) {
+      if (!homeName || !homeTypeId || !address.country_code || !address.province_code|| !address.district_code || !address.ward_code
+        || numFloor === undefined || numRoom === undefined || location.lat === undefined || location.lng === undefined || !managerId) {
+        this.setState({isSubmitted: true, selectedStep: 0});
+      } else {
+        this.setState({isSubmitted: false, selectedStep: 1});
+      }
+    } else {
+      this.setState({isSubmitted: false, selectedStep: 0});
+    }
   }
 
   buttonListOne = [
-    { title: "Lưu và tiếp tục", type: "primary", onClick: () => this.selectedStep(1)}
+    { title: "Tiếp theo", type: "primary", onClick: () => this.selectedStep(1)}
   ];
 
   buttonListTwo = [
     { title: "Quay lại", onClick: () => this.selectedStep(0)},
     { title: "Lưu tòa nhà", type: "primary",  icon: "save", onClick: () => this.handleSubmit()}
+  ];
+
+  buttonListTwoViewMode = [
+    { title: "Quay lại", onClick: () => this.selectedStep(0)}
   ];
 
   onOkAddUtilities = (type, selectedIdList, selectedList) => {
@@ -361,17 +421,27 @@ class AddHome extends Component {
   }
 
   render() {
-    const {selected, isEdit, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
+    const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
       outcome_service, income_service, extra_service} = this.state;
     const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
       isActive} = selected;
+    const { address_text, country_code, district_code, province_code, ward_code } = address;
     const {phoneNumber, email} = homeManager;
     const {onChangeVisible} = this.props;
     const [...status] = CONSTANTS.STATUS;
+    const { isEdit, isView} = this.state;
+    let title;
+    if (isEdit) {
+      title = 'Chỉnh sửa thông tin tòa nhà';
+    } else if (isView) {
+      title = 'Thông tin chi tiết tòa nhà';
+    } else {
+      title = 'Thêm mới tòa nhà';
+    }
     return (
       <div className="page-wrapper add-home-page-wrapper">
         <div className="page-headding">
-          Thêm mới tòa nhà
+          {title}
         </div>
         <div className="steps-wrapper" style={{display: (selectedStep === 0 ? 'block' : 'none')}}>
           <div className="group-box">
@@ -383,12 +453,23 @@ class AddHome extends Component {
               />
               <InputText
                 title="Tên tiếng việt"
+                value={homeName}
+                isSubmitted={isSubmitted}
                 name="homeName"
                 isRequired={true}
                 onChange={this.onChangeInput}
+                disabled={isView}
               />
               <SubTitle title="Loại hình chỗ nghỉ của bạn?" isRequired='true'/>
-              <DropdownList name="homeTypeId" list={homeCatalogs} onChange={this.onChangeDropdown}/>
+              <DropdownList
+                name="homeTypeId"
+                list={homeCatalogs}
+                value={homeTypeId}
+                isSubmitted={isSubmitted}
+                isRequired='true'
+                onChange={this.onChangeDropdown}
+                disabled={isView}
+              />
               <SubTitle
                 title="Địa chỉ chỗ nghỉ"
                 titleInfo="Địa chỉ chỗ nghỉ của bạn là quan trọng! Vui lòng cung cấp đầy đủ thông tin về địa chỉ chỗ nghỉ của bạn."
@@ -396,59 +477,85 @@ class AddHome extends Component {
               <DropdownInputSearch
                 title="Quốc gia"
                 isRequired="true"
+                isSubmitted={isSubmitted}
                 list={countries}
-                name="country"
+                value={country_code}
+                name="country_code"
                 onChange={this.onChangeAddress}
+                disabled={isView}
               />
               <DropdownInputSearch
                 title="Tỉnh/Thành phố"
                 isRequired="true"
+                isSubmitted={isSubmitted}
                 list={provinces}
-                name="province"
+                value={province_code}
+                name="province_code"
                 onChange={this.onChangeAddress}
+                disabled={isView}
               />
               <DropdownInputSearch
                 title="Quận/Huyện"
                 isRequired="true"
+                isSubmitted={isSubmitted}
                 list={districts}
-                name="district"
+                value={district_code}
+                name="district_code"
                 onChange={this.onChangeAddress}
+                disabled={isView}
               />
               <DropdownInputSearch
                 title="Tên đường, phường, xã"
                 isRequired="true"
+                isSubmitted={isSubmitted}
                 list={wards}
-                name="ward"
+                value={ward_code}
+                name="ward_code"
                 onChange={this.onChangeAddress}
+                disabled={isView}
               />
               <InputTextArea
                 title="Số nhà, tầng, tòa nhà,..."
+                value={address_text}
                 name="address_text"
                 onChange={this.onChangeAddress}
+                disabled={isView}
               />
               <InputNumber
                 title="Lat"
                 name="lat"
-                defaultValue={location.lat}
+                value={location.lat}
+                isRequired="true"
+                isSubmitted={isSubmitted}
                 onChange={this.onChangeInputLatLong}
+                disabled={isView}
               />
               <InputNumber
                 title="Long"
                 name="lng"
-                defaultValue={location.lng}
+                value={location.lng}
+                isRequired="true"
+                isSubmitted={isSubmitted}
                 onChange={this.onChangeInputLatLong}
+                disabled={isView}
               />
               <InputText
                 title="Hot line"
                 name="hotline"
+                value={hotline}
+                isSubmitted={isSubmitted}
                 isRequired="true"
                 onChange={this.onChangeInput}
+                disabled={isView}
               />
               <InputNumber
                 title="Số tầng"
                 name="numFloor"
-                defaultValue={numFloor}
+                value={numFloor}
+                isRequired="true"
+                isSubmitted={isSubmitted}
                 onChange={this.onChangeInput}
+                disabled={isView}
               />
             </div>
           </div>
@@ -460,9 +567,12 @@ class AddHome extends Component {
               <DropdownInputSearch
                 title="Tên người quản lý"
                 isRequired="true"
+                isSubmitted={isSubmitted}
                 list={users}
+                value={managerId}
                 name="managerId"
                 onChange={this.onChangeDropdownManager}
+                disabled={isView}
               />
               <OutputText title="Số điện thoại" value={phoneNumber}/>
               <OutputText title="Email" value={email}/>
@@ -473,9 +583,11 @@ class AddHome extends Component {
           </div>
         </div>
         <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
-          <Button onClick={this.toggleAddUploadModal}>
-            Chỉnh sửa thư viện ảnh
-          </Button>
+          { !isView && (
+            <Button onClick={this.toggleAddUploadModal}>
+              Chỉnh sửa thư viện ảnh
+            </Button>)
+          }
           <div className="group-box">
             <div className="group-header">
               <div className="group-title">Tiện nghi nổi bật</div>
@@ -489,11 +601,13 @@ class AddHome extends Component {
           <div className="group-box">
             <div className="group-header">
               <div className="group-title">Tiện ích ngoài</div>
+              { !isView && (
               <div className="group-action">
                 <a onClick={() => this.showUtilitiesModal("outcome_service")}>
                   Chỉnh sửa
                 </a>
               </div>
+              )}
             </div>
             <div className="group-content">
               <ViewUtilities
@@ -504,11 +618,12 @@ class AddHome extends Component {
           <div className="group-box">
             <div className="group-header">
               <div className="group-title">Tiện ích trong</div>
-              <div className="group-action">
+              { !isView && ( <div className="group-action">
                 <a onClick={() => this.showUtilitiesModal("income_service")}>
                   Chỉnh sửa
                 </a>
               </div>
+              )}
             </div>
             <div className="group-content">
               <ViewUtilities
@@ -524,16 +639,21 @@ class AddHome extends Component {
               <InputTextArea
                 title="Hãy mô tả ngắn gọn chỗ nghỉ của bạn"
                 name="homeDescription"
+                value={homeDescription}
+                isSubmitted={isSubmitted}
                 isRequired='true'
                 onChange={this.onChangeInput}
                 style={{maxWidth: "none"}}
+                disabled={isView}
               />
             </div>
           </div>
           <div className="group-box">
             <div className="group-header">
               <div className="group-title">Dịch vụ đi kèm</div>
-              <div className="group-action"><a onClick={() => this.showUtilitiesModal("extra_service")}>Chỉnh sửa</a></div>
+              { !isView && ( <div className="group-action">
+                <a onClick={() => this.showUtilitiesModal("extra_service")}>Chỉnh sửa</a>
+              </div>)}
             </div>
             <div className="group-content">
               <ViewUtilities
@@ -542,7 +662,7 @@ class AddHome extends Component {
             </div>
           </div>
           <div className='button-list-wrapper'>
-            <ButtonList list={this.buttonListTwo}/>
+            <ButtonList list={ isView ? this.buttonListTwoViewMode : this.buttonListTwo}/>
           </div>
           {utilitiesModal.visible && (
             <AddUtilities

@@ -1,6 +1,6 @@
 import * as Services from "../../../utils/cuiResource";
 
-export function getHomeCatalog(params, successCallback, failCallback) {
+export function getHomes(params, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/homes/getAllHomes',
         params: params
@@ -37,13 +37,25 @@ export function createNewHome(data, successCallback, failCallback) {
     });
 }
 
-export function editHomeCatalog(id, data, successCallback, failCallback) {
+export function editHome(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/' + id,
+        url: '/api/homes/updateHome',
         data: data
     };
 
     Services.makePutRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
+export function getHomeDetails(id, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/homes/' + id
+    };
+
+    Services.makeGetRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
         failCallback(error);

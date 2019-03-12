@@ -97,13 +97,13 @@ class Homes extends Component {
         return (
           <div className="actions-column">
             <Tooltip title={STRINGS.VIEW}>
-              <span className="icon icon-view" onClick={() =>this.viewIncomeUtility(id)}></span>
-            </Tooltip>*
+              <span className="icon icon-view" onClick={() =>this.viewHome(id)}></span>
+            </Tooltip>
             <Tooltip title={STRINGS.EDIT}>
-              <span className="icon icon-edit" onClick={() => this.editIncomeUtility(id)}></span>
+              <span className="icon icon-edit" onClick={() => this.editHome(id)}></span>
             </Tooltip>
             <Tooltip title={STRINGS.ACTION_DELETE}>
-              <span className="icon icon-delete" onClick={() => this.deleteIncomeUtility(id)}></span>
+              <span className="icon icon-delete" onClick={() => this.deleteHome(id)}></span>
             </Tooltip>
           </div>
         )
@@ -120,23 +120,23 @@ class Homes extends Component {
     });
   };
 
-  editIncomeUtility = (id) => {
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
-    if (!selectedUtility) {
+  editHome = (id) => {
+    const { history } = this.props;
+    if (!id) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit })
+    history.push('/Home/' + id + '/Edit');
   }
 
-  viewIncomeUtility = (id) => {
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
-    if (!selectedUtility) {
+  viewHome = (id) => {
+    const { history } = this.props;
+    if (!id) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails })
+    history.push('/Home/' + id + '/View');
   }
 
-  deleteIncomeUtility = (id) => {
+  deleteHome = (id) => {
     const { intl, dispatch } = this.props;
 
     const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
@@ -200,7 +200,7 @@ class Homes extends Component {
       loading: true
     });
     dispatch(spinActions.showSpin());
-    Services.getHomeCatalog({ ...params, }, (response) => {
+    Services.getHomes({ ...params, }, (response) => {
       dispatch(spinActions.hideSpin());
       const tableSettings = {
         ...this.state.tableSettings,

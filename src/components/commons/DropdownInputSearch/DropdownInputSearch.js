@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import {Select, Icon, Tooltip} from "antd";
 import "./DropdownInputSearch.scss"
 import PropTypes from 'prop-types';
+import {FormattedMessage} from "react-intl";
 const Option = Select.Option;
+
+const STRINGS = {
+  REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
+}
 
 class DropdownInputSearch extends Component {
 
@@ -11,11 +16,11 @@ class DropdownInputSearch extends Component {
   }
 
   render() {
-    const { list, title, placeholder, isRequired, titleInfo, placeholderInfo, style} = this.props;
+    const { list, title, placeholder, isRequired, disabled, titleInfo, placeholderInfo, style, isSubmitted, value} = this.props;
     return (
       <div className="dropdown-input-search-wrapper">
         <div className="heading">{ title }
-          { isRequired && <span className="is-required">*</span> }
+          { isRequired && title &&  <span className="is-required">*</span> }
           {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
@@ -24,8 +29,10 @@ class DropdownInputSearch extends Component {
           showSearch
           style={style}
           placeholder={placeholder}
+          value={value}
           optionFilterProp="children"
           onChange={ this.handleOnChange}
+          disabled={disabled}
           filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
         >
           {
@@ -37,6 +44,7 @@ class DropdownInputSearch extends Component {
             )
           }
         </Select>
+        {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );
   }

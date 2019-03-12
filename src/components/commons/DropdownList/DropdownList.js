@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import {Select, Icon, Tooltip} from "antd";
 import "./DropdownList.scss"
 import PropTypes from 'prop-types';
+import {FormattedMessage} from "react-intl";
 const Option = Select.Option;
+
+const STRINGS = {
+  REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
+}
 
 class DropdownList extends Component {
 
@@ -11,26 +16,28 @@ class DropdownList extends Component {
   }
 
   render() {
-    const { defaultValue, list, title, isRequired, titleInfo, placeholderInfo} = this.props;
-    const value = defaultValue ? defaultValue : (list.length ? list[0].value : '');
+    const { defaultValue, value, disabled, list, title, isRequired, titleInfo, placeholderInfo, isSubmitted} = this.props;
     return (
       <div className="dropdown-list-wrapper">
         <div className="heading">{ title }
-          { isRequired && <span className="is-required">*</span> }
+          { isRequired && title && <span className="is-required">*</span> }
           {
-            titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
+            !!titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
         </div>
         <Select
-          defaultValue={value}
+          defaultValue={defaultValue}
+          value={value}
           onChange={this.handleOnChange}
+          disabled={disabled}
         >
-          {list && list.length && list.map((item, index) => (
+          { !!list && list.length && list.map((item, index) => (
             <Option key={index} value={item.value}>
               {item.text}
             </Option>
           ))}
         </Select>
+        {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );
   }
