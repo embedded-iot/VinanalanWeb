@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import * as Services from './HomesServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
-import {Modal, notification, Tooltip} from 'antd';
-import {spinActions} from "../../../actions/spinAction";
+import { Modal, notification, Tooltip } from 'antd';
+import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AddHome from "./AddHome";
@@ -27,7 +27,8 @@ const STRINGS = {
   VIEW: <FormattedMessage id="VIEW" />,
   EDIT: <FormattedMessage id="EDIT" />,
   ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
-  DELETE_HOME_QUESTION: <FormattedMessage id="DELETE_HOME_QUESTION" />,
+  DELETE_QUESTION_WARNING: " Hiện bạn còn phòng đang hoạt động. Không thể xóa tòa nhà.",
+  DELETE_QUESTION: "Mọi thông tin bạn đã đăng tải về chỗ nghỉ này như hình ảnh, video, phòng khách sạn, ... sẽ bị xóa khỏi webstite sarepi.com và không thể khôi phục được. Bạn có chắc chắn muốn xóa chỗ nghỉ này?",
 }
 
 class Homes extends Component {
@@ -95,14 +96,14 @@ class Homes extends Component {
       render: id => {
         return (
           <div className="actions-column">
-            {/*<Tooltip title={STRINGS.VIEW}>
+            <Tooltip title={STRINGS.VIEW}>
               <span className="icon icon-view" onClick={() =>this.viewIncomeUtility(id)}></span>
-            </Tooltip>*/}
+            </Tooltip>*
             <Tooltip title={STRINGS.EDIT}>
-              <span className="icon icon-edit" onClick={() =>this.editIncomeUtility(id)}></span>
+              <span className="icon icon-edit" onClick={() => this.editIncomeUtility(id)}></span>
             </Tooltip>
             <Tooltip title={STRINGS.ACTION_DELETE}>
-              <span className="icon icon-delete" onClick={() =>this.deleteIncomeUtility(id)}></span>
+              <span className="icon icon-delete" onClick={() => this.deleteIncomeUtility(id)}></span>
             </Tooltip>
           </div>
         )
@@ -124,7 +125,7 @@ class Homes extends Component {
     if (!selectedUtility) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit})
+    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit })
   }
 
   viewIncomeUtility = (id) => {
@@ -132,7 +133,7 @@ class Homes extends Component {
     if (!selectedUtility) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails})
+    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails })
   }
 
   deleteIncomeUtility = (id) => {
@@ -142,31 +143,38 @@ class Homes extends Component {
     if (!selectedUtility) {
       return;
     }
-    confirmModal({
-      title: intl.formatMessage({ id: 'DELETE_HOME_QUESTION' }),
-      content: <b>{selectedUtility.catalogName}</b>,
-      okText: intl.formatMessage({ id: 'YES' }),
-      centered: true,
-      cancelText: intl.formatMessage({ id: 'NO' }),
-      okType: 'danger',
-      onOk: () => {
-        dispatch(spinActions.showSpin());
-        Services.deleteHomeCatalog(id, response => {
-          dispatch(spinActions.hideSpin());
-          this.openNotification('success', intl.formatMessage({ id: 'DELETE_HOME_SUCCESS' }));
-          this.onReload()
-        }, error => {
-          dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'DELETE_HOME_FAIL' }))
-        })
-      },
-      onCancel() {
+    if (selectedUtility.numRoom === 0) {
+      confirmModal({
+        title: 'Xóa tòa nhà ' + selectedUtility.homeName,
+        content: STRINGS.DELETE_QUESTION,
+        okText: intl.formatMessage({ id: 'YES' }),
+        centered: true,
+        cancelText: intl.formatMessage({ id: 'NO' }),
+        okType: 'danger',
+        onOk: () => {
+          dispatch(spinActions.showSpin());
+          Services.deleteHome(id, response => {
+            dispatch(spinActions.hideSpin());
+            this.openNotification('success', intl.formatMessage({ id: 'DELETE_HOME_SUCCESS' }));
+            this.onReload()
+          }, error => {
+            dispatch(spinActions.hideSpin());
+            this.openNotification('error', intl.formatMessage({ id: 'DELETE_HOME_FAIL' }))
+          })
+        }
+      });
+    } else {
+      Modal.warning({
+        title: 'Xóa tòa nhà ' + selectedUtility.homeName,
+        content: STRINGS.DELETE_QUESTION_WARNING,
+        centered: true,
+        okText: intl.formatMessage({ id: 'OK' })
+      });
+    }
 
-      },
-    });
   };
 
-  onChange = (pagination = {}, filters = {}, sorter  = {}, extra, searchText) => {
+  onChange = (pagination = {}, filters = {}, sorter = {}, extra, searchText) => {
     const tableSettings = {
       ...this.state.tableSettings,
       pagination,
@@ -176,7 +184,7 @@ class Homes extends Component {
     };
     const { dispatch } = this.props;
 
-    let isActive =  filters.isActive;
+    let isActive = filters.isActive;
     let params = {
       limit: pagination.pageSize || 10,
       skip: (pagination.current - 1) * pagination.pageSize || 0,
@@ -189,9 +197,10 @@ class Homes extends Component {
 
     this.setState({
       tableSettings: tableSettings,
-      loading: true });
+      loading: true
+    });
     dispatch(spinActions.showSpin());
-    Services.getHomeCatalog({...params,}, (response) => {
+    Services.getHomeCatalog({ ...params, }, (response) => {
       dispatch(spinActions.hideSpin());
       const tableSettings = {
         ...this.state.tableSettings,
@@ -210,21 +219,21 @@ class Homes extends Component {
   }
 
   onReload = () => {
-    let { pagination, filters, sorter, searchText } = {...this.state.tableSettings};
+    let { pagination, filters, sorter, searchText } = { ...this.state.tableSettings };
     this.onChange(pagination, filters, sorter, {}, searchText);
   }
 
   onAddHome = (success) => {
-     const { history} = this.props;
+    const { history } = this.props;
     history.push('/AddHome')
   }
 
   onChangeVisibleViewDetails = () => {
-    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails})
+    this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails })
   }
 
   render() {
-    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected} = this.state;
+    const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected } = this.state;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
@@ -233,20 +242,20 @@ class Homes extends Component {
       tableSettings: tableSettings
     };
     const buttonList = [
-      { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onAddHome()}
+      { title: "Thêm", type: "primary", icon: "plus", onClick: () => this.onAddHome() }
     ];
     return (
       <div className="page-wrapper">
         <div className="page-headding">
           {STRINGS.HOMES}
-          <ButtonList list={buttonList}/>
+          <ButtonList list={buttonList} />
         </div>
         <TableCustom {...TableConfig} />
         {
-          isShowAddOrEdit && <AddHome selected={selected} onChangeVisible={this.onChangeVisible}/>
+          isShowAddOrEdit && <AddHome selected={selected} onChangeVisible={this.onChangeVisible} />
         }
         {
-          isShowViewDetails && <ViewHome selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewHome selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} />
         }
       </div>
     );

@@ -13,7 +13,7 @@ export function getHomeCatalog(params, successCallback, failCallback) {
     });
 }
 
-export function deleteHomeCatalog(id, successCallback, failCallback) {
+export function deleteHome(id, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/homes/' + id
     };
@@ -24,7 +24,7 @@ export function deleteHomeCatalog(id, successCallback, failCallback) {
     });
 }
 
-export function createHomeCatalog(data, successCallback, failCallback) {
+export function createNewHome(data, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/homes/addNewHome',
         data: data

@@ -38,7 +38,7 @@ const {TextArea} = Input;
 const STRINGS = {
   ADD_HOME_SUCCESS: <FormattedMessage id="ADD_HOME_SUCCESS"/>,
   ADD_HOME_FAIL: <FormattedMessage id="ADD_HOME_FAIL"/>,
-  EDIT_HOME_CATALOG: <FormattedMessage id="EDIT_HOME_CATALOG"/>,
+  EDIT_HOME_SUCCESS: <FormattedMessage id="EDIT_HOME_SUCCESS"/>,
   HOME_CATALOG_NAME: <FormattedMessage id="HOME_CATALOG_NAME"/>,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION"/>,
   STATUS: <FormattedMessage id="STATUS"/>,
@@ -66,7 +66,7 @@ class AddHome extends Component {
         address: {},
         location: {
           lat: 0,
-          long: 0
+          lng: 0
         },
         media: {},
         numFloor: 0,
@@ -77,6 +77,7 @@ class AddHome extends Component {
         outcome_service: [],
         income_service: [],
         extra_service: [],
+        home_out_furniture: []
       },
       homeCatalogs: [],
       users: [],
@@ -165,7 +166,7 @@ class AddHome extends Component {
   
   handleSubmit = () => {
     const {selected, isEdit} = this.state;
-    const {onChangeVisible, intl, dispatch, user} = this.props;
+    const {intl, dispatch, user, history} = this.props;
     this.setState({isSubmitted: true});
     // if (!selected.catalogName || !selected.catalogDescription) return;
 
@@ -181,20 +182,20 @@ class AddHome extends Component {
           dispatch(spinActions.hideSpin());
           this.openNotification(
             "success",
-            intl.formatMessage({id: "EDIT_HOME_CATALOG_SUCCESS"})
+            intl.formatMessage({id: "EDIT_HOME_SUCCESS"})
           );
-          onChangeVisible(true);
+          history.push('/Home');
         },
         error => {
           dispatch(spinActions.hideSpin());
           this.openNotification(
             "error",
-            intl.formatMessage({id: "EDIT_HOME_CATALOG_FAIL"})
+            intl.formatMessage({id: "EDIT_HOME_FAIL"})
           );
         }
       );
     } else {
-      Services.createHomeCatalog(
+      Services.createNewHome(
         {...selected, userId: user.id},
         response => {
           dispatch(spinActions.hideSpin());
@@ -202,7 +203,7 @@ class AddHome extends Component {
             "success",
             intl.formatMessage({id: "ADD_HOME_SUCCESS"})
           );
-          onChangeVisible(true);
+          history.push('/Home');
         },
         er => {
           dispatch(spinActions.hideSpin());
@@ -285,13 +286,6 @@ class AddHome extends Component {
     });
   };
 
-  findHomeManagerById = id => {
-    const {users} = this.state;
-    const manager = users.find(item => (item.value = id));
-    if (!manager) return;
-    this.setState({homeManager: manager});
-  };
-
   onChangeAddress = (name, value) => {
     let address = { ...this.state.selected.address};
     address[name] = value;
@@ -311,13 +305,16 @@ class AddHome extends Component {
   }
 
   onChangeDropdownManager = (name, value) => {
-    let selected = {...this.state.selected, name: value };
+    const {users} = this.state;
+    let selected = {...this.state.selected };
     selected[name] = value;
-    this.findHomeManagerById(value);
+    const manager = users.find(item => (item.value === value));
+    if (!manager) return;
+    this.setState({ selected: selected, homeManager: manager});
   }
 
   onChangeDropdown = (name, value) => {
-    let selected = {...this.state.selected, name: value };
+    let selected = {...this.state.selected};
     selected[name] = value;
     this.setState({selected: selected});
   }
@@ -390,7 +387,7 @@ class AddHome extends Component {
                 isRequired={true}
                 onChange={this.onChangeInput}
               />
-              <SubTitle title="Loại hình chỗ nghỉ của bạn?"/>
+              <SubTitle title="Loại hình chỗ nghỉ của bạn?" isRequired='true'/>
               <DropdownList name="homeTypeId" list={homeCatalogs} onChange={this.onChangeDropdown}/>
               <SubTitle
                 title="Địa chỉ chỗ nghỉ"
@@ -437,8 +434,8 @@ class AddHome extends Component {
               />
               <InputNumber
                 title="Long"
-                name="long"
-                defaultValue={location.long}
+                name="lng"
+                defaultValue={location.lng}
                 onChange={this.onChangeInputLatLong}
               />
               <InputText
@@ -464,7 +461,7 @@ class AddHome extends Component {
                 title="Tên người quản lý"
                 isRequired="true"
                 list={users}
-                name="homeManager"
+                name="managerId"
                 onChange={this.onChangeDropdownManager}
               />
               <OutputText title="Số điện thoại" value={phoneNumber}/>
@@ -527,6 +524,7 @@ class AddHome extends Component {
               <InputTextArea
                 title="Hãy mô tả ngắn gọn chỗ nghỉ của bạn"
                 name="homeDescription"
+                isRequired='true'
                 onChange={this.onChangeInput}
                 style={{maxWidth: "none"}}
               />
