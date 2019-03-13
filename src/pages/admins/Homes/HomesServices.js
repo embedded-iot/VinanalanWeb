@@ -52,7 +52,8 @@ export function editHome(data, successCallback, failCallback) {
 
 export function getHomeDetails(id, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/' + id
+        url: '/api/homes/homeInfo',
+        params: { id: id}
     };
 
     Services.makeGetRequest(requestOptions, (response) => {

@@ -39,7 +39,9 @@ class AddImagesAndVideos extends Component {
     });
   }
 
-  handleChange = ({ fileList }) => this.setState({ fileList })
+  handleChange = ({ fileList }) => {
+    this.setState({ fileList })
+  }
 
   render() {
     const { onCancel} = this.props;
@@ -64,7 +66,6 @@ class AddImagesAndVideos extends Component {
       >
         <div className="upload-images-videos-wrapper clearfix">
           <Upload
-            action="//jsonplaceholder.typicode.com/posts/"
             listType="picture-card"
             fileList={fileList}
             onPreview={this.handlePreview}

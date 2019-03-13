@@ -124,7 +124,11 @@ class AddHome extends Component {
       dispatch(spinActions.hideSpin());
       if (response.data) {
         let selected = { ...this.state.selected, ...response.data};
-        this.setState({selected: selected});
+        let { extraFees, outcomeUtilities, incomeUtilities} = response.data;
+        selected.income_service = incomeUtilities.map(item => item.id);
+        selected.outcome_service = outcomeUtilities.map(item => item.id);
+        selected.extra_service = extraFees.map(item => item.id);
+        this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees });
         const { address_text, country_code, district_code, province_code, ward_code } = selected.address;
         this.getProvincesByCountry(country_code);
         this.getDistrictsByProvince(province_code);
