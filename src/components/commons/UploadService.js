@@ -1,4 +1,6 @@
-import { makePostRequest} from "../../utils/cuiResource";
+import {makePostRequest, URL_SERVER} from "../../utils/cuiResource";
+
+export const url_upload_image = URL_SERVER + '/api/container/images/upload';
 
 export function uploadImage(data, successCallback, failCallback) {
     let config = {
@@ -23,6 +25,7 @@ export function postIcon(data, successCallback, failCallback) {
         failCallback(error);
     });
 }
+
 
 export function uploadVideo(data, successCallback, failCallback) {
     let config = {

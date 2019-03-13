@@ -69,7 +69,9 @@ class AddHome extends Component {
           lat: 0,
           lng: 0
         },
-        media: {},
+        media: {
+          images: []
+        },
         numFloor: 0,
         numRoom: 0,
         hotline: '',
@@ -424,11 +426,16 @@ class AddHome extends Component {
     }
   }
 
+  saveImages = images => {
+    this.setState({selected: { ...this.state.selected, media: { ...this.state.selected.media, images: images}}})
+  }
+
   render() {
     const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
       outcome_service, income_service, extra_service} = this.state;
     const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
       isActive} = selected;
+    const { images, videos} = media;
     const { address_text, country_code, district_code, province_code, ward_code } = address;
     const {phoneNumber, email} = homeManager;
     const {onChangeVisible} = this.props;
@@ -587,6 +594,15 @@ class AddHome extends Component {
           </div>
         </div>
         <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
+          <div className='images-wrapper'>
+            <div className='home-image'>
+              <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
+            </div>
+            <div className='home-details'>
+              <div className='home-title'>{homeName}</div>
+              <div className='home-description'>{address_text}</div>
+            </div>
+          </div>
           { !isView && (
             <Button onClick={this.toggleAddUploadModal}>
               Chỉnh sửa thư viện ảnh
@@ -676,7 +692,7 @@ class AddHome extends Component {
             />
           )}
           {isShowUploadModal && (
-            <AddImagesAndVideos onCancel={this.toggleAddUploadModal}/>
+            <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages}/>
           )}
         </div>
       </div>

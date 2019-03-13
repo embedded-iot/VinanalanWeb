@@ -7,4 +7,34 @@
       display: inline-block;
     }
   }
+
+  .images-wrapper {
+    display: flex;
+    margin-bottom: 15px;
+    .home-image {
+      height: 400px;
+      min-width: 400px;
+      max-width: 800px;
+
+      img {
+        width: auto;
+        height: 100%;
+        border: 2px solid #40404040;
+      }
+    }
+    .home-details {
+      padding-left: 20px;
+      flex-grow: 1;
+      .home-title {
+        font-weight: bold;
+        font-size: 25px;
+        text-align: center;
+      }
+      .home-description {
+        font-size: 16px;
+        text-align: center;
+        margin-top: 15px;
+      }
+    }
+  }
 }

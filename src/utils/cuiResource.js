@@ -30,6 +30,8 @@ const header = [navigator.platform, navigator.userAgent, navigator.appVersion, n
         { name: 'Mozilla', value: 'Mozilla', version: 'Mozilla' }
     ];
 
+export const URL_SERVER = SERVER;
+
 export function matchItem(string, data) {
     var i = 0,
         j = 0,
