@@ -46,7 +46,10 @@ class LeftSideBar extends Component {
     return classNameLeftSideBar;
   };
 
-  menuList = [{ pathName: "/Home", name: "Tòa nhà" }];
+  menuList = [
+    { pathName: "/Home", name: "Tòa nhà" }/*,
+    { pathName: "/Rooms", name: "Phòng" }*/
+  ];
 
   menuConfig = [
     { pathName: "/Users", name: "Quản lý tài khoản" },

@@ -30,7 +30,9 @@ import {
 
 import {
     Home,
-    AddHome
+    AddHome,
+    AddRoom,
+    Rooms as RoomsNew
 } from "./pages/admins";
 
 // import {PrivateRoute, NotRequireLogin, RequireLogin} from './components/commons';
@@ -63,6 +65,8 @@ const Protected = (props) => <div>
         <Route exact path="/OutFurnitures" component={OutFurnitures}/>
         <Route exact path="/ExtraFees" component={ExtraFees}/>
 
+        <Route exact path="/Rooms" component={RoomsNew}/>
+        <Route exact path="/AddRoom" component={AddRoom}/>
         <Route exact path="/Room/:homeId" component={Rooms}/>
         <Route exact path="/Room" component={Rooms}/>
         <Route exact path="/RoomDetail/:roomId" component={RoomDetail}/>
