@@ -56,6 +56,7 @@ class LeftSideBar extends Component {
     { pathName: "/OutcomeUtilities", name: "Tiện ích ngoài tòa nhà" },
     { pathName: "/RoomUtilities", name: "Tiện ích phòng" },
     { pathName: "/InFurnitures", name: "Thiết bị phòng" },
+    { pathName: "/OutFurnitures", name: "Thiết bị tòa nhà" },
     { pathName: "/ExtraFees", name: "Các loại phí khác" }
   ];
 
