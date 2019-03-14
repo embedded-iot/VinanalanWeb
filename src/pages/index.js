@@ -8,6 +8,7 @@ export { default as RoomsCatalog } from "./config/RoomsCatalog/RoomsCatalog";
 export { default as RoomUtilities } from "./config/RoomUtilities/RoomUtilities";
 export { default as IncomeUtilities } from "./config/IncomeUtilities/IncomeUtilities";
 export { default as OutcomeUtilities } from "./config/OutcomeUtilities/OutcomeUtilities";
+export { default as InFurnitures } from "./config/InFurnitures/InFurnitures";
 export { default as ExtraFees } from "./config/ExtraFees/ExtraFees";
 export { default as Rooms } from "./admins/Rooms/Rooms";
 export { default as RoomDetail } from "./admins/Rooms/RoomDetail";

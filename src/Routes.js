@@ -19,6 +19,7 @@ import {
     RoomUtilities,
     IncomeUtilities,
     OutcomeUtilities,
+    InFurnitures,
     ExtraFees,
     Rooms,
     RoomDetail,
@@ -57,6 +58,7 @@ const Protected = (props) => <div>
         <Route exact path="/RoomUtilities" component={RoomUtilities}/>
         <Route exact path="/IncomeUtilities" component={IncomeUtilities}/>
         <Route exact path="/OutcomeUtilities" component={OutcomeUtilities}/>
+        <Route exact path="/InFurnitures" component={InFurnitures}/>
         <Route exact path="/ExtraFees" component={ExtraFees}/>
 
         <Route exact path="/Room/:homeId" component={Rooms}/>
