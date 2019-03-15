@@ -32,6 +32,7 @@ import {getOutcomeUtilities} from "../../config/OutcomeUtilities/OutcomeUtilitie
 import {getExtraFees} from "../../config/ExtraFees/ExtraFeesServices";
 import ViewTopUtilities from "./HomeComponents/ViewTopUtilities";
 import {getHomeDetails} from "./HomesServices";
+import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -603,6 +604,11 @@ class AddHome extends Component {
               <div className='home-description'>{address_text}</div>
             </div>
           </div>
+          <div>
+            {
+              images && images.length > 1 && <ReactSlick list={images}/>
+            }
+          </div>
           { !isView && (
             <Button onClick={this.toggleAddUploadModal}>
               Chỉnh sửa thư viện ảnh
@@ -692,7 +698,7 @@ class AddHome extends Component {
             />
           )}
           {isShowUploadModal && (
-            <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages}/>
+            <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages} list={images}/>
           )}
         </div>
       </div>
