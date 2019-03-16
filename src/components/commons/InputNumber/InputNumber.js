@@ -15,7 +15,7 @@ class InputNumber extends Component {
   }
 
   render() {
-    const { isSubmitted, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo} = this.props;
+    const { isSubmitted, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
     return (
       <div className="input-number-wrapper">
         <div className="heading">{ title }
@@ -26,6 +26,7 @@ class InputNumber extends Component {
         </div>
         <InputNumberAntd value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />
         {isSubmitted && isRequired && value === undefined && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
+        {description && <span>{ description }</span>}
       </div>
     );
   }
