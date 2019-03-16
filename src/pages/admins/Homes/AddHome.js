@@ -658,9 +658,8 @@ class AddHome extends Component {
             </div>
           </div>
           <div className="group-box">
-            <div className="group-header">
-              <div className="group-title">Giới thiệu "Khách sạn"</div>
-            </div>
+            <div className="group-sub-heading">Giới thiệu "Khách sạn"</div>
+            <div className=''></div>
             <div className="group-content">
               <InputTextArea
                 title="Hãy mô tả ngắn gọn chỗ nghỉ của bạn"

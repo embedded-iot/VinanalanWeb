@@ -14,6 +14,10 @@
     .home-image {
       width: 50%;
       height: auto;
+      border-radius: 6px;
+      padding: 10px 20px;
+      border: 1px solid #40404040;
+      min-height: 400px;
 
       img {
         width: 100%;
