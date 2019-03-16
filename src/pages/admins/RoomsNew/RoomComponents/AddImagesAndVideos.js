@@ -32,6 +32,19 @@ class AddImagesAndVideos extends Component {
     fileList: []
   };
 
+  componentWillMount() {
+    const { list } = this.props;
+    let images = list.map((item, index) => (
+      {
+          uid: index,
+          name: url.substring(item.lastIndexOf('/') + 1),
+          status: 'done',
+          url: item
+      }
+    ));
+    this.setState({fileList: images})
+  }
+
   handleCancel = () => this.setState({ previewVisible: false })
 
   handlePreview = (file) => {
@@ -68,8 +81,7 @@ class AddImagesAndVideos extends Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-//action='http://35.185.47.170:3300/api/container/images/upload'
-    // action={file => UploadService.postIcon1(file, this.uploadSuccess, error => {})}
+
     return(
       <Modal title="Tải lên hình ảnh"
              centered
@@ -89,7 +101,7 @@ class AddImagesAndVideos extends Component {
             onPreview={this.handlePreview}
             onChange={this.handleChange}
           >
-            {fileList.length >= 5 ? null : uploadButton}
+            {fileList.length >= 10 ? null : uploadButton}
           </Upload>
           <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
             <img alt="example" style={{ width: '100%' }} src={previewImage} />
@@ -101,11 +113,13 @@ class AddImagesAndVideos extends Component {
 }
 
 AddImagesAndVideos.propTypes = {
+  list: PropTypes.array,
   onOk: PropTypes.func,
   onCancel: PropTypes.func
 }
 
 AddImagesAndVideos.defaultProps = {
+  list: [],
   onOk: f => f,
   onCancel: f => f
 }

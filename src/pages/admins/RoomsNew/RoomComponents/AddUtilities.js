@@ -6,14 +6,14 @@ import {FormattedMessage, injectIntl} from "react-intl";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {spinActions} from "../../../../actions";
-import {getIncomeUtilities} from "../../../config/IncomeUtilities/IncomeUtilitiesServices";
-import {getOutcomeUtilities} from "../../../config/OutcomeUtilities/OutcomeUtilitiesServices";
-import {getExtraFees} from "../../../config/ExtraFees/ExtraFeesServices";
+import {getInFurnitures} from "../../../config/InFurnitures/InFurnituresServices";
+import {getRoomUtilities} from "../../../config/RoomUtilities/RoomUtilitiesServices";
 
 const CheckboxGroup = Checkbox.Group;
 
 const STRINGS = {
-  ADD_INCOME_UTILITY_IN_HOME_PAGE: 'Xin mời chọn tiện ích trong cho toàn nhà',
+  ADD_ROOM_UTILITIES_IN_ROOM_PAGE: 'Xin mời chọn tiện ích cho phòng',
+  ADD_IN_FURNITURES_IN_ROOM_PAGE: 'Xin mời chọn dịch vụ cho phòng',
   SAVE: <FormattedMessage id="SAVE" />,
   CLOSE: <FormattedMessage id="CLOSE" />
 };
@@ -49,22 +49,18 @@ class AddUtilities extends Component {
     const { type} = this.props;
 
     switch (type) {
-      case 'income_service':
-        this.setState( {nameModal: 'Xin mời chọn tiện ích trong cho toà nhà'});
-        this.fetchInitData(getIncomeUtilities);
+      case 'inFurnitures':
+        this.setState( {nameModal: STRINGS.ADD_IN_FURNITURES_IN_ROOM_PAGE});
+        this.fetchInitData(getInFurnitures);
         break;
-      case 'outcome_service':
-        this.setState( {nameModal: 'Xin mời chọn tiện ích ngoài cho toà nhà'});
-        this.fetchInitData(getOutcomeUtilities);
+      case 'room_utilities':
+        this.setState( {nameModal: STRINGS.ADD_ROOM_UTILITIES_IN_ROOM_PAGE});
+        this.fetchInitData(getRoomUtilities);
         break;
-      default:
-        this.setState( {nameModal: 'Xin mời chọn phụ phí cho toà nhà'});
-        this.fetchInitData(getExtraFees);
     }
   }
 
   onChange = checkedValues => {
-    console.log(checkedValues);
     this.setState({ selectedIdList: checkedValues});
   }
 

@@ -13,17 +13,15 @@ import DropdownInputSearch from "../../../components/commons/DropdownInputSearch
 import InputTextArea from "../../../components/commons/InputTextArea/InputTextArea";
 import InputNumber from "../../../components/commons/InputNumber/InputNumber";
 import OutputText from "../../../components/commons/OutputText/OutputText";
-import {getUsers} from "../../config/Users/UsersServices";
 import ViewUtilities from "./RoomComponents/ViewUtilities";
 import AddUtilities from "./RoomComponents/AddUtilities";
-import AddIncomeUtility from "../../config/IncomeUtilities/AddIncomeUtility";
 import AddImagesAndVideos from "./RoomComponents/AddImagesAndVideos";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import './AddRoom.scss'
-import {getIncomeUtilities} from "../../config/IncomeUtilities/IncomeUtilitiesServices";
-import {getOutcomeUtilities} from "../../config/OutcomeUtilities/OutcomeUtilitiesServices";
-import {getExtraFees} from "../../config/ExtraFees/ExtraFeesServices";
 import {getRoomDetails} from "./RoomsServices";
+import {getRoomsCatalog} from "../../config/RoomsCatalog/RoomsCatalogServices";
+import {getHomes} from "../Homes/HomesServices";
+import EditFurniture from "./RoomComponents/EditFurniture";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -48,41 +46,32 @@ const status = [
   {title: STRINGS.ACTION_DEACTIVE, value: 0}
 ];
 
+const MAX_GUEST = 10;
+
 class AddRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selected: {
-        homeName: '',
-        homeDescription: '',
-        homeTypeId: '',
-        address: {},
-        location: {
-          lat: 0,
-          lng: 0
-        },
-        media: {
+        roomName: '',
+        roomDescription: '',
+        roomArea: 0,
+        homeId: '',
+        roomTypeId	: '',
+        isActive: true,
+        roomMedia: {
           images: []
         },
-        numFloor: 0,
-        numRoom: 0,
-        hotline: '',
-        managerId: '',
-        isActive: true,
-        outcome_service: [],
-        income_service: [],
-        extra_service: [],
-        home_out_furniture: []
+        maxGuest: 1,
+        roomDatePrice: 0,
+        roomMonthPrice: 0,
+        inFurnitures: [],
+        room_utilities: []
       },
-      homeCatalogs: [],
-      users: [],
-      countries: [],
-      provinces: [],
-      districts: [],
-      wards: [],
-      outcome_service: [],
-      income_service: [],
-      extra_service: [],
+      homes: [],
+      roomCatalogs: [],
+      inFurnituresAll: [],
+      room_utilities_all: [],
       isEdit: false,
       isSubmitted: false,
       utilitiesModal: {
@@ -91,8 +80,7 @@ class AddRoom extends Component {
         selected: []
       },
       isShowUploadModal: false,
-      homeManager: {},
-      selectedStep: 0
+      numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)}))
     };
   }
 
@@ -124,9 +112,6 @@ class AddRoom extends Component {
         selected.extra_service = extraFees.map(item => item.id);
         this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees });
         const { address_text, country_code, district_code, province_code, ward_code } = selected.address;
-        this.getProvincesByCountry(country_code);
-        this.getDistrictsByProvince(province_code);
-        this.getWardsByDistrict(district_code);
         callback();
       }
     }, error => {
@@ -136,50 +121,24 @@ class AddRoom extends Component {
 
   getInnitData = () => {
     let param = {skip: 0, limit: 100};
-    getHomeCatalog(param, response => {
+    getHomes(param, response => {
       if (response.data && response.data.length) {
-        const homeCatalogs = response.data.map(item => ({
+        const homes = response.data.map(item => ({
+          text: item.homeName,
+          value: item.id
+        }));
+        this.setState({homes: homes});
+      }
+    });
+    getRoomsCatalog(param, response => {
+      if (response.data && response.data.length) {
+        const roomCatalogs = response.data.map(item => ({
           text: item.catalogName,
           value: item.id
         }));
-        this.setState({homeCatalogs: homeCatalogs});
+        this.setState({roomCatalogs: roomCatalogs});
       }
     });
-    getUsers(param, response => {
-      if (response.data && response.data.length) {
-        const users = response.data.map(item => ({
-          email: item.email,
-          phoneNumber: item.phoneNumber,
-          text: item.userName,
-          value: item.id
-        }));
-        this.setState({users: users}, () => {
-          const { selected } = this.state;
-          if (selected.managerId) {
-            this.findHomeManageById(selected.managerId);
-          }
-        });
-
-      }
-    });
-
-  };
-
-  onChangeName = e => {
-    const {value} = e.target;
-    const selected = {...this.state.selected, catalogName: value};
-    this.setState({selected: selected});
-  };
-
-  onChangeDescription = e => {
-    const {value} = e.target;
-    const selected = {...this.state.selected, catalogDescription: value};
-    this.setState({selected: selected});
-  };
-
-  setStatus = status => {
-    const selected = {...this.state.selected, isActive: !!status};
-    this.setState({selected: selected});
   };
 
   openNotification = (type, message, description) => {
@@ -189,13 +148,21 @@ class AddRoom extends Component {
     });
   };
 
-  
+
+  isDisabled = () => {
+    const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomDatePrice, roomMonthPrice} = this.state.selected;
+    return !roomName || roomArea === undefined || !homeId || !roomTypeId || roomDatePrice === undefined || roomMonthPrice === undefined;
+  }
+
   handleSubmit = () => {
-    const {selected, isEdit} = this.state;
+    let {selected, isEdit, inFurnituresAll} = this.state;
     const {intl, dispatch, user, history} = this.props;
     this.setState({isSubmitted: true});
-    if (!selected.homeDescription) return;
+    if (this.isDisabled()) {
+      return;
+    }
 
+    selected.inFurnitures = inFurnituresAll.map(item => ({ id: item.id, cost: item.cost}));
     dispatch(spinActions.showSpin());
     if (isEdit) {
       var id =
@@ -219,6 +186,7 @@ class AddRoom extends Component {
         }
       );
     } else {
+      debugger
       Services.createNewRoom(
         {...selected, userId: user.id},
         response => {
@@ -241,17 +209,14 @@ class AddRoom extends Component {
   };
 
   showUtilitiesModal = type => {
-    const {outcome_service, income_service, extra_service} = this.state.selected;
+    const {inFurnitures, room_utilities} = this.state.selected;
     let selected;
     switch (type) {
-      case 'outcome_service':
-        selected = outcome_service;
+      case 'inFurnitures':
+        selected = inFurnitures;
         break;
-      case 'income_service':
-        selected = income_service;
-        break;
-      default:
-        selected = extra_service;
+      case 'room_utilities':
+        selected = room_utilities;
         break;
     }
     this.setState({
@@ -274,87 +239,10 @@ class AddRoom extends Component {
     this.setState({isShowUploadModal: !this.state.isShowUploadModal});
   };
 
-  getProvincesByCountry = countryCode => {
-    getProvincesByCountry(countryCode, response => {
-      if (response.data && response.data.length) {
-        const provinces = response.data.map(item => ({
-          text: item.name,
-          value: item.code
-        }));
-        this.setState({provinces: provinces});
-      }
-    });
-  };
-
-  getDistrictsByProvince = countryCode => {
-    getDistrictsByProvince(countryCode, response => {
-      if (response.data && response.data.length) {
-        const districts = response.data.map(item => ({
-          text: item.name,
-          value: item.code
-        }));
-        this.setState({districts: districts});
-      }
-    });
-  };
-
-  getWardsByDistrict = countryCode => {
-    getWardsByDistrict(countryCode, response => {
-      if (response.data && response.data.length) {
-        const wards = response.data.map(item => ({
-          text: item.name,
-          value: item.code
-        }));
-        this.setState({wards: wards});
-      }
-    });
-  };
-
-  onChangeAddress = (name, value) => {
-    let address = { ...this.state.selected.address};
-    address[name] = value;
-    const selected = { ...this.state.selected, address: address};
-    this.setState({ selected: { ...selected}});
-    switch (name) {
-      case "country_code":
-        this.getProvincesByCountry(value);
-        break;
-      case "province_code":
-        this.getDistrictsByProvince(value);
-        break;
-      case "district_code":
-        this.getWardsByDistrict(value);
-        break;
-    }
-  }
-
-  findHomeManageById = id => {
-    const {users} = this.state;
-    const manager = users.find(item => (item.value === id));
-    if (!manager) return;
-    this.setState({ homeManager: manager});
-  }
-
-  onChangeDropdownManager = (name, value) => {
-    const {users} = this.state;
-    let selected = {...this.state.selected };
-    selected[name] = value;
-    const manager = users.find(item => (item.value === value));
-    if (!manager) return;
-    this.setState({ selected: selected, homeManager: manager});
-  }
-
   onChangeDropdown = (name, value) => {
     let selected = {...this.state.selected};
     selected[name] = value;
     this.setState({selected: selected});
-  }
-
-  onChangeInputLatLong= (name, value) => {
-    let location = { ...this.state.selected.location};
-    location[name] = value;
-    const selected = { ...this.state.selected, location: location};
-    this.setState({ selected: { ...selected}})
   }
 
   onChangeInput = (name, value) => {
@@ -363,266 +251,188 @@ class AddRoom extends Component {
     this.setState({selected: selected});
   };
 
+  onChangeInputCostFurniture = (name, value) => {
+    let inFurnituresAll = [...this.state.inFurnituresAll];
+    inFurnituresAll[Number(name)].cost = value;
+    this.setState({inFurnituresAll: inFurnituresAll});
+  };
 
-
-  selectedStep = step => {
-    const { selected } = this.state;
-    const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
-      isActive} = selected;
-    if (step === 1) {
-      if (!homeName || !homeTypeId || !address.country_code || !address.province_code|| !address.district_code || !address.ward_code
-        || numFloor === undefined || numRoom === undefined || location.lat === undefined || location.lng === undefined || !managerId) {
-        this.setState({isSubmitted: true, selectedStep: 0});
-      } else {
-        this.setState({isSubmitted: false, selectedStep: 1});
-      }
-    } else {
-      this.setState({isSubmitted: false, selectedStep: 0});
-    }
+  goBackPage = () => {
+    const { history } = this.props;
+    history.goBack();
   }
 
-  buttonListOne = [
-    { title: "Tiếp theo", type: "primary", onClick: () => this.selectedStep(1)}
-  ];
-
   buttonListTwo = [
-    { title: "Quay lại", onClick: () => this.selectedStep(0)},
-    { title: "Lưu tòa nhà", type: "primary",  icon: "save", onClick: () => this.handleSubmit()}
-  ];
-
-  buttonListTwoViewMode = [
-    { title: "Quay lại", onClick: () => this.selectedStep(0)}
+    { title: "Quay lại", onClick: () => this.goBackPage()},
+    { title: "Lưu phòng", type: "primary",  icon: "save", onClick: () => this.handleSubmit()}
   ];
 
   onOkAddUtilities = (type, selectedIdList, selectedList) => {
+    const { inFurnituresAll } = this.state;
     let selected = { ...this.state.selected};
     selected[type] = selectedIdList;
     switch (type) {
-      case 'income_service':
-        this.setState({ selected: selected, income_service: selectedList});
+      case 'inFurnitures':
+        const inFurnituresAllNew = selectedList.map(item => {
+          let existFurniture = inFurnituresAll.find(furniture => furniture.id === item.id);
+          return {
+            ...item, cost: existFurniture && existFurniture.cost ? existFurniture.cost : 0
+          }
+        });
+        this.setState({ selected: selected, inFurnituresAll: inFurnituresAllNew });
         break;
-      case 'outcome_service':
-        this.setState({ selected: selected, outcome_service: selectedList});
+      case 'room_utilities':
+        this.setState({ selected: selected, room_utilities_all: selectedList});
         break;
-      default:
-        this.setState({ selected: selected, extra_service: selectedList});
     }
   }
 
   saveImages = images => {
-    this.setState({selected: { ...this.state.selected, media: { ...this.state.selected.media, images: images}}})
+    this.setState({selected: { ...this.state.selected, roomMedia: { ...this.state.selected.roomMedia, images: images}}})
   }
 
   render() {
-    const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
-      outcome_service, income_service, extra_service} = this.state;
-    const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
-      isActive} = selected;
-    const { images, videos} = media;
-    const { address_text, country_code, district_code, province_code, ward_code } = address;
-    const {phoneNumber, email} = homeManager;
-    const {onChangeVisible} = this.props;
-    const [...status] = CONSTANTS.STATUS;
+    const {selected, isSubmitted, homes, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all} = this.state;
+    const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
+    const { images} = roomMedia;
+    const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
     const { isEdit, isView} = this.state;
     let title;
     if (isEdit) {
-      title = 'Chỉnh sửa thông tin tòa nhà';
+      title = 'Chỉnh sửa thông tin phòng';
     } else if (isView) {
-      title = 'Thông tin chi tiết tòa nhà';
+      title = 'Thông tin chi tiết phòng';
     } else {
-      title = 'Thêm mới tòa nhà';
+      title = 'Thêm mới phòng';
     }
     return (
-      <div className="page-wrapper add-home-page-wrapper">
+      <div className="page-wrapper add-room-page-wrapper">
         <div className="page-headding">
           {title}
         </div>
-        <div className="steps-wrapper" style={{display: (selectedStep === 0 ? 'block' : 'none')}}>
+        <div className="steps-wrapper">
+          <div className='images-wrapper'>
+            <div className='home-image'>
+              <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
+            </div>
+            <div className='home-details'>
+              <div className="group-box">
+                <div className="group-sub-heading">Loại phòng</div>
+                <div className="group-content">
+                  <InputText
+                    title="Tên phòng"
+                    titleInfo="Đây là tên mà khách sẽ nhìn thấy trên website"
+                    value={roomName}
+                    isSubmitted={isSubmitted}
+                    name="roomName"
+                    isRequired={true}
+                    onChange={this.onChangeInput}
+                    disabled={isView}
+                  />
+                  <DropdownInputSearch
+                    name="homeId"
+                    title="Chọn tòa nhà"
+                    list={homes}
+                    value={homeId}
+                    isSubmitted={isSubmitted}
+                    isRequired='true'
+                    onChange={this.onChangeDropdown}
+                    disabled={isView}
+                  />
+                  <DropdownInputSearch
+                    name="roomTypeId"
+                    title="Chọn loại phòng"
+                    list={roomCatalogs}
+                    value={roomTypeId}
+                    isSubmitted={isSubmitted}
+                    isRequired='true'
+                    onChange={this.onChangeDropdown}
+                    disabled={isView}
+                  />
+                  <DropdownList
+                    name="isActive"
+                    title="Trạng thái"
+                    list={status}
+                    value={Number(isActive)}
+                    isSubmitted={isSubmitted}
+                    isRequired='true'
+                    onChange={this.onChangeDropdown}
+                    disabled={isView}
+                  />
+                  <InputNumber
+                    title="Diện tích phòng"
+                    titleInfo="Không bắt buộc. Phòng sẽ được hiển thị tốt hơn nếu chọn mục này."
+                    description='(Đơn vị: m2)'
+                    name="roomArea"
+                    value={roomArea}
+                    onChange={this.onChangeInput}
+                    disabled={isView}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          { !isView && <div style={{marginBottom: '15px'}}>
+              <Button onClick={this.toggleAddUploadModal}>
+                Chọn ảnh đại diện
+              </Button>
+            </div>
+          }
           <div className="group-box">
-            <div className="group-sub-heading">Thông tin "Khách sạn"</div>
+            <div className="group-sub-heading">
+              Khách
+            </div>
             <div className="group-content">
-              <SubTitle
-                title="Tên chỗ nghỉ của bạn?"
-                titleInfo="Tên này sẽ được hiển thị tới khách hàng khi họ tìm kiếm chỗ nghỉ."
-              />
-              <InputText
-                title="Tên tiếng việt"
-                value={homeName}
-                isSubmitted={isSubmitted}
-                name="homeName"
-                isRequired={true}
-                onChange={this.onChangeInput}
-                disabled={isView}
-              />
-              <SubTitle title="Loại hình chỗ nghỉ của bạn?" isRequired='true'/>
               <DropdownList
-                name="homeTypeId"
-                list={homeCatalogs}
-                value={homeTypeId}
+                name="maxGuest"
+                title="Số lượng khách tối đa"
+                list={numberGuest}
+                value={maxGuest}
                 isSubmitted={isSubmitted}
                 isRequired='true'
                 onChange={this.onChangeDropdown}
-                disabled={isView}
-              />
-              <SubTitle
-                title="Địa chỉ chỗ nghỉ"
-                titleInfo="Địa chỉ chỗ nghỉ của bạn là quan trọng! Vui lòng cung cấp đầy đủ thông tin về địa chỉ chỗ nghỉ của bạn."
-              />
-              <DropdownInputSearch
-                title="Quốc gia"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={countries}
-                value={country_code}
-                name="country_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <DropdownInputSearch
-                title="Tỉnh/Thành phố"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={provinces}
-                value={province_code}
-                name="province_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <DropdownInputSearch
-                title="Quận/Huyện"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={districts}
-                value={district_code}
-                name="district_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <DropdownInputSearch
-                title="Tên đường, phường, xã"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={wards}
-                value={ward_code}
-                name="ward_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <InputTextArea
-                title="Số nhà, tầng, tòa nhà,..."
-                value={address_text}
-                name="address_text"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Lat"
-                name="lat"
-                value={location.lat}
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                onChange={this.onChangeInputLatLong}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Long"
-                name="lng"
-                value={location.lng}
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                onChange={this.onChangeInputLatLong}
-                disabled={isView}
-              />
-              <InputText
-                title="Hot line"
-                name="hotline"
-                value={hotline}
-                isSubmitted={isSubmitted}
-                isRequired="true"
-                onChange={this.onChangeInput}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Số tầng"
-                name="numFloor"
-                value={numFloor}
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                onChange={this.onChangeInput}
                 disabled={isView}
               />
             </div>
           </div>
           <div className="group-box">
             <div className="group-sub-heading">
-              Thông tin người quản lý toàn
+              Giá phòng
             </div>
             <div className="group-content">
-              <DropdownInputSearch
-                title="Tên người quản lý"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={users}
-                value={managerId}
-                name="managerId"
-                onChange={this.onChangeDropdownManager}
-                disabled={isView}
-              />
-              <OutputText title="Số điện thoại" value={phoneNumber}/>
-              <OutputText title="Email" value={email}/>
-            </div>
-            <div className='button-list-wrapper'>
-              <ButtonList list={this.buttonListOne}/>
-            </div>
-          </div>
-        </div>
-        <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
-          <div className='images-wrapper'>
-            <div className='home-image'>
-              <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
-            </div>
-            <div className='home-details'>
-              <div className='home-title'>{homeName}</div>
-              <div className='home-description'>{address_text}</div>
-            </div>
-          </div>
-          { !isView && (
-            <Button onClick={this.toggleAddUploadModal}>
-              Chỉnh sửa thư viện ảnh
-            </Button>)
-          }
-          <div className="group-box">
-            <div className="group-header">
-              <div className="group-title">Tiện nghi nổi bật</div>
-            </div>
-            <div className="group-content">
-              <ViewTopUtilities
-                list={extra_service}
-                emptyMessage='Chưa có tiện nghi nào.'/>
+              <Row>
+                <Col span={12}>
+                  <InputNumber
+                    title="Giá cơ bản cho một đêm nghỉ"
+                    name="roomDatePrice"
+                    description="(VNĐ/phòng/đêm)"
+                    value={roomDatePrice}
+                    isSubmitted={isSubmitted}
+                    isRequired='true'
+                    onChange={this.onChangeInput}
+                    disabled={isView}
+                  />
+                </Col>
+                <Col span={12}>
+                  <InputNumber
+                    title="Giá cho nghỉ dài ngày (trên 30 ngày)"
+                    name="roomMonthPrice"
+                    description="(VNĐ/phòng/đêm)"
+                    value={roomMonthPrice}
+                    isSubmitted={isSubmitted}
+                    isRequired='true'
+                    onChange={this.onChangeInput}
+                    disabled={isView}
+                  />
+                </Col>
+              </Row>
             </div>
           </div>
           <div className="group-box">
             <div className="group-header">
-              <div className="group-title">Tiện ích ngoài</div>
-              { !isView && (
-              <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("outcome_service")}>
-                  Chỉnh sửa
-                </a>
-              </div>
-              )}
-            </div>
-            <div className="group-content">
-              <ViewUtilities
-                list={outcome_service}
-                emptyMessage='Tòa nhà chưa gắn với tiện ích ngoài nào. Chọn nút "Chỉnh sửa" để thêm tiện ích.'/>
-            </div>
-          </div>
-          <div className="group-box">
-            <div className="group-header">
-              <div className="group-title">Tiện ích trong</div>
+              <div className="group-title">Tiện ích phòng</div>
               { !isView && ( <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("income_service")}>
+                <a onClick={() => this.showUtilitiesModal("room_utilities")}>
                   Chỉnh sửa
                 </a>
               </div>
@@ -630,38 +440,36 @@ class AddRoom extends Component {
             </div>
             <div className="group-content">
               <ViewUtilities
-                list={income_service}
-                emptyMessage='Tòa nhà chưa gắn với tiện ích trong nào. Chọn nút "Chỉnh sửa" để thêm tiện ích.'/>
+                list={room_utilities_all}
+                emptyMessage='Tòa nhà chưa gắn với tiện ích phòng nào. Chọn nút "Chỉnh sửa" để tiện ích.'/>
             </div>
           </div>
           <div className="group-box">
             <div className="group-header">
-              <div className="group-title">Giới thiệu "Khách sạn"</div>
+              <div className="group-title">Dịch vụ và giá đi kèm</div>
+              { !isView && ( <div className="group-action">
+                <a onClick={() => this.showUtilitiesModal("inFurnitures")}>Chỉnh sửa</a>
+              </div>)}
+            </div>
+            <div className="group-content">
+                <EditFurniture list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>
+            </div>
+          </div>
+          <div className="group-box">
+            <div className="group-header">
+              <div className="group-title">Lưu ý</div>
             </div>
             <div className="group-content">
               <InputTextArea
-                title="Hãy mô tả ngắn gọn chỗ nghỉ của bạn"
-                name="homeDescription"
-                value={homeDescription}
+                title="Xin mời nhập lưu ý ở đây"
+                name="roomDescription"
+                value={roomDescription}
                 isSubmitted={isSubmitted}
                 isRequired='true'
                 onChange={this.onChangeInput}
                 style={{maxWidth: "none"}}
                 disabled={isView}
               />
-            </div>
-          </div>
-          <div className="group-box">
-            <div className="group-header">
-              <div className="group-title">Dịch vụ đi kèm</div>
-              { !isView && ( <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("extra_service")}>Chỉnh sửa</a>
-              </div>)}
-            </div>
-            <div className="group-content">
-              <ViewUtilities
-                list={extra_service}
-                emptyMessage='Tòa nhà chưa gắn với phụ phí nào nào. Chọn nút "Chỉnh sửa" để thêm tiện ích.'/>
             </div>
           </div>
           <div className='button-list-wrapper'>
