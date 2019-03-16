@@ -105,12 +105,13 @@ class AddRoom extends Component {
     getRoomDetails(id, response => {
       dispatch(spinActions.hideSpin());
       if (response.data && response.data.room) {
-        const room = response.data.room;
+        let room = response.data.room;
+        room.inFurnitures = room.inFurnitures.map(item => ({...item, cost: item.cost || 0}))
         let selected = { ...this.state.selected, ...room};
-        let { roomUtilities, inFurnitures} = room;
-        selected.roomUtilities = roomUtilities.map(item => item.id);
+        let { room_utilities, inFurnitures} = room;
+        selected.room_utilities = room_utilities.map(item => item.id);
         selected.inFurnitures = inFurnitures.map(item => item.id);
-        this.setState({selected: selected, roomUtilities: roomUtilities, inFurnituresAll: inFurnitures});
+        this.setState({selected: selected, room_utilities_all: room_utilities, inFurnituresAll: inFurnitures});
         callback();
       }
     }, error => {
@@ -174,7 +175,7 @@ class AddRoom extends Component {
             "success",
             intl.formatMessage({id: "EDIT_HOME_SUCCESS"})
           );
-          history.push('/Home');
+          history.push('/Room')
         },
         error => {
           dispatch(spinActions.hideSpin());
@@ -193,7 +194,7 @@ class AddRoom extends Component {
             "success",
             intl.formatMessage({id: "ADD_HOME_SUCCESS"})
           );
-          history.push('/Home');
+          history.push('/Room');
         },
         er => {
           dispatch(spinActions.hideSpin());
