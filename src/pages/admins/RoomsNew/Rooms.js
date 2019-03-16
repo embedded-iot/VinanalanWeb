@@ -67,7 +67,7 @@ class Rooms extends Component {
       width: '20%'
     }, {
       title: "Dịch vụ phòng",
-      dataIndex: 'inFurnitures',
+      dataIndex: '',
       width: '20%',
     }, {
       title: STRINGS.STATUS,
@@ -110,7 +110,7 @@ class Rooms extends Component {
     if (!id) {
       return;
     }
-    history.push('/Home/' + id + '/Edit');
+    history.push('/Room/' + id + '/Edit');
   }
 
   viewHome = (id) => {
@@ -118,7 +118,7 @@ class Rooms extends Component {
     if (!id) {
       return;
     }
-    history.push('/Home/' + id + '/View');
+    history.push('/Room/' + id + '/View');
   }
 
   deleteRoom = (id) => {

@@ -39,7 +39,7 @@ export function createNewRoom(data, successCallback, failCallback) {
 
 export function editRoom(data, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/rooms/updateHome',
+        url: '/api/rooms/updateRoom',
         data: data
     };
 
@@ -52,8 +52,8 @@ export function editRoom(data, successCallback, failCallback) {
 
 export function getRoomDetails(id, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/rooms/homeInfo',
-        params: { id: id}
+        url: '/api/rooms/roomDetail',
+        params: { roomId: id}
     };
 
     Services.makeGetRequest(requestOptions, (response) => {

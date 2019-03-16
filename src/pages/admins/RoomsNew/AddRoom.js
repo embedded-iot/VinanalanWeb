@@ -85,9 +85,9 @@ class AddRoom extends Component {
   }
 
   componentWillMount() {
-    const { homeId, mode } = this.props.match.params;
-    if (homeId) {
-      this.getRoomDetails(homeId, this.getInnitData);
+    const { roomId, mode } = this.props.match.params;
+    if (roomId) {
+      this.getRoomDetails(roomId, this.getInnitData);
     } else {
       this.getInnitData();
     }
@@ -104,14 +104,13 @@ class AddRoom extends Component {
     dispatch(spinActions.showSpin());
     getRoomDetails(id, response => {
       dispatch(spinActions.hideSpin());
-      if (response.data) {
-        let selected = { ...this.state.selected, ...response.data};
-        let { extraFees, outcomeUtilities, incomeUtilities} = response.data;
-        selected.income_service = incomeUtilities.map(item => item.id);
-        selected.outcome_service = outcomeUtilities.map(item => item.id);
-        selected.extra_service = extraFees.map(item => item.id);
-        this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees });
-        const { address_text, country_code, district_code, province_code, ward_code } = selected.address;
+      if (response.data && response.data.room) {
+        const room = response.data.room;
+        let selected = { ...this.state.selected, ...room};
+        let { roomUtilities, inFurnitures} = room;
+        selected.roomUtilities = roomUtilities.map(item => item.id);
+        selected.inFurnitures = inFurnitures.map(item => item.id);
+        this.setState({selected: selected, roomUtilities: roomUtilities, inFurnituresAll: inFurnitures});
         callback();
       }
     }, error => {
@@ -186,7 +185,6 @@ class AddRoom extends Component {
         }
       );
     } else {
-      debugger
       Services.createNewRoom(
         {...selected, userId: user.id},
         response => {
@@ -261,6 +259,10 @@ class AddRoom extends Component {
     const { history } = this.props;
     history.goBack();
   }
+
+  buttonListTwoViewMode = [
+    { title: "Quay lại", onClick: () => this.goBackPage()}
+  ];
 
   buttonListTwo = [
     { title: "Quay lại", onClick: () => this.goBackPage()},
@@ -452,7 +454,8 @@ class AddRoom extends Component {
               </div>)}
             </div>
             <div className="group-content">
-                <EditFurniture list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>
+                <EditFurniture emptyMessage='Tòa nhà chưa gắn với dịch vụ phòng nào. Chọn nút "Chỉnh sửa" để thêm dịch vụ.'
+                               list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>
             </div>
           </div>
           <div className="group-box">
