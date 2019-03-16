@@ -16,4 +16,8 @@ const ButtonList = (props) => {
   )
 }
 
+ButtonList.defaultProps = {
+  list: []
+};
+
 export default ButtonList;
