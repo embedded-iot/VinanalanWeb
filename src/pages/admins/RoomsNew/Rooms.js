@@ -124,38 +124,29 @@ class Rooms extends Component {
   deleteRoom = (id) => {
     const { intl, dispatch } = this.props;
 
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
+    const selectedUtility = this.state.dataSource.find(room => room.id === id);
     if (!selectedUtility) {
       return;
     }
-    if (selectedUtility.numRoom === 0) {
-      confirmModal({
-        title: 'Xóa tòa nhà ' + selectedUtility.homeName,
-        content: STRINGS.DELETE_QUESTION,
-        okText: intl.formatMessage({ id: 'YES' }),
-        centered: true,
-        cancelText: intl.formatMessage({ id: 'NO' }),
-        okType: 'danger',
-        onOk: () => {
-          dispatch(spinActions.showSpin());
-          Services.deleteRoom(id, response => {
-            dispatch(spinActions.hideSpin());
-            this.openNotification('success', intl.formatMessage({ id: 'DELETE_HOME_SUCCESS' }));
-            this.onReload()
-          }, error => {
-            dispatch(spinActions.hideSpin());
-            this.openNotification('error', intl.formatMessage({ id: 'DELETE_HOME_FAIL' }))
-          })
-        }
-      });
-    } else {
-      Modal.warning({
-        title: 'Xóa tòa nhà ' + selectedUtility.homeName,
-        content: STRINGS.DELETE_QUESTION_WARNING,
-        centered: true,
-        okText: intl.formatMessage({ id: 'OK' })
-      });
-    }
+    confirmModal({
+      title: 'Xóa phòng ' + selectedUtility.roomName,
+      content: STRINGS.DELETE_QUESTION,
+      okText: intl.formatMessage({ id: 'YES' }),
+      centered: true,
+      cancelText: intl.formatMessage({ id: 'NO' }),
+      okType: 'danger',
+      onOk: () => {
+        dispatch(spinActions.showSpin());
+        Services.deleteRoom(id, response => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('success', intl.formatMessage({ id: 'DELETE_ROOM_SUCCESS' }));
+          this.onReload()
+        }, error => {
+          dispatch(spinActions.hideSpin());
+          this.openNotification('error', intl.formatMessage({ id: 'DELETE_ROOM_FAIL' }))
+        })
+      }
+    });
 
   };
 
