@@ -40,6 +40,7 @@ export default class TableCustom extends Component {
 
   render() {
     const config = { ...defaultProps, ...this.props };
+    const { pagination } = this.props;
     return (
       <div className="table-custom-wrapper">
         <div className="table-header">
@@ -55,6 +56,8 @@ export default class TableCustom extends Component {
           </div>
         </div>
         <Table {...config}/>
+        { pagination && pagination.total !== undefined && <div className='table-total-count'>Tổng số: {pagination.total}</div>}
+
       </div>
     );
   }
