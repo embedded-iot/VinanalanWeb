@@ -274,6 +274,6 @@
   "REQUIRED_ALERT": "Trường này không để trống",
   "SELECT_AVATAR_FOR_ROOM": "Chọn ảnh đại diện cho phòng",
   "SETTING_HOME": "Cài đặt tòa nhà",
-  "EMPTY_IMAGE_IN_HOME": "Không có hình ảnh nào trong tòa nhà \"{homeId}\". Chọn nút \"Cài đặt tòa nhà\" để thêm hình ảnh!",
+  "EMPTY_IMAGE_IN_HOME": "Không có hình ảnh nào trong tòa nhà \"{homeName}\". Chọn nút \"Cài đặt tòa nhà\" để thêm hình ảnh!",
   "STT": "No."
 }

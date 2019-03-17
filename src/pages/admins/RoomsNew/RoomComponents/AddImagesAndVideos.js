@@ -41,8 +41,9 @@ class AddImagesAndVideos extends Component {
     this.setState({loading: true});
     HomesService.getAllMediaHome(selectedHome.id, response => {
       dispatch(spinActions.hideSpin());
+      let images = [];
       if (response.images && response.images.length > 0) {
-        let images = response.images.map((item, index) => (
+        images = response.images.map((item, index) => (
           {
             uid: index,
             name: item.substring(item.lastIndexOf('/') + 1),
@@ -50,8 +51,8 @@ class AddImagesAndVideos extends Component {
             url: item
           }
         ));
-        this.setState({fileList: images, loading: false})
       }
+      this.setState({fileList: images, loading: false})
 
     }, error => {
       dispatch(spinActions.hideSpin());
@@ -81,7 +82,7 @@ class AddImagesAndVideos extends Component {
 
   goToEditHome = home => {
     const { history } = this.props;
-    history.push('/Home/' + home.id + ' /Edit');
+    history.push('/Home/' + home.id + '/Edit');
   }
 
   onSelected = index => {
@@ -110,7 +111,7 @@ class AddImagesAndVideos extends Component {
              onCancel={() => onCancel()}
       >
         <div className="upload-images-videos-wrapper clearfix">
-          { !loading && fileList.length === 0 && intl.formatMessage({ id: 'EMPTY_IMAGE_IN_HOME' }, {homeId: selectedHome.homeName})}
+          { !loading && fileList.length === 0 && intl.formatMessage({ id: 'EMPTY_IMAGE_IN_HOME' }, {homeName: selectedHome.homeName})}
           {fileList.length > 0 && (
             <div className="ant-upload-list ant-upload-list-picture-card">
               {
