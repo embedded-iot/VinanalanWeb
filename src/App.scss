@@ -98,7 +98,7 @@ body,
     .content-container {
       min-height: 100vh;
       flex-grow: 1;
-      padding-top: 66px;
+      padding-top: 56px;
       background: #f3f3f3;
       width: calc(100% - 250px);
     }
@@ -153,7 +153,7 @@ body,
   min-width: 700px;
 
   span {
-    min-width: "100px";
+    min-width: 100px;
     font-size: 16px;
     color: rgb(57, 57, 57);
     font-weight: bold;
@@ -161,7 +161,7 @@ body,
   }
   .home-select {
     span {
-      min-width: "100px";
+      min-width: 100px;
       font-size: 14px;
       color: rgb(57, 57, 57);
       font-weight: 400;
