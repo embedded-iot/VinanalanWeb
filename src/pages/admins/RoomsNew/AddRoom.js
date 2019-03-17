@@ -108,7 +108,14 @@ class AddRoom extends Component {
       dispatch(spinActions.hideSpin());
       if (response.data && response.data.room) {
         let room = response.data.room;
-        room.inFurnitures = room.inFurnitures.map(item => ({...item, cost: item.cost || 0}))
+        room.roomArea = Number(room.roomArea);
+        room.inFurnitures = room.inFurnitures.map(item => {
+          const furniture = item.roomInfurnitures.find(fur => fur.inFurnitureId === item.id);
+          return { icon_link: item.icon_link,
+            id: item.id,
+            name: item.name,
+            cost: furniture && furniture.cost ? furniture.cost : 0}
+          });
         let selected = { ...this.state.selected, ...room};
         let { room_utilities, inFurnitures} = room;
         selected.room_utilities = room_utilities.map(item => item.id);
@@ -167,6 +174,7 @@ class AddRoom extends Component {
 
     selected.inFurnitures = inFurnituresAll.map(item => ({ id: item.id, cost: item.cost}));
     dispatch(spinActions.showSpin());
+    selected.isActive = !!selected.isActive;
     if (isEdit) {
       var id =
         typeof selected.create_by === "object" ? selected.create_by.id : "";
