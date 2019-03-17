@@ -66,14 +66,15 @@ const Protected = (props) => <div>
         <Route exact path="/ExtraFees" component={ExtraFees}/>
 
         <Route exact path="/Room" component={RoomsNew}/>
-        <Route exact path="/AddRoom" component={AddRoom}/>
         <Route exact path="/Room/:roomId/:mode" component={AddRoom}/>
+        <Route exact path="/Room/Home/:homeId/:homeName" component={RoomsNew}/>
+        <Route exact path="/AddRoom" component={AddRoom}/>
         <Route exact path="/Rooms/:homeId" component={Rooms}/>
         <Route exact path="/Rooms" component={Rooms}/>
         <Route exact path="/RoomDetail/:roomId" component={RoomDetail}/>
-        {/*<Route exact path="/Room/RoomDetail/:roomId" component={RoomDetail}/>*/}
+        <Route exact path="/Room/RoomDetail/:roomId" component={RoomDetail}/>
         <Route exact path="/BookRoom/:roomId" component={BookRoom}/>
-        {/*<Route exact path="/Room/BookRoom/:roomId" component={BookRoom}/>*/}
+        <Route exact path="/Room/BookRoom/:roomId" component={BookRoom}/>
 
         <Route exact path="/Report" component={ReportManament}/>
         <PrivateRoute path="/protected" component={Protected}/>

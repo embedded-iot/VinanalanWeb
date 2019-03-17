@@ -27,6 +27,7 @@ const STRINGS = {
   VIEW: <FormattedMessage id="VIEW" />,
   EDIT: <FormattedMessage id="EDIT" />,
   ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
+  VIEW_ROOM_DETAILS: 'Danh sách phòng',
   DELETE_QUESTION_WARNING: " Hiện bạn còn phòng đang hoạt động. Không thể xóa tòa nhà.",
   DELETE_QUESTION: "Mọi thông tin bạn đã đăng tải về chỗ nghỉ này như hình ảnh, video, phòng khách sạn, ... sẽ bị xóa khỏi webstite sarepi.com và không thể khôi phục được. Bạn có chắc chắn muốn xóa chỗ nghỉ này?",
 }
@@ -93,9 +94,12 @@ class Homes extends Component {
     }, {
       title: STRINGS.ACTION,
       dataIndex: 'id',
-      render: id => {
+      render: (id, home) => {
         return (
           <div className="actions-column">
+            <Tooltip title={STRINGS.VIEW_ROOM_DETAILS}>
+              <span className="icon icon-view-details" onClick={() =>this.viewRooms(id, home.homeName)}></span>
+            </Tooltip>
             <Tooltip title={STRINGS.VIEW}>
               <span className="icon icon-view" onClick={() =>this.viewHome(id)}></span>
             </Tooltip>
@@ -126,6 +130,14 @@ class Homes extends Component {
       return;
     }
     history.push('/Home/' + id + '/Edit');
+  }
+
+  viewRooms = (homeId, homeName) => {
+    const { history } = this.props;
+    if (!homeId && !homeName) {
+      return;
+    }
+    history.push('/Room/Home/' + homeId + '/' + homeName);
   }
 
   viewHome = (id) => {

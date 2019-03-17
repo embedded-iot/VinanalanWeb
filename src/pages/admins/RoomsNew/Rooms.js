@@ -42,12 +42,19 @@ class Rooms extends Component {
         searchText: ""
       },
       isShowAddOrEdit: false,
-      selected: {}
+      selected: {},
+      homeId: '',
+      homeName: ''
     }
   }
 
-  componentWillMount() {
-    this.onChange();
+  componentDidMount() {
+    const { homeId, homeName } = this.props.match.params;
+    if (homeId) {
+      this.setState({ homeId: homeId, homeName: homeName}, () => this.onChange());
+    } else {
+      this.onChange();
+    }
   }
 
   columns = [
@@ -56,15 +63,21 @@ class Rooms extends Component {
       dataIndex: 'roomName',
       render: (roomName, row) => (
         <div>
-          <p style={{fontWeight: 'bold'}}>{ `${roomName} ( ${row.maxGuest} người ở )`}</p>
+          <p style={{fontWeight: 'bold'}}>{ roomName + '( ' + row.maxGuest + ' người ở )'}</p>
           { row.roomMedia && row.roomMedia.images && row.roomMedia.images.length > 0 && (
             <p>
               <img src={row.roomMedia.images[0]} alt={roomName} style={{width: '100%'}}/>
             </p>
           )}
-          { Number(row.roomArea) > 0 && <p>{ `Diện tích: ${row.roomArea} m2` }</p>}
+          { Number(row.roomArea) > 0 && <p>{ 'Diện tích: ' + row.roomArea + ' m2' }</p>}
         </div>
       )
+    }, {
+      title: "Tòa nhà",
+      dataIndex: 'homes',
+      centered: true,
+      render: homes => <span>{homes.homeName}</span>,
+      width: '15%'
     }, {
       title: "Giá phòng",
       dataIndex: 'roomDatePrice',
@@ -78,7 +91,7 @@ class Rooms extends Component {
           <p>{row.roomMonthPrice} đ</p>
         </div>
       ),
-      width: '15%'
+      width: '10%'
     }, {
       title: "Tiện ích phòng",
       dataIndex: 'room_utilities',
@@ -190,6 +203,7 @@ class Rooms extends Component {
   };
 
   onChange = (pagination = {}, filters = {}, sorter = {}, extra, searchText) => {
+    const { homeId } = this.state;
     const tableSettings = {
       ...this.state.tableSettings,
       pagination,
@@ -206,7 +220,8 @@ class Rooms extends Component {
       sortField: sorter.field,
       sortOrder: sorter.order,
       searchText,
-      isActive
+      isActive,
+      homeId
     };
 
 
@@ -245,7 +260,8 @@ class Rooms extends Component {
 
 
   render() {
-    const { tableSettings, dataSource, isShowAddOrEdit, selected } = this.state;
+    const { intl } = this.props;
+    const { tableSettings, dataSource, isShowAddOrEdit, selected, homeId, homeName } = this.state;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
@@ -259,7 +275,9 @@ class Rooms extends Component {
     return (
       <div className="page-wrapper">
         <div className="page-headding">
-          {STRINGS.ROOMS}
+          <span>
+            { !homeId ? intl.formatMessage({ id: 'ROOMS' }) : intl.formatMessage({ id: 'ROOMS' }) + ` ( Tòa nhà ${homeName} )`}
+          </span>
           <ButtonList list={buttonList} />
         </div>
         <TableCustom {...TableConfig} />

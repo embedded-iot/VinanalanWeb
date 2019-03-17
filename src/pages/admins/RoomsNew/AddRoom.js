@@ -101,6 +101,10 @@ class AddRoom extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    console.log('componentWillReceiveProps');
+  }
+
   getRoomDetails = (id, callback)  => {
     const { dispatch } = this.props;
     dispatch(spinActions.showSpin());
