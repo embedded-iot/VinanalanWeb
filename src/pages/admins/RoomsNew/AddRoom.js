@@ -165,7 +165,7 @@ class AddRoom extends Component {
 
   isDisabled = () => {
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomDatePrice, roomMonthPrice} = this.state.selected;
-    return !roomName || roomArea === undefined || !homeId || !roomTypeId || roomDatePrice === undefined || roomMonthPrice === undefined;
+    return !roomName || roomArea === '' || !homeId || !roomTypeId || roomDatePrice === '' || roomMonthPrice === '';
   }
 
   handleSubmit = () => {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {InputNumber as InputNumberAntd, Icon, Tooltip} from "antd";
+import {InputNumber as InputNumberAntd, Icon, Tooltip, Input} from "antd";
 import "./InputNumber.scss"
 import PropTypes from 'prop-types';
 import {FormattedMessage} from "react-intl";
@@ -14,8 +14,20 @@ class InputNumber extends Component {
     this.props.onChange(this.props.name, value);
   }
 
+  onChange = (e) => {
+    const { value } = e.target;
+    const {type} = this.props;
+    let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    if (type === 'phone') {
+      reg = /^-?([0-9]+)(\.[0-9]*)?$/;
+    }
+    if ((!Number.isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+      this.props.onChange(this.props.name, value);
+    }
+  }
+
   render() {
-    const { isSubmitted, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
+    const { isSubmitted, typeNumber, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
     return (
       <div className="input-number-wrapper">
         <div className="heading">{ title }
@@ -24,8 +36,13 @@ class InputNumber extends Component {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
         </div>
-        <InputNumberAntd value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />
-        {isSubmitted && isRequired && value === undefined && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
+        {/*<InputNumberAntd value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />*/}
+        <Input
+          value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder}
+          onChange={this.onChange}
+          maxLength={25}
+        />
+        {isSubmitted && isRequired && value === '' && <p style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</p>}
         {description && <span>{ description }</span>}
       </div>
     );
