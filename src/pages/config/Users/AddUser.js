@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import { spinActions } from "../../../actions";
 import * as CONSTANTS from "../../Constants";
+import InputNumber from "../../../components/commons/InputNumber/InputNumber";
+import './User.scss'
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -77,8 +79,8 @@ class AddUser extends Component {
     this.setState({ selected: selected });
   };
 
-  onChangePhone = e => {
-    const selected = { ...this.state.selected, phoneNumber: e.target.value };
+  onChangePhone = (name, value) => {
+    const selected = { ...this.state.selected, phoneNumber: value };
     this.setState({ selected: selected });
   };
 
@@ -175,6 +177,7 @@ class AddUser extends Component {
     return (
       <Modal
         title={isEdit ? STRINGS.EDIT_USER : STRINGS.ADD_USER}
+        wrapClassName='add-user-modal'
         centered
         width="600px"
         visible={true}
@@ -227,7 +230,8 @@ class AddUser extends Component {
         <Row>
           <Col span={8}>{STRINGS.PHONE}</Col>
           <Col span={16}>
-            <Input value={phoneNumber} onChange={this.onChangePhone} />
+            {/*<Input value={phoneNumber} onChange={this.onChangePhone} />*/}
+            <InputNumber name="phoneNumber" value={phoneNumber} onChange={this.onChangePhone}/>
           </Col>
         </Row>
         <Row>
