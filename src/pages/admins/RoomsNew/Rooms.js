@@ -255,7 +255,12 @@ class Rooms extends Component {
 
   onAddRoom = (success) => {
     const { history } = this.props;
-    history.push('/AddRoom')
+    const { homeId } = this.state;
+    if (!!homeId) {
+      history.push(`/AddRoom/${homeId}`);
+    } else {
+      history.push('/AddRoom')
+    }
   }
 
 

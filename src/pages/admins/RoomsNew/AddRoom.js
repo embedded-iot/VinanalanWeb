@@ -82,12 +82,13 @@ class AddRoom extends Component {
       },
       selectedHome: {},
       isShowUploadModal: false,
+      homeIdFromProps: '',
       numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)}))
     };
   }
 
   componentWillMount() {
-    const { roomId, mode } = this.props.match.params;
+    const { roomId, mode, homeId } = this.props.match.params;
     if (roomId) {
       this.getRoomDetails(roomId, this.getInnitData);
     } else {
@@ -98,6 +99,11 @@ class AddRoom extends Component {
     }
     if (mode === 'View') {
       this.setState({isView: true})
+    }
+    if (!!homeId) {
+      let selected = this.state.selected;
+      selected.homeId = homeId;
+      this.setState({selected: selected, homeIdFromProps: homeId})
     }
   }
 
@@ -190,7 +196,7 @@ class AddRoom extends Component {
             "success",
             intl.formatMessage({id: "EDIT_HOME_SUCCESS"})
           );
-          history.push('/Room')
+          history.goBack();
         },
         error => {
           dispatch(spinActions.hideSpin());
@@ -209,7 +215,7 @@ class AddRoom extends Component {
             "success",
             intl.formatMessage({id: "ADD_HOME_SUCCESS"})
           );
-          history.push('/Room');
+          history.goBack();
         },
         er => {
           dispatch(spinActions.hideSpin());
@@ -323,7 +329,7 @@ class AddRoom extends Component {
   }
 
   render() {
-    const {selected, isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all} = this.state;
+    const {selected, isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
     const { images} = roomMedia;
     const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
@@ -368,7 +374,7 @@ class AddRoom extends Component {
                     isSubmitted={isSubmitted}
                     isRequired='true'
                     onChange={this.onChangeDropdown}
-                    disabled={isView}
+                    disabled={isView || !!homeIdFromProps}
                   />
                   <DropdownInputSearch
                     name="roomTypeId"
