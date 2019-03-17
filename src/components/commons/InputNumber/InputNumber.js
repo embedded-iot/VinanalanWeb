@@ -22,7 +22,7 @@ class InputNumber extends Component {
       reg = /^-?([0-9]+)(\.[0-9]*)?$/;
     }
     if ((!Number.isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-      this.props.onChange(this.props.name, value);
+      this.props.onChange(this.props.name, Number(value));
     }
   }
 
@@ -30,12 +30,12 @@ class InputNumber extends Component {
     const { isSubmitted, typeNumber, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
     return (
       <div className="input-number-wrapper">
-        <div className="heading">{ title }
+        { !!title && <div className="heading"> {title }
           { isRequired && title && <span className="is-required">*</span> }
           {
             titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
           }
-        </div>
+        </div>}
         {/*<InputNumberAntd value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />*/}
         <Input
           value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder}
