@@ -7,12 +7,14 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {spinActions} from "../../../../actions";
 import * as UploadService from "../../../../components/commons/UploadService";
+import * as HomesService from "../../../../pages/admins/Homes/HomesServices";
 
 
 const CheckboxGroup = Checkbox.Group;
 
 const STRINGS = {
-  ADD_INCOME_UTILITY_IN_HOME_PAGE: 'Xin mời chọn tiện ích trong cho toàn nhà',
+  SELECT_AVATAR_FOR_ROOM: <FormattedMessage id="SELECT_AVATAR_FOR_ROOM" />,
+  SETTING_HOME: <FormattedMessage id="SETTING_HOME" />,
   SAVE: <FormattedMessage id="SAVE" />,
   CLOSE: <FormattedMessage id="CLOSE" />
 };
@@ -29,52 +31,66 @@ class AddImagesAndVideos extends Component {
     //   status: 'done',
     //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     // }],
+    loading: false,
     fileList: []
   };
 
   componentWillMount() {
-    const { list } = this.props;
-    let images = list.map((item, index) => (
-      {
-          uid: index,
-          name: url.substring(item.lastIndexOf('/') + 1),
-          status: 'done',
-          url: item
+    const { selectedHome, dispatch } = this.props;
+    dispatch(spinActions.showSpin());
+    this.setState({loading: true});
+    HomesService.getAllMediaHome(selectedHome.id, response => {
+      dispatch(spinActions.hideSpin());
+      if (response.images && response.images.length > 0) {
+        let images = response.images.map((item, index) => (
+          {
+            uid: index,
+            name: item.substring(item.lastIndexOf('/') + 1),
+            status: 'done',
+            url: item
+          }
+        ));
+        this.setState({fileList: images, loading: false})
       }
-    ));
-    this.setState({fileList: images})
+
+    }, error => {
+      dispatch(spinActions.hideSpin());
+      this.setState({loading: false});
+    });
   }
 
-  handleCancel = () => this.setState({ previewVisible: false })
+  handleCancel = () => this.setState({ previewVisible: false });
 
   handlePreview = (file) => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     });
-  }
-
-  handleChange = ({ fileList }) => {
-    if (fileList.length > 0) {
-      const endFile = fileList[fileList.length - 1];
-      if (endFile.response && endFile.response.data) {
-        fileList[fileList.length - 1].url = endFile.response.data.result.files.file[0].name;
-      }
-    }
-    this.setState({ fileList });
-}
+  };
 
   saveUpload = () => {
-    const { fileList } = this.state;
+    const { fileList, selectedIndex } = this.state;
     const { onOk, onCancel } = this.props;
-    const images = fileList.map(item => item.url);
-    onOk(images);
+    let images = [];
+    if (selectedIndex >= 0) {
+      images.push(fileList[selectedIndex].url);
+      onOk(images);
+    }
     onCancel();
+  };
+
+  goToEditHome = home => {
+    const { history } = this.props;
+    history.push('/Home/' + home.id + ' /Edit');
   }
 
+  onSelected = index => {
+    this.setState({selectedIndex: index});
+  };
+
   render() {
-    const { onCancel} = this.props;
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { onCancel, selectedHome, intl} = this.props;
+    const { previewVisible, previewImage, fileList, selectedIndex, loading } = this.state;
     const uploadButton = (
       <div>
         <Icon type="plus" />
@@ -83,26 +99,40 @@ class AddImagesAndVideos extends Component {
     );
 
     return(
-      <Modal title="Tải lên hình ảnh"
+      <Modal title={STRINGS.SELECT_AVATAR_FOR_ROOM}
              centered
              width="800px"
              visible={true}
-             okText={STRINGS.SAVE}
+             okText={ fileList && fileList.length > 0 ? STRINGS.SAVE : STRINGS.SETTING_HOME}
              cancelText={STRINGS.CLOSE}
              maskClosable={false}
-             onOk={() => this.saveUpload()}
+             onOk={() => fileList && fileList.length > 0 ? this.saveUpload() : this.goToEditHome(selectedHome)}
              onCancel={() => onCancel()}
       >
         <div className="upload-images-videos-wrapper clearfix">
-          <Upload
-            action={UploadService.url_upload_image}
-            listType="picture-card"
-            fileList={fileList}
-            onPreview={this.handlePreview}
-            onChange={this.handleChange}
-          >
-            {fileList.length >= 10 ? null : uploadButton}
-          </Upload>
+          { !loading && fileList.length === 0 && intl.formatMessage({ id: 'EMPTY_IMAGE_IN_HOME' }, {homeId: selectedHome.homeName})}
+          {fileList.length > 0 && (
+            <div className="ant-upload-list ant-upload-list-picture-card">
+              {
+                fileList.map((file, index) => {
+                  return (
+                    <div key={index} className={ index === selectedIndex ? 'ant-upload-list-item selected' : 'ant-upload-list-item'}
+                         onClick={() => this.onSelected(index)}>
+                      <div className='ant-upload-list-item-info'>
+                        <span>
+                          <a className='ant-upload-list-item-thumbnail'>
+                            <img src={file.url} alt={file.name} />
+                          </a>
+                        </span>
+                      </div>
+                      <span className="ant-upload-list-item-actions" onClick={() => this.handlePreview(file)}><Icon type="eye" /></span>
+                    </div>
+                  );
+                })
+              }
+            </div>
+          )}
+
           <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
             <img alt="example" style={{ width: '100%' }} src={previewImage} />
           </Modal>
@@ -113,13 +143,13 @@ class AddImagesAndVideos extends Component {
 }
 
 AddImagesAndVideos.propTypes = {
-  list: PropTypes.array,
+  selectedHome: PropTypes.object,
   onOk: PropTypes.func,
   onCancel: PropTypes.func
 }
 
 AddImagesAndVideos.defaultProps = {
-  list: [],
+  selectedHome: {},
   onOk: f => f,
   onCancel: f => f
 }

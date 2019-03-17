@@ -38,7 +38,8 @@ const STRINGS = {
   REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT"/>,
   CREATE: <FormattedMessage id="CREATE"/>,
   SAVE: <FormattedMessage id="SAVE"/>,
-  CLOSE: <FormattedMessage id="CLOSE"/>
+  CLOSE: <FormattedMessage id="CLOSE"/>,
+  CHOICE_IMAGE_UPLOAD_BY_HOME_WARNING: 'Vui lòng chọn tòa nhà trước khi thực hiện chức năng này!'
 };
 
 const status = [
@@ -79,6 +80,7 @@ class AddRoom extends Component {
         visible: false,
         selected: []
       },
+      selectedHome: {},
       isShowUploadModal: false,
       numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)}))
     };
@@ -111,7 +113,7 @@ class AddRoom extends Component {
         let { room_utilities, inFurnitures} = room;
         selected.room_utilities = room_utilities.map(item => item.id);
         selected.inFurnitures = inFurnitures.map(item => item.id);
-        this.setState({selected: selected, room_utilities_all: room_utilities, inFurnituresAll: inFurnitures});
+        this.setState({selected: selected, room_utilities_all: room_utilities, inFurnituresAll: inFurnitures, selectedHome: room.homes});
         callback();
       }
     }, error => {
@@ -124,6 +126,7 @@ class AddRoom extends Component {
     getHomes(param, response => {
       if (response.data && response.data.length) {
         const homes = response.data.map(item => ({
+          ...item,
           text: item.homeName,
           value: item.id
         }));
@@ -235,13 +238,26 @@ class AddRoom extends Component {
   };
 
   toggleAddUploadModal = () => {
-    this.setState({isShowUploadModal: !this.state.isShowUploadModal});
+    const { homeId } = this.state.selected;
+    if (homeId) {
+      this.setState({isShowUploadModal: !this.state.isShowUploadModal});
+    } else {
+      this.openNotification('info', STRINGS.CHOICE_IMAGE_UPLOAD_BY_HOME_WARNING);
+    }
   };
+
+
 
   onChangeDropdown = (name, value) => {
     let selected = {...this.state.selected};
     selected[name] = value;
-    this.setState({selected: selected});
+    if (name === 'homeId') {
+      let selectedHome = this.state.homes.find(item => item.id === value);
+      selected.roomMedia.images = [];
+      this.setState({selected: selected, selectedHome});
+    } else {
+      this.setState({selected: selected});
+    }
   }
 
   onChangeInput = (name, value) => {
@@ -295,7 +311,7 @@ class AddRoom extends Component {
   }
 
   render() {
-    const {selected, isSubmitted, homes, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all} = this.state;
+    const {selected, isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all} = this.state;
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
     const { images} = roomMedia;
     const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
@@ -487,7 +503,7 @@ class AddRoom extends Component {
             />
           )}
           {isShowUploadModal && (
-            <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages}/>
+            <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages} selectedHome={selectedHome}/>
           )}
         </div>
       </div>
