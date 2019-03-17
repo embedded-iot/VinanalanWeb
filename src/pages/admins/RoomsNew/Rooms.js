@@ -54,26 +54,65 @@ class Rooms extends Component {
     {
       title: STRINGS.TYPES_OFF_ROOMS,
       dataIndex: 'roomName',
-      width: '20%'
+      render: (roomName, row) => (
+        <div>
+          <p style={{fontWeight: 'bold'}}>{ `${roomName} ( ${row.maxGuest} người ở )`}</p>
+          { row.roomMedia && row.roomMedia.images && row.roomMedia.images.length > 0 && (
+            <p>
+              <img src={row.roomMedia.images[0]} alt={roomName} style={{width: '100%'}}/>
+            </p>
+          )}
+          { Number(row.roomArea) > 0 && <p>{ `Diện tích: ${row.roomArea} m2` }</p>}
+        </div>
+      )
     }, {
       title: "Giá phòng",
       dataIndex: 'roomDatePrice',
-      render: homeCatalog => homeCatalog && homeCatalog.catalogName ? homeCatalog.catalogName : '-',
-      width: '10%'
+      align: 'center',
+      centered: true,
+      render: (field, row) => (
+        <div style={{textAlign: 'center'}}>
+          <p>Giá 1 đêm</p>
+          <p>{row.roomDatePrice} đ</p>
+          <p>Giá dài ngày</p>
+          <p>{row.roomMonthPrice} đ</p>
+        </div>
+      ),
+      width: '15%'
     }, {
       title: "Tiện ích phòng",
       dataIndex: 'room_utilities',
-      render: address => address && address.address_text ? address.address_text : '-',
-      width: '20%'
+      render: room_utilities => {
+        if (room_utilities && room_utilities.length > 0) {
+          return (
+            <div>
+              {room_utilities.map(item => <p key={item.id}>{item.name}</p>)}
+            </div>
+          );
+        }
+        return '-'
+      } ,
+      width: '15%'
     }, {
-      title: "Dịch vụ phòng",
-      dataIndex: '',
-      width: '20%',
+      title: "Thiết bị phòng",
+      dataIndex: 'inFurnitures',
+      render: inFurnitures => {
+        if (inFurnitures && inFurnitures.length > 0) {
+          return (
+            <div>
+              {inFurnitures.map(item => <p key={item.id}>{item.name}</p>)}
+            </div>
+          );
+        }
+        return '-'
+      } ,
+      width: '15%'
     }, {
       title: STRINGS.STATUS,
       dataIndex: 'isActive',
       render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
       filters: CONSTANTS.STATUS,
+      align: 'center',
       width: '10%',
     }, {
       title: STRINGS.ACTION,
@@ -93,7 +132,7 @@ class Rooms extends Component {
           </div>
         )
       },
-      width: '20%',
+      width: '15%',
       align: 'center'
     }
   ];
