@@ -254,6 +254,7 @@ export function makeDeleteRequest(config, successCallback, failCallback) {
     let requestConfig = {
         method: 'DELETE',
         url: link_api,
+        params: config.params,
         headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') }
     };
 
