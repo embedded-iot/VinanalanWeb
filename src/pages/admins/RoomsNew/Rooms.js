@@ -76,7 +76,7 @@ class Rooms extends Component {
       title: "Tòa nhà",
       dataIndex: 'homes',
       centered: true,
-      render: homes => <span>{homes.homeName}</span>,
+      render: homes => <span>{homes && homes.homeName ? homes.homeName : '-'}</span>,
       width: '15%'
     }, {
       title: "Giá phòng",
