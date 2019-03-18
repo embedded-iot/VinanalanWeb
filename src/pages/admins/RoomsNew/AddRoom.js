@@ -139,6 +139,7 @@ class AddRoom extends Component {
   }
 
   getInnitData = () => {
+    const { roomId, mode, homeId } = this.props.match.params;
     let param = {skip: 0, limit: 100};
     getHomes(param, response => {
       if (response.data && response.data.length) {
@@ -147,7 +148,8 @@ class AddRoom extends Component {
           text: item.homeName,
           value: item.id
         }));
-        this.setState({homes: homes});
+        let selectedHome = homes.find(item => item.id === homeId);
+        this.setState({homes: homes, selectedHome});
       }
     });
     getRoomsCatalog(param, response => {
