@@ -127,7 +127,9 @@ class AddUser extends Component {
     const { onChangeVisible, intl, dispatch, user } = this.props;
     this.setState({ isSubmitted: true });
     if (!selected.userName || !selected.email || !validEmail) return;
-
+    if (!isEdit && !selected.password) {
+      return;
+    }
     dispatch(spinActions.showSpin());
     if (isEdit) {
       if (!selected.password) {
@@ -154,7 +156,6 @@ class AddUser extends Component {
         }
       );
     } else {
-      if (!selected.password) return;
       selected.name = selected.userName;
       let useInfo = {...selected};
       delete useInfo.userName;
