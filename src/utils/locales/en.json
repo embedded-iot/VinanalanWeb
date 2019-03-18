@@ -272,6 +272,7 @@
   "EDIT_USER_FAIL": "Chỉnh sửa tài khoản thất bại!",
   "EDIT_ROOM_CATALOG_FAIL": "Chỉnh sửa loại phòng thất bại!",
   "REQUIRED_ALERT": "Trường này không để trống",
+  "INVALID_EMAIL": "Email không đúng định dạng",
   "SELECT_AVATAR_FOR_ROOM": "Chọn ảnh đại diện cho phòng",
   "SETTING_HOME": "Cài đặt tòa nhà",
   "EMPTY_IMAGE_IN_HOME": "Không có hình ảnh nào trong tòa nhà \"{homeName}\". Chọn nút \"Cài đặt tòa nhà\" để thêm hình ảnh!",
