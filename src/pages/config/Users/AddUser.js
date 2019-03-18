@@ -8,6 +8,9 @@ import { spinActions } from "../../../actions";
 import * as CONSTANTS from "../../Constants";
 import InputNumber from "../../../components/commons/InputNumber/InputNumber";
 import './User.scss'
+import InputText from "../../../components/commons/InputText/InputText";
+import validator from "validator";
+import InputEmail from "../../../components/commons/InputEmail/InputEmail";
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -60,18 +63,26 @@ class AddUser extends Component {
         ...props.selected
       },
       isEdit: props.selected && Object.getOwnPropertyNames(props.selected).length,
-      isSubmitted: false
+      isSubmitted: false,
+      validEmail: false
     };
   }
 
-  onChangeName = e => {
-    const selected = { ...this.state.selected, userName: e.target.value };
+  componentDidMount() {
+    const { selected } = this.state;
+    console.log(validator.isEmail(selected.email))
+    this.setState({validEmail: validator.isEmail(selected.email)})
+  }
+
+  onChangeInput = (name, value) => {
+    let selected = { ...this.state.selected };
+    selected[name] = value;
     this.setState({ selected: selected });
   };
 
-  onChangeEmail = e => {
-    const selected = { ...this.state.selected, email: e.target.value };
-    this.setState({ selected: selected });
+  onChangeEmail = (name, value, validate) => {
+    const selected = { ...this.state.selected, email: value };
+    this.setState({ selected: selected, validEmail: validate });
   };
 
   onChangePassword = e => {
@@ -112,10 +123,10 @@ class AddUser extends Component {
   };
 
   handleSubmit = () => {
-    const { selected, isEdit } = this.state;
+    const { selected, isEdit, validEmail } = this.state;
     const { onChangeVisible, intl, dispatch, user } = this.props;
     this.setState({ isSubmitted: true });
-    if (!selected.userName || !selected.email) return;
+    if (!selected.userName || !selected.email || !validEmail) return;
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
@@ -145,9 +156,10 @@ class AddUser extends Component {
     } else {
       if (!selected.password) return;
       selected.name = selected.userName;
-      delete selected.userName;
+      let useInfo = {...selected};
+      delete useInfo.userName;
       Services.createUser(
-        { ...selected, userId: user.id },
+        { ...useInfo, userId: user.id },
         response => {
           dispatch(spinActions.hideSpin());
           this.openNotification(
@@ -193,10 +205,7 @@ class AddUser extends Component {
             <span className="is-required">*</span>
           </Col>
           <Col span={16}>
-            <Input value={userName} onChange={this.onChangeName} />
-            {isSubmitted && !email && (
-              <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
-            )}
+            <InputText name='userName' value={userName} isRequired='true' onChange={this.onChangeInput} isSubmitted={isSubmitted}/>
           </Col>
         </Row>
         <Row>
@@ -205,10 +214,11 @@ class AddUser extends Component {
             <span className="is-required">*</span>
           </Col>
           <Col span={16}>
-            <Input value={email} onChange={this.onChangeEmail} />
+            {/*<Input value={email} onChange={this.onChangeEmail} />
             {isSubmitted && !email && (
               <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
-            )}
+            )}*/}
+            <InputEmail name='email' value={email} isRequired='true' onChange={this.onChangeEmail} isSubmitted={isSubmitted}/>
           </Col>
         </Row>
         <Row>
@@ -221,17 +231,18 @@ class AddUser extends Component {
                 Trường này chỉ dành cho Reset password cho User.
               </span>
             )}
-            <Input value={password} onChange={this.onChangePassword} />
+            {/*<Input value={password} onChange={this.onChangePassword} />
             {!isEdit && isSubmitted && !password && (
               <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
-            )}
+            )}*/}
+            <InputText name='password' value={password} isRequired={!isEdit} onChange={this.onChangeInput} isSubmitted={isSubmitted}/>
           </Col>
         </Row>
         <Row>
           <Col span={8}>{STRINGS.PHONE}</Col>
           <Col span={16}>
             {/*<Input value={phoneNumber} onChange={this.onChangePhone} />*/}
-            <InputNumber name="phoneNumber" value={phoneNumber} onChange={this.onChangePhone}/>
+            <InputNumber type='phone' name="phoneNumber" value={phoneNumber} onChange={this.onChangePhone}/>
           </Col>
         </Row>
         <Row>

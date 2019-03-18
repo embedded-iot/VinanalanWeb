@@ -1,5 +1,9 @@
 .add-user-modal {
-  .input-number-wrapper {
-    margin: 0;
+  .ant-modal-body {
+    .ant-row {
+      .ant-col-8 {
+        line-height: 32px;
+      }
+    }
   }
 }
