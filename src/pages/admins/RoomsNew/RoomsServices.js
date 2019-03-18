@@ -15,7 +15,8 @@ export function getRooms(params, successCallback, failCallback) {
 
 export function deleteRoom(id, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/rooms/' + id
+        url: '/api/rooms/deleteRoom',
+        params: {roomId: id}
     };
     Services.makeDeleteRequest(requestOptions, (response) => {
         successCallback(response.data);

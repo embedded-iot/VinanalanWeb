@@ -15,7 +15,8 @@ export function getHomes(params, successCallback, failCallback) {
 
 export function deleteHome(id, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/' + id
+        url: '/api/homes/deleteHome',
+        params: { id: id}
     };
     Services.makeDeleteRequest(requestOptions, (response) => {
         successCallback(response.data);
