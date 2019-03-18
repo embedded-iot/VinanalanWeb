@@ -389,7 +389,7 @@ class AddHome extends Component {
       isActive} = selected;
     if (step === 1) {
       if (!homeName || !homeTypeId || !address.country_code || !address.province_code|| !address.district_code || !address.ward_code
-        || numFloor === '' || numRoom === '' || location.lat === '' || location.lng === '' || !managerId) {
+        || numFloor === '' || numRoom === '' || location.lat === '' || location.lng === '' || !managerId || hotline === '') {
         this.setState({isSubmitted: true, selectedStep: 0});
       } else {
         this.setState({isSubmitted: false, selectedStep: 1});
