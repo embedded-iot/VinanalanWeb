@@ -31,7 +31,7 @@ export function createUser(data, successCallback, failCallback) {
     };
 
     Services.makePostRequest(requestOptions, (response) => {
-        successCallback(response);
+        successCallback(response.data);
     }, (error) => {
         failCallback(error);
     });

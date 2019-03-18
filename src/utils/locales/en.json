@@ -256,6 +256,7 @@
   "ADD_HOME_CATALOG_FAIL": "Thêm mới loại tòa nhà thất bại!",
   "ADD_HOME_FAIL": "Thêm mới tòa nhà thất bại!",
   "ADD_USER_FAIL": "Thêm mới tài khoản thất bại!",
+  "ADD_USER_EMAIL_EXIST": "Email đã tồn tại, vui lòng nhập email mới!",
   "ADD_ROOM_CATALOG_FAIL": "Thêm mới loại phòng thất bại!",
   "EDIT_UTILITY_SUCCESS": "Chỉnh sửa tiện ích thành công!",
   "EDIT_FURNITURE_SUCCESS": "Chỉnh sửa thiết bị thành công!",

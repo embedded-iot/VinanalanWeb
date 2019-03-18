@@ -163,11 +163,18 @@ class AddUser extends Component {
         { ...useInfo, userId: user.id },
         response => {
           dispatch(spinActions.hideSpin());
-          this.openNotification(
-            "success",
-            intl.formatMessage({ id: "ADD_USER_SUCCESS" })
-          );
-          onChangeVisible(true);
+          if (response.data && response.data.statusCode === 422) {
+            this.openNotification(
+              "error",
+              intl.formatMessage({ id: "ADD_USER_EMAIL_EXIST" })
+            );
+          } else {
+            this.openNotification(
+              "success",
+              intl.formatMessage({ id: "ADD_USER_SUCCESS" })
+            );
+            onChangeVisible(true);
+          }
         },
         er => {
           dispatch(spinActions.hideSpin());
