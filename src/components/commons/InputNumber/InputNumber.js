@@ -33,7 +33,7 @@ class InputNumber extends Component {
   render() {
     const { isSubmitted, typeNumber, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
     return (
-      <div className="input-number-wrapper">
+      <div className="input-number-wrapper" style={ !title ? {margin: 0} : {}}>
         { !!title && <div className="heading"> {title }
           { isRequired && title && <span className="is-required">*</span> }
           {
