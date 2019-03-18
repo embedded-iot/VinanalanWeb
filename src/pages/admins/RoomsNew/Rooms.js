@@ -57,6 +57,13 @@ class Rooms extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { homeId, homeName } = this.props.match.params;
+    if (nextProps.match.params && nextProps.match.params.homeId !== homeId) {
+      this.setState({homeId: nextProps.match.params.homeId}, () => this.onChange());
+    }
+  }
+
   columns = [
     {
       title: STRINGS.TYPES_OFF_ROOMS,
@@ -221,7 +228,7 @@ class Rooms extends Component {
       sortOrder: sorter.order,
       searchText,
       isActive,
-      homeId
+      homeId : !!homeId ? homeId : null
     };
 
 
