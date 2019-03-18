@@ -69,7 +69,7 @@ const ViewUser = (props) => {
       </Row>
       <Row>
         <Col span={8}>{STRINGS.USER_PERMISSION}</Col>
-        <Col span={16}>{role}</Col>
+        <Col span={16}>{getNameByValue(CONSTANTS.USER_PERMISSION, role)}</Col>
       </Row>
     </Modal>
   );
