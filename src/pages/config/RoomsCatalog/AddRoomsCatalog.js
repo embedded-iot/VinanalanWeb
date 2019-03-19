@@ -72,13 +72,12 @@ class AddRoomsCatalog extends Component {
   handleSubmit = () => {
     const { selected, isEdit } = this.state;
     const { onChangeVisible, intl, dispatch, user } = this.props;
-    this,this.setState({isSubmitted: true});
+    this.setState({isSubmitted: true});
     if (!selected.catalogName || !selected.catalogDescription) return;
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      var id = typeof selected.create_by === "object" ? selected.create_by.id : '';
-      selected.create_by = id;
+      selected.create_by = user.id;
       Services.editRoomCatalog(selected.id, selected, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_ROOM_CATALOG_SUCCESS' }));

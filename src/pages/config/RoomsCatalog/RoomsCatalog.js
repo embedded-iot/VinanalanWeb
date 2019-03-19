@@ -17,7 +17,7 @@ const confirmModal = Modal.confirm;
 const STRINGS = {
   ROOM_CATALOGS: <FormattedMessage id="ROOM_CATALOGS" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
-  CREATE_BY: <FormattedMessage id="CREATE_BY" />,
+  UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_ROOM_CATALOGS: <FormattedMessage id="TYPES_OFF_ROOM_CATALOGS" />,
@@ -61,10 +61,10 @@ class RoomsCatalog extends Component {
       title: STRINGS.DESCRIPTION,
       dataIndex: 'catalogDescription'
     }, {
-      title: STRINGS.CREATE_BY,
-      dataIndex: 'create_by',
+      title: STRINGS.UPDATE_BY,
+      dataIndex: 'update_by',
       width: '10%',
-      render: create_by => typeof create_by === "object" ? create_by.userName : '-',
+      render: update_by => typeof update_by === "object" ? update_by.userName : '-',
       align: 'center'
     }, {
       title: STRINGS.STATUS,

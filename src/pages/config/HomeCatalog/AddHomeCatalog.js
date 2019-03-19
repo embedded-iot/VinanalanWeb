@@ -72,13 +72,12 @@ class AddHomeCatalog extends Component {
   handleSubmit = () => {
     const { selected, isEdit } = this.state;
     const { onChangeVisible, intl, dispatch, user } = this.props;
-    this,this.setState({isSubmitted: true});
+    this.setState({isSubmitted: true});
     if (!selected.catalogName || !selected.catalogDescription) return;
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      var id = typeof selected.create_by === "object" ? selected.create_by.id : '';
-      selected.create_by = id;
+      selected.update_by = user.id;
       Services.editHomeCatalog(selected.id, selected, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_SUCCESS' }));
