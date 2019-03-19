@@ -52,24 +52,24 @@ const Protected = (props) => <div>
         <Route exact path="/" component={Homes}/>
         <Route exact path="/Home" component={Homes}/>
         <Route exact path="/HomeOld" component={Home}/>
-        <Route exact path="/AddHome" component={AddHome}/>
+        <Route exact path="/home/AddHome" component={AddHome}/>
         <Route exact path="/Home/:homeId/:mode" component={AddHome}/>
 
-        <Route exact path="/Users" component={Users}/>
-        <Route exact path="/HomeCatalog" component={HomeCatalog}/>
-        <Route exact path="/RoomsCatalog" component={RoomsCatalog}/>
-        <Route exact path="/RoomUtilities" component={RoomUtilities}/>
-        <Route exact path="/IncomeUtilities" component={IncomeUtilities}/>
-        <Route exact path="/OutcomeUtilities" component={OutcomeUtilities}/>
-        <Route exact path="/InFurnitures" component={InFurnitures}/>
-        <Route exact path="/OutFurnitures" component={OutFurnitures}/>
-        <Route exact path="/ExtraFees" component={ExtraFees}/>
+        <Route exact path="/Settings/Users" component={Users}/>
+        <Route exact path="/Settings/HomeCatalog" component={HomeCatalog}/>
+        <Route exact path="/Settings/RoomsCatalog" component={RoomsCatalog}/>
+        <Route exact path="/Settings/RoomUtilities" component={RoomUtilities}/>
+        <Route exact path="/Settings/IncomeUtilities" component={IncomeUtilities}/>
+        <Route exact path="/Settings/OutcomeUtilities" component={OutcomeUtilities}/>
+        <Route exact path="/Settings/InFurnitures" component={InFurnitures}/>
+        <Route exact path="/Settings/OutFurnitures" component={OutFurnitures}/>
+        <Route exact path="/Settings/ExtraFees" component={ExtraFees}/>
 
         <Route exact path="/Room" component={RoomsNew}/>
         <Route exact path="/Room/:roomId/:mode" component={AddRoom}/>
         <Route exact path="/Room/Home/:homeId/:homeName" component={RoomsNew}/>
-        <Route exact path="/AddRoom" component={AddRoom}/>
-        <Route exact path="/AddRoom/:homeId" component={AddRoom}/>
+        <Route exact path="/Room/AddRoom" component={AddRoom}/>
+        <Route exact path="/Room/AddRoom/:homeId" component={AddRoom}/>
         <Route exact path="/Rooms/:homeId" component={Rooms}/>
         <Route exact path="/Rooms" component={Rooms}/>
         <Route exact path="/RoomDetail/:roomId" component={RoomDetail}/>

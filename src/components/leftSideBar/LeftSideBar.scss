@@ -26,11 +26,19 @@ $menu-size: 230px;
       padding-left: 20px;
       cursor: pointer;
       line-height: 32px;
+      display: block;
+      text-decoration: unset;
       &.selected {
         border-left: 6px solid #37b3ff;
         background-color: #58585d;
         font-weight: bold;
         padding-left: 14px;
+      }
+    }
+    .sub-menu {
+      padding-left: 35px;
+      &.selected {
+        padding-left: 29px;
       }
     }
     .menu-divider {

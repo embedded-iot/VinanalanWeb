@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./LeftSideBar.scss";
-import { withRouter } from "react-router-dom";
+import { NavLink, Route, withRouter} from 'react-router-dom';
 import { FormattedMessage } from "react-intl";
 import logo_vinaland from "../../public/images/icons/logo.png";
 
@@ -12,6 +12,31 @@ const STRINGS = {
   HOME_CATALOG: <FormattedMessage id="HOME_CATALOG" />,
   ROOM_CATALOG: <FormattedMessage id="ROOM_CATALOG" />
 };
+
+
+const Settings = (props) => {
+  let menuConfig = [
+    { pathName: "/Users", name: "Quản lý tài khoản" },
+    { pathName: "/RoomsCatalog", name: "Loại phòng" },
+    { pathName: "/HomeCatalog", name: "Loại tòa nhà" },
+    { pathName: "/IncomeUtilities", name: "Tiện ích trong tòa nhà" },
+    { pathName: "/OutcomeUtilities", name: "Tiện ích ngoài tòa nhà" },
+    { pathName: "/RoomUtilities", name: "Tiện ích phòng" },
+    { pathName: "/InFurnitures", name: "Thiết bị phòng" },
+    { pathName: "/OutFurnitures", name: "Thiết bị tòa nhà" },
+    { pathName: "/ExtraFees", name: "Các loại phí khác" }
+  ]
+
+  return (
+    <div>
+      {
+        menuConfig.map(item=> (
+          <NavLink key={item.pathName} to={'/Settings' + item.pathName} className='menu-item sub-menu' activeClassName='selected'>{item.name}</NavLink>
+        ))
+      }
+    </div>
+  )
+}
 
 class LeftSideBar extends Component {
   constructor(props) {
@@ -51,18 +76,6 @@ class LeftSideBar extends Component {
     { pathName: "/Room", name: "Phòng" }
   ];
 
-  menuConfig = [
-    { pathName: "/Users", name: "Quản lý tài khoản" },
-    { pathName: "/RoomsCatalog", name: "Loại phòng" },
-    { pathName: "/HomeCatalog", name: "Loại tòa nhà" },
-    { pathName: "/IncomeUtilities", name: "Tiện ích trong tòa nhà" },
-    { pathName: "/OutcomeUtilities", name: "Tiện ích ngoài tòa nhà" },
-    { pathName: "/RoomUtilities", name: "Tiện ích phòng" },
-    { pathName: "/InFurnitures", name: "Thiết bị phòng" },
-    { pathName: "/OutFurnitures", name: "Thiết bị tòa nhà" },
-    { pathName: "/ExtraFees", name: "Các loại phí khác" }
-  ];
-
   render() {
     const { urlPage, collapsed } = this.state;
     return (
@@ -72,28 +85,11 @@ class LeftSideBar extends Component {
         </div>
         <div className="menu-wrapper">
           {this.menuList.map((item, index) => (
-            <div
-              className={
-                urlPage === item.pathName ? "menu-item selected" : "menu-item"
-              }
-              key={index}
-              onClick={() => this.handleActive(item.pathName)}
-            >
-              {item.name}
-            </div>
+            <NavLink key={index} to={item.pathName} className='menu-item' activeClassName='selected'>{item.name}</NavLink>
           ))}
           <div className="menu-divider" />
-          {this.menuConfig.map((item, index) => (
-            <div
-              className={
-                urlPage === item.pathName ? "menu-item selected" : "menu-item"
-              }
-              key={index}
-              onClick={() => this.handleActive(item.pathName)}
-            >
-              {item.name}
-            </div>
-          ))}
+          <NavLink to='/Settings/Users' className='menu-item'>Cấu hình</NavLink>
+          <Route path="/Settings" component={Settings} />
         </div>
       </div>
     );

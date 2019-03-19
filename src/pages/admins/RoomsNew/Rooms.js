@@ -264,9 +264,9 @@ class Rooms extends Component {
     const { history } = this.props;
     const { homeId } = this.state;
     if (!!homeId) {
-      history.push(`/AddRoom/${homeId}`);
+      history.push(`/Room/AddRoom/${homeId}`);
     } else {
-      history.push('/AddRoom')
+      history.push('/Room/AddRoom')
     }
   }
 

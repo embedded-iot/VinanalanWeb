@@ -237,7 +237,7 @@ class Homes extends Component {
 
   onAddHome = (success) => {
     const { history } = this.props;
-    history.push('/AddHome')
+    history.push('/Home/AddHome')
   }
 
   onChangeVisibleViewDetails = () => {
