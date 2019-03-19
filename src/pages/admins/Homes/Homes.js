@@ -10,6 +10,7 @@ import AddHome from "./AddHome";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import ViewHome from "./ViewHome";
 import * as CONSTANTS from '../../Constants';
+import FilterLocationHome from "./HomeComponents/FilterLocationHome";
 
 const confirmModal = Modal.confirm;
 
@@ -45,7 +46,8 @@ class Homes extends Component {
       },
       isShowAddOrEdit: false,
       isShowViewDetails: false,
-      selected: {}
+      selected: {},
+      filterObject: {}
     }
   }
 
@@ -195,6 +197,7 @@ class Homes extends Component {
       sorter
     };
     const { dispatch } = this.props;
+    const { filterObject } = this.state;
 
     let isActive = filters.isActive;
     let params = {
@@ -203,6 +206,7 @@ class Homes extends Component {
       sortField: sorter.field,
       sortOrder: sorter.order,
       searchText,
+      ...filterObject,
       isActive
     };
 
@@ -244,6 +248,11 @@ class Homes extends Component {
     this.setState({ selected: {}, isShowViewDetails: !this.state.isShowViewDetails })
   }
 
+  onChangeFilterLocation = filterObject => {
+    console.log(filterObject);
+    this.setState({filterObject: filterObject} , () => this.onChange())
+  }
+
   render() {
     const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected } = this.state;
     const TableConfig = {
@@ -262,6 +271,7 @@ class Homes extends Component {
           {STRINGS.HOMES}
           <ButtonList list={buttonList} />
         </div>
+        <FilterLocationHome onChangeFilter={ this.onChangeFilterLocation}/>
         <TableCustom {...TableConfig} />
         {
           isShowAddOrEdit && <AddHome selected={selected} onChangeVisible={this.onChangeVisible} />
