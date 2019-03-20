@@ -77,8 +77,14 @@ class AddHomeCatalog extends Component {
 
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      selected.update_by = user.id;
-      Services.editHomeCatalog(selected.id, selected, response => {
+      let Info = {
+        catalogDescription: selected.catalogDescription,
+        catalogName: selected.catalogName,
+        id: selected.id,
+        isActive: selected.isActive,
+        userId: user.id
+      }
+      Services.editHomeCatalog(selected.id, Info, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_SUCCESS' }));
         onChangeVisible(true);
