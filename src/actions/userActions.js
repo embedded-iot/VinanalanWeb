@@ -4,10 +4,14 @@ import {alertActions, spinActions} from './';
 import cookie from 'react-cookies';
 import { FormattedMessage } from 'react-intl';
 import React from "react";
+import {notification} from "antd";
 
 const STRINGS = {
   CONGRATULATIONS_YOU_REGISTERED_SUCESSFULLY_PLEASE_LOGIN: <FormattedMessage id="CONGRATULATIONS_YOU_REGISTERED_SUCESSFULLY_PLEASE_LOGIN" />,
+  LOGIN_SUCESS: 'Đăng nhập thành công!',
+  LOGIN_FAIL: 'Đăng nhập thất bại!'
 }
+
 export const userActions = {
   resetPass,
   login,
@@ -15,6 +19,13 @@ export const userActions = {
   register
   // getAll,
   // delete: _delete
+};
+
+const openNotification = (type, message, description) => {
+  notification[type]({
+    message: message,
+    description: description,
+  });
 };
 
 function login(user, remember, history) {
@@ -28,18 +39,22 @@ function login(user, remember, history) {
         if (remember) {
           cookie.save("vinaland_email_login", user.email, { path: '/' });
         }
-        // dispatch(success(response.data.data.user));
         dispatch(spinActions.hideSpin());
+        dispatch(success(response.data.data.user));
+        openNotification('success', STRINGS.LOGIN_SUCESS);
         history.push('/Home');
       } else {
         dispatch(spinActions.hideSpin());
         // dispatch(failure(response.data.description));
-        dispatch(alertActions.error(response.data.description));
+        // dispatch(alertActions.error(response.data.description));
+        openNotification('error', STRINGS.LOGIN_FAIL);
       }
     }
       , error => {
-        dispatch(failure(error));
-        dispatch(alertActions.error(error.response.data.error.message));
+        dispatch(spinActions.hideSpin());
+        openNotification('error', STRINGS.LOGIN_FAIL);
+        // dispatch(failure(error));
+        // dispatch(alertActions.error(error.response.data.error.message));
       });
   };
 
