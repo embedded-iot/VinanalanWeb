@@ -107,7 +107,7 @@ class AddOutcomeUtility extends Component {
     const { selected } = this.state;
 
     this.setState({isSubmitted: true});
-    if (!selected.name) return;
+    if (!selected.name || !fileList.length) return;
     if (fileList.length) {
       fileList.forEach((file) => {
         formData.append('file', file);
@@ -155,9 +155,10 @@ class AddOutcomeUtility extends Component {
           </Col>
         </Row>
         <Row>
-          <Col span={8}>Icon</Col>
+          <Col span={8}>Icon<span className="is-required">*</span></Col>
           <Col span={16}>
             <UploadImageList onChange={this.onChangeUpload}/>
+            { isSubmitted && !fileList.length && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
           </Col>
         </Row>
         <Row>
