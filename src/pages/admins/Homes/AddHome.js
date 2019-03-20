@@ -33,6 +33,7 @@ import {getExtraFees} from "../../config/ExtraFees/ExtraFeesServices";
 import ViewTopUtilities from "./HomeComponents/ViewTopUtilities";
 import {getHomeDetails} from "./HomesServices";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
+import {GoogleMapMarker} from "../../../components/GoogleMaps/GoogleMapMarker";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -431,6 +432,15 @@ class AddHome extends Component {
     this.setState({selected: { ...this.state.selected, media: { ...this.state.selected.media, images: images}}})
   }
 
+
+  onClickMap = (lat, lng) => {
+    let location = { ...this.state.selected.location};
+    location.lat = lat;
+    location.lng = lng;
+    const selected = { ...this.state.selected, location: location};
+    this.setState({ selected: { ...selected}})
+  }
+
   render() {
     const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
       outcome_service, income_service, extra_service} = this.state;
@@ -486,90 +496,105 @@ class AddHome extends Component {
                 title="Địa chỉ chỗ nghỉ"
                 titleInfo="Địa chỉ chỗ nghỉ của bạn là quan trọng! Vui lòng cung cấp đầy đủ thông tin về địa chỉ chỗ nghỉ của bạn."
               />
-              <DropdownInputSearch
-                title="Quốc gia"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={countries}
-                value={country_code}
-                name="country_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <DropdownInputSearch
-                title="Tỉnh/Thành phố"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={provinces}
-                value={province_code}
-                name="province_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <DropdownInputSearch
-                title="Quận/Huyện"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={districts}
-                value={district_code}
-                name="district_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <DropdownInputSearch
-                title="Tên đường, phường, xã"
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                list={wards}
-                value={ward_code}
-                name="ward_code"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <InputTextArea
-                title="Số nhà, tầng, tòa nhà,..."
-                value={address_text}
-                name="address_text"
-                onChange={this.onChangeAddress}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Lat"
-                name="lat"
-                value={location.lat}
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                onChange={this.onChangeInputLatLong}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Long"
-                name="lng"
-                value={location.lng}
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                onChange={this.onChangeInputLatLong}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Hot line"
-                name="hotline"
-                type="phone"
-                value={hotline}
-                isSubmitted={isSubmitted}
-                isRequired="true"
-                onChange={this.onChangeInput}
-                disabled={isView}
-              />
-              <InputNumber
-                title="Số tầng"
-                name="numFloor"
-                value={numFloor}
-                isRequired="true"
-                isSubmitted={isSubmitted}
-                onChange={this.onChangeInput}
-                disabled={isView}
-              />
+
+              <Row>
+                <Col span={10} style={{width: '500px'}}>
+                  <DropdownInputSearch
+                    title="Quốc gia"
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    list={countries}
+                    value={country_code}
+                    name="country_code"
+                    onChange={this.onChangeAddress}
+                    disabled={isView}
+                  />
+                  <DropdownInputSearch
+                    title="Tỉnh/Thành phố"
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    list={provinces}
+                    value={province_code}
+                    name="province_code"
+                    onChange={this.onChangeAddress}
+                    disabled={isView}
+                  />
+                  <DropdownInputSearch
+                    title="Quận/Huyện"
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    list={districts}
+                    value={district_code}
+                    name="district_code"
+                    onChange={this.onChangeAddress}
+                    disabled={isView}
+                  />
+                  <DropdownInputSearch
+                    title="Tên đường, phường, xã"
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    list={wards}
+                    value={ward_code}
+                    name="ward_code"
+                    onChange={this.onChangeAddress}
+                    disabled={isView}
+                  />
+                  <InputTextArea
+                    title="Số nhà, tầng, tòa nhà,..."
+                    value={address_text}
+                    name="address_text"
+                    onChange={this.onChangeAddress}
+                    disabled={isView}
+                  />
+                </Col>
+                <Col span={10}>
+                  { !!location.lat && <GoogleMapMarker onClickMap={this.onClickMap} location={location}/>}
+
+                </Col>
+              </Row>
+              <Row >
+                <Col span={10} style={{width: '500px'}}>
+                  <InputNumber
+                    title="Hot line"
+                    name="hotline"
+                    type="phone"
+                    value={hotline}
+                    isSubmitted={isSubmitted}
+                    isRequired="true"
+                    onChange={this.onChangeInput}
+                    disabled={isView}
+                  />
+                  <InputNumber
+                    title="Số tầng"
+                    name="numFloor"
+                    value={numFloor}
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    onChange={this.onChangeInput}
+                    disabled={isView}
+                  />
+                </Col>
+                <Col span={10}>
+                  <InputNumber
+                    title="Vĩ độ"
+                    name="lat"
+                    value={location.lat}
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    onChange={this.onChangeInputLatLong}
+                    disabled={isView}
+                  />
+                  <InputNumber
+                    title="Kinh độ"
+                    name="lng"
+                    value={location.lng}
+                    isRequired="true"
+                    isSubmitted={isSubmitted}
+                    onChange={this.onChangeInputLatLong}
+                    disabled={isView}
+                  />
+                </Col>
+              </Row>
             </div>
           </div>
           <div className="group-box">
