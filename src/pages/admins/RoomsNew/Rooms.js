@@ -169,7 +169,7 @@ class Rooms extends Component {
     if (!id) {
       return;
     }
-    history.push('/Room/' + id + '/Edit');
+    history.push('/Room/Details/' + id + '/Edit');
   }
 
   viewHome = (id) => {
@@ -177,7 +177,7 @@ class Rooms extends Component {
     if (!id) {
       return;
     }
-    history.push('/Room/' + id + '/View');
+    history.push('/Room/Details/' + id + '/View');
   }
 
   deleteRoom = (id) => {
