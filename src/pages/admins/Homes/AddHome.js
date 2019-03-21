@@ -33,7 +33,7 @@ import {getExtraFees} from "../../config/ExtraFees/ExtraFeesServices";
 import ViewTopUtilities from "./HomeComponents/ViewTopUtilities";
 import {getHomeDetails} from "./HomesServices";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
-import {GoogleMapMarker} from "../../../components/GoogleMaps/GoogleMapMarker";
+import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -102,7 +102,8 @@ class AddHome extends Component {
       },
       isShowUploadModal: false,
       homeManager: {},
-      selectedStep: 0
+      selectedStep: 0,
+      loading: false
     };
   }
 
@@ -124,6 +125,7 @@ class AddHome extends Component {
   getHomeDetails = (id, callback)  => {
     const { dispatch } = this.props;
     dispatch(spinActions.showSpin());
+    this.setState({loading: true});
     getHomeDetails(id, response => {
       dispatch(spinActions.hideSpin());
       if (response.data) {
@@ -132,7 +134,9 @@ class AddHome extends Component {
         selected.income_service = incomeUtilities.map(item => item.id);
         selected.outcome_service = outcomeUtilities.map(item => item.id);
         selected.extra_service = extraFees.map(item => item.id);
-        this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees });
+        this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees }, () => {
+          this.setState({loading: false});
+        });
         const { address_text, country_code, district_code, province_code, ward_code } = selected.address;
         this.getProvincesByCountry(country_code);
         this.getDistrictsByProvince(province_code);
@@ -433,17 +437,22 @@ class AddHome extends Component {
   }
 
 
-  onClickMap = (lat, lng) => {
+  onChangeLocation = (lat, lng, address_text) => {
+    // console.log(lat + '-' + lng + '-' + address_text);
     let location = { ...this.state.selected.location};
+    let address = { ...this.state.selected.address};
     location.lat = lat;
     location.lng = lng;
-    const selected = { ...this.state.selected, location: location};
+    if (address_text) {
+      address.address_text = address_text;
+    }
+    const selected = { ...this.state.selected, location: location, address: address};
     this.setState({ selected: { ...selected}})
   }
 
   render() {
     const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
-      outcome_service, income_service, extra_service} = this.state;
+      outcome_service, income_service, extra_service, loading} = this.state;
     const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
       isActive} = selected;
     const { images, videos} = media;
@@ -548,8 +557,7 @@ class AddHome extends Component {
                   />
                 </Col>
                 <Col span={10}>
-                  { !!location.lat && <GoogleMapMarker onClickMap={this.onClickMap} location={location}/>}
-
+                  { !loading && <GoogleMapSearchBox onChangeLocation={this.onChangeLocation} location={location} disabled={isView}/>}
                 </Col>
               </Row>
               <Row >
@@ -692,6 +700,7 @@ class AddHome extends Component {
                 name="homeDescription"
                 value={homeDescription}
                 isSubmitted={isSubmitted}
+                isRequired='true'
                 isRequired='true'
                 onChange={this.onChangeInput}
                 style={{maxWidth: "none"}}
