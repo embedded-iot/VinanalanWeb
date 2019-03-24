@@ -1,0 +1,40 @@
+.input-search-home-wrapper {
+  max-width: 100%;
+  .search-box {
+    margin-bottom: 15px;
+    display: flex;
+    flex-flow: row nowrap;
+    .ant-input-affix-wrapper {
+      margin-right: auto;
+      width: 100%;
+      box-shadow: none;
+      input {
+        padding-left: 30px;
+        width: 30%;
+        border: none;
+        border-radius: 4px;
+        &:focus, &:active {
+          width: 100%;
+          flex-grow: 1;
+          border: 1px solid #000000;
+          box-shadow: none;
+        }
+      }
+      .ant-input-suffix {
+        left: 12px;
+        right: auto;
+      }
+    }
+  }
+
+  //.ant-input {
+  //  border: solid 1px #CCCCCC;
+  //  &:hover {
+  //    border: solid 1px #CCCCCC;
+  //  }
+  //  &:focus {
+  //    box-shadow: none;
+  //    border: 1px solid #000000;
+  //  }
+  //}
+}

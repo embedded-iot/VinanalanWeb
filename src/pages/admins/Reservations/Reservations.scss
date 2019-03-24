@@ -1,0 +1,47 @@
+.reservations-wrapper {
+  .page-contents-wrapper {
+    margin-top: 30px;
+    .search-home-wrapper {
+      .search-home-box {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        .search-home-item {
+          width: calc(30%);
+          & > div {
+            max-width: none;
+          }
+        }
+      }
+    }
+  }
+  .homes-contents-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    .search-home-wrapper {
+      width: 400px;
+      flex-shrink: 0;
+      .input-search-home-wrapper {
+        margin-bottom: 0;
+        .search-box {
+          margin-bottom: 0;
+        }
+        input {
+          width: 100%;
+        }
+      }
+      .search-home-item {
+        width: 100% !important;
+        &:last-child {
+          margin-bottom: 10px;
+        }
+        & > div {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .homes-wrapper {
+      padding-left: 25px;
+    }
+  }
+}

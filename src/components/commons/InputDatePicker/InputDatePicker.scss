@@ -1,0 +1,15 @@
+.input-date-picker-wrapper {
+   /*.ant-calendar-picker {
+     border: solid 1px #CCCCCC;
+     &:hover {
+       border: solid 1px #CCCCCC;
+     }
+     &:focus {
+       box-shadow: none;
+       border: 1px solid #000000;
+     }
+   }*/
+  .ant-calendar-picker {
+    width: 100% !important;
+  }
+}

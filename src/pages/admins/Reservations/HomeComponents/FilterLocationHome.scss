@@ -1,0 +1,24 @@
+.filter-location-home-wrapper {
+  .dropdown-input-search-wrapper {
+    margin-top: 0;
+    padding-right: 15px;
+    display: flex;
+    flex-flow: row nowrap;
+    .heading {
+      flex-shrink: 0;
+      margin: 0 15px 0 0;
+      line-height: 32px;
+    }
+    .ant-select {
+      flex-grow: 1;
+    }
+  }
+  .clear-filter {
+    line-height: 32px;
+    color: red;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}

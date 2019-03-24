@@ -1,0 +1,16 @@
+.view-top-utilities-wrapper {
+  .utility-item {
+    display: inline-block;
+    min-width: 150px;
+    margin: 10px 0;
+    text-align: center;
+    .utility-icon {
+      width: 70px;
+      height: 70px;
+    }
+    .utility-text {
+      font-weight: bold;
+      margin: 15px 0;
+    }
+  }
+}
