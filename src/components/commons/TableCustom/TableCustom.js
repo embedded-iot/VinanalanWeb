@@ -11,7 +11,8 @@ const defaultProps = {
   rowKey: record => record.id,
   pagination: {},
   loading: false,
-  onChange: () => { }
+  onChange: () => { },
+  isHideInputSearch: false
 }
 
 const pageSizes = [
@@ -47,6 +48,7 @@ export default class TableCustom extends Component {
           <Search
             placeholder="Nhập thông tin tìm kiếm"
             onSearch={this.onSearchText}
+            style={{display: config.isHideInputSearch ? 'none': ''}}
           />
           <div className="dropdown-page-size">
             <span>Hiển thị</span>

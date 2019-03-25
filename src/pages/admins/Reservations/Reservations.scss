@@ -19,7 +19,7 @@
     display: flex;
     flex-flow: row nowrap;
     .search-home-wrapper {
-      width: 400px;
+      width: 27%;
       flex-shrink: 0;
       .input-search-home-wrapper {
         margin-bottom: 0;
@@ -42,6 +42,47 @@
     }
     .homes-wrapper {
       padding-left: 25px;
+      flex-grow: 1;
+      .homes-heading {
+        margin-bottom: 15px;
+        font-size: 22px;
+        font-weight: bold;
+      }
+
+      .sort-home-wrapper {
+        position: absolute;
+        z-index: 1;
+        .dropdown-list-wrapper {
+          max-width: none;
+          width: auto;
+          display: inline-block;
+          margin: 0 0 0 15px;
+          .ant-select {
+            width: auto;
+          }
+        }
+      }
+
+      .home-details {
+        display: flex;
+        flex-flow: row wrap;
+        .home-img {
+          width: 30%;
+          img {
+            width: 100%;
+          }
+        }
+        .home-contents {
+          padding: 20px;
+          .home-name {
+            font-size: 16px;
+            font-weight: bold;
+          }
+          .home-address {
+
+          }
+        }
+      }
     }
   }
 }

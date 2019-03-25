@@ -19,12 +19,17 @@ class DropdownList extends Component {
     const { defaultValue, value, disabled, list, title, isRequired, titleInfo, placeholderInfo, isSubmitted} = this.props;
     return (
       <div className="dropdown-list-wrapper">
-        <div className="heading">{ title }
-          { isRequired && title && <span className="is-required">*</span> }
-          {
-            !!titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
-          }
-        </div>
+        {
+          title && (
+            <div className="heading">{ title }
+            { isRequired && title && <span className="is-required">*</span> }
+            {
+              !!titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
+            }
+          </div>
+          )
+        }
+
         <Select
           defaultValue={defaultValue}
           value={value}

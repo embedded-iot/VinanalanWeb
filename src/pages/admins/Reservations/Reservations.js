@@ -60,6 +60,12 @@ class Reservations extends Component {
       numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})),
       numberDays: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)}))
     }
+
+    this.sortTypesByHomes = [
+      { text: "Gợi ý của chúng tôi", value: 'normal'},
+      { text: "Giá tăng dần", value: 'ascending'},
+      { text: "Giá giảm dần", value: 'descending'},
+    ]
   }
 
   componentWillMount() {
@@ -84,65 +90,34 @@ class Reservations extends Component {
     {
       title: STRINGS.TYPES_OFF_HOMES,
       dataIndex: 'homeName',
-      width: '10%'
+      render: (homeName, homeDetails) => {
+        return (
+          <div className="home-details">
+            <div className="home-img">
+              <img src={ homeDetails.media && homeDetails.media.images && homeDetails.media.images.length > 0 ? homeDetails.media.images[0] : ''} alt={ homeName }/>
+            </div>
+            <div className="home-contents">
+              <div className="home-name">{homeName}</div>
+              <div className="home-address">{homeDetails.address && homeDetails.address.address_text ? homeDetails.address.address_text : '-'}</div>
+            </div>
+          </div>
+        );
+      },
+      width: "80%"
     }, {
       title: "Loại hình",
-      dataIndex: 'homeCatalog',
-      render: homeCatalog => homeCatalog && homeCatalog.catalogName ? homeCatalog.catalogName : '-',
-      width: '10%'
-    }, {
-      title: "Người quản trị",
-      dataIndex: 'manager',
-      render: manager => manager && manager.userName ? manager.userName : '-',
-      width: '10%'
-    }, {
-      title: "Địa chỉ",
-      dataIndex: 'address',
-      render: address => address && address.address_text ? address.address_text : '-',
-      width: '20%'
-    }, {
-      title: "Số tầng",
-      dataIndex: 'numFloor',
-      width: '10%',
-    }, {
-      title: "Số phòng",
-      dataIndex: 'numRoom',
-      width: '10%',
-    }, {
-      title: "Hotline",
-      dataIndex: 'hotline',
-      width: '10%',
-    }, {
-      title: STRINGS.STATUS,
-      dataIndex: 'isActive',
-      render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
-      filters: CONSTANTS.STATUS,
-      width: '10%',
-    }, {
-      title: STRINGS.ACTION,
       dataIndex: 'id',
-      render: (id, home) => {
-        return (
-          <div className="actions-column">
-            <Tooltip title={STRINGS.VIEW_ROOM_DETAILS}>
-              <span className="icon icon-view-details" onClick={() =>this.viewRooms(id, home.homeName)}></span>
-            </Tooltip>
-            <Tooltip title={STRINGS.VIEW}>
-              <span className="icon icon-view" onClick={() =>this.viewHome(id)}></span>
-            </Tooltip>
-            <Tooltip title={STRINGS.EDIT}>
-              <span className="icon icon-edit" onClick={() => this.editHome(id)}></span>
-            </Tooltip>
-            <Tooltip title={STRINGS.ACTION_DELETE}>
-              <span className="icon icon-delete" onClick={() => this.deleteHome(id)}></span>
-            </Tooltip>
-          </div>
-        )
+      render:  (id, homeDetails) => {
+        return <Button onClick={() => this.viewRoomsOfHomeId(id)}>Xem phòng</Button>
       },
-      width: '10%',
-      align: 'center'
+      align: "center",
+      width: '20%'
     }
   ];
+
+  viewRoomsOfHomeId = homeId => {
+    console.log("homeId", homeId)
+  }
 
   openNotification = (type, message, description) => {
     notification[type]({
@@ -283,7 +258,8 @@ class Reservations extends Component {
       pagination: tableSettings.pagination,
       onChange: this.onChange,
       tableSettings: tableSettings,
-      showHeader: false
+      showHeader: false,
+      isHideInputSearch: true
     };
     const buttonList = [
       { title: "Quay lại", onClick: () => this.selectedStep(0) },
@@ -354,6 +330,16 @@ class Reservations extends Component {
             </div>
           </div>
           <div className="homes-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
+            <div className="homes-heading">Danh sách tòa nhà</div>
+            <div className="sort-home-wrapper">
+              <span>Sắp xếp theo:</span>
+              <DropdownList
+                name="maxGuest"
+                list={this.sortTypesByHomes}
+                value={'normal'}
+                onChange={this.onChangeDropdown}
+              />
+            </div>
             <TableCustom {...TableConfig} />
           </div>
         </div>
