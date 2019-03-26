@@ -7,10 +7,8 @@ import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
-import * as CONSTANTS from '../../Constants';
 import InputSearchHome from "./HomeComponents/InputSearchHome";
 import InputDatePicker from "../../../components/commons/InputDatePicker/InputDatePicker";
-
 import DropdownInputSearch from "../../../components/commons/DropdownInputSearch/DropdownInputSearch";
 import {getRoomsCatalog} from "../../config/RoomsCatalog/RoomsCatalogServices";
 import DropdownList from "../../../components/commons/DropdownList/DropdownList";
@@ -22,20 +20,8 @@ const confirmModal = Modal.confirm;
 const STRINGS = {
   RESERVATIONS: <FormattedMessage id="RESERVATIONS" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
-  CREATE_BY: <FormattedMessage id="CREATE_BY" />,
-  ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
-  ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_HOMES: <FormattedMessage id="TYPES_OFF_HOMES" />,
-  ACTION: <FormattedMessage id="ACTION" />,
-  STATUS: <FormattedMessage id="STATUS" />,
-  YES: <FormattedMessage id="YES" />,
-  NO: <FormattedMessage id="NO" />,
   VIEW: <FormattedMessage id="VIEW" />,
-  EDIT: <FormattedMessage id="EDIT" />,
-  ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
-  VIEW_ROOM_DETAILS: 'Danh sách phòng',
-  DELETE_QUESTION_WARNING: " Hiện bạn còn phòng đang hoạt động. Không thể xóa tòa nhà.",
-  DELETE_QUESTION: "Mọi thông tin bạn đã đăng tải về chỗ nghỉ này như hình ảnh, video, phòng khách sạn, ... sẽ bị xóa khỏi webstite sarepi.com và không thể khôi phục được. Bạn có chắc chắn muốn xóa chỗ nghỉ này?",
 }
 
 const MAX_GUEST = 10;
@@ -116,76 +102,16 @@ class Reservations extends Component {
   ];
 
   viewRoomsOfHomeId = homeId => {
-    console.log("homeId", homeId)
-  }
+    console.log("homeId", homeId);
+    const { history } = this.props;
+    history.push('/Reservations/HomeDetails/' + homeId);
+  };
 
   openNotification = (type, message, description) => {
     notification[type]({
       message: message,
       description: description,
     });
-  };
-
-  editHome = (id) => {
-    const { history } = this.props;
-    if (!id) {
-      return;
-    }
-    history.push('/Home/' + id + '/Edit');
-  }
-
-  viewRooms = (homeId, homeName) => {
-    const { history } = this.props;
-    if (!homeId && !homeName) {
-      return;
-    }
-    history.push('/Room/Home/' + homeId + '/' + homeName);
-  }
-
-  viewHome = (id) => {
-    const { history } = this.props;
-    if (!id) {
-      return;
-    }
-    history.push('/Home/' + id + '/View');
-  }
-
-  deleteHome = (id) => {
-    const { intl, dispatch } = this.props;
-
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
-    if (!selectedUtility) {
-      return;
-    }
-    if (selectedUtility.numRoom === 0) {
-      confirmModal({
-        title: 'Xóa tòa nhà ' + selectedUtility.homeName,
-        content: STRINGS.DELETE_QUESTION,
-        okText: intl.formatMessage({ id: 'YES' }),
-        centered: true,
-        cancelText: intl.formatMessage({ id: 'NO' }),
-        okType: 'danger',
-        onOk: () => {
-          dispatch(spinActions.showSpin());
-          Services.deleteHome(id, response => {
-            dispatch(spinActions.hideSpin());
-            this.openNotification('success', intl.formatMessage({ id: 'DELETE_HOME_SUCCESS' }));
-            this.onReload()
-          }, error => {
-            dispatch(spinActions.hideSpin());
-            this.openNotification('error', intl.formatMessage({ id: 'DELETE_HOME_FAIL' }))
-          })
-        }
-      });
-    } else {
-      Modal.warning({
-        title: 'Xóa tòa nhà ' + selectedUtility.homeName,
-        content: STRINGS.DELETE_QUESTION_WARNING,
-        centered: true,
-        okText: intl.formatMessage({ id: 'OK' })
-      });
-    }
-
   };
 
   onChange = (pagination = {}, filters = {}, sorter = {}, extra, searchText) => {
@@ -239,14 +165,10 @@ class Reservations extends Component {
     this.onChange(pagination, filters, sorter, {}, searchText);
   }
 
-  onAddHome = (success) => {
-    const { history } = this.props;
-    history.push('/Home/AddHome')
-  }
 
   selectedStep = step => {
     this.setState({selectedStep: step});
-  }
+  };
 
   render() {
     const { tableSettings, dataSource, selected, selectedStep } = this.state;

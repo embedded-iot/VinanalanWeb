@@ -31,6 +31,7 @@ import {
 import {
     Home,
     Reservations,
+    HomeDetails,
     AddHome,
     AddRoom,
     Rooms as RoomsNew
@@ -57,6 +58,7 @@ const Protected = (props) => <div>
         <Route exact path="/Home/:homeId/:mode" component={AddHome}/>
 
         <Route exact path="/Reservations" component={Reservations}/>
+        <Route exact path="/Reservations/HomeDetails/:homeId" component={HomeDetails}/>
 
         <Route exact path="/Settings/Users" component={Users}/>
         <Route exact path="/Settings/HomeCatalog" component={HomeCatalog}/>
