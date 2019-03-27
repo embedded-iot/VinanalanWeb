@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import * as Services from '../RoomsNew/RoomsServices';
+import * as Services from './ReservationsServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
-import {Alert, Modal, notification, Tooltip} from 'antd';
+import {Alert, Button, Col, Icon, Modal, notification, Row, Tooltip} from 'antd';
 import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as CONSTANTS from '../../Constants';
-import {getHomeDetails} from "./ReservationsServices";
 import AddRoom from "../RoomsNew/AddRoom";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
@@ -15,6 +14,7 @@ import ViewTopUtilities from "../Homes/HomeComponents/ViewTopUtilities";
 import FilterRooms from "./HomeComponents/FilterRooms";
 import "./Reservations.scss";
 import "./HomeDetails.scss";
+import {getHomeDetails} from "../Homes/HomesServices";
 
 
 const confirmModal = Modal.confirm;
@@ -34,6 +34,7 @@ class HomeDetails extends Component {
     super(props);
     this.state = {
       dataSource: [],
+      reservations: [],
       tableSettings: {
         pagination: {},
         filters: {},
@@ -160,19 +161,49 @@ class HomeDetails extends Component {
     }, {
       title: STRINGS.ACTION,
       dataIndex: 'id',
-      render: id => {
-        return (
-          <div className="actions-column">
-            <Tooltip title={STRINGS.VIEW}>
-              <span className="icon icon-view" onClick={() =>this.viewHome(id)}></span>
-            </Tooltip>
-          </div>
-        )
+      render:  (id, roomDetails) => {
+        if (this.findReservationById(id)) {
+          return <Button onClick={() => this.destroyReservationRoom(id)}>Hủy phòng</Button>
+        } else {
+          return <Button type="primary" onClick={() => this.reservationRoom(roomDetails)}>Đặt phòng</Button>
+        }
       },
       width: '15%',
       align: 'center'
     }
   ];
+
+  roomColumns = [
+    {
+      title: 'Đơn hàng của bạn',
+      dataIndex: 'roomName'
+    },
+    {
+      title: 'Giá',
+      dataIndex: 'age'
+    },
+    {
+      dataIndex: 'id',
+      render: id => <a onClick={() => this.destroyReservationRoom(id)}><Icon type="delete"/></a>,
+      width: "50px"
+    }
+  ];
+
+
+  findReservationById = roomId => {
+    const {reservations} = this.state;
+    return reservations.find(room => room.id === roomId)
+  }
+
+  reservationRoom = selectedRoom => {
+    const {reservations} = this.state;
+    this.setState({reservations: [...reservations, selectedRoom]});
+  };
+
+  destroyReservationRoom = id => {
+    const {reservations} = this.state;
+    this.setState({reservations: [...(reservations.filter(room => room.id !== id))]});
+  };
 
   openNotification = (type, message, description) => {
     notification[type]({
@@ -217,7 +248,7 @@ class HomeDetails extends Component {
       loading: true
     });
     dispatch(spinActions.showSpin());
-    Services.getRooms({ ...params, }, (response) => {
+    Services.getListRoomOfHome({ ...params, }, (response) => {
       dispatch(spinActions.hideSpin());
       const tableSettings = {
         ...this.state.tableSettings,
@@ -253,7 +284,7 @@ class HomeDetails extends Component {
 
   render() {
     const { intl } = this.props;
-    const { tableSettings, dataSource, isShowAddOrEdit, selected, homeId, loading, extra_service, numberDays } = this.state;
+    const { tableSettings, dataSource, selected, homeId, loading, extra_service, numberDays, reservations} = this.state;
     const {homeName, homeDescription, homeTypeId, address, location, media} = selected;
     const { images, videos} = media;
     const TableConfig = {
@@ -262,6 +293,12 @@ class HomeDetails extends Component {
       pagination: tableSettings.pagination,
       onChange: this.onChange,
       tableSettings: tableSettings
+    };
+
+    const RoomTableConfig = {
+      columns: this.roomColumns,
+      dataSource: reservations,
+      isHideTableHeader: true
     };
 
     return (
@@ -309,10 +346,14 @@ class HomeDetails extends Component {
         <div className="page-contents-wrapper">
           <FilterRooms numberDays={numberDays}/>
         </div>
-        <TableCustom {...TableConfig} />
-        {
-          isShowAddOrEdit && <AddRoom selected={selected} onChangeVisible={this.onChangeVisible} />
-        }
+        <Row>
+          <Col span={16}>
+            <TableCustom {...TableConfig} />
+          </Col>
+          <Col span={8} style={{padding: '57px 0 0 15px'}}>
+            <TableCustom {...RoomTableConfig}/>
+          </Col>
+        </Row>
       </div>
     );
   }

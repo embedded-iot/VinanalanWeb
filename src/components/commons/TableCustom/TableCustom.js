@@ -12,7 +12,8 @@ const defaultProps = {
   pagination: {},
   loading: false,
   onChange: () => { },
-  isHideInputSearch: false
+  isHideInputSearch: false,
+  isHideTableHeader: false
 }
 
 const pageSizes = [
@@ -44,7 +45,7 @@ export default class TableCustom extends Component {
     const { pagination } = this.props;
     return (
       <div className="table-custom-wrapper">
-        <div className="table-header">
+        <div className="table-header" style={{display: config.isHideTableHeader ? 'none': ''}}>
           <Search
             placeholder="Nhập thông tin tìm kiếm"
             onSearch={this.onSearchText}

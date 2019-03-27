@@ -28,27 +28,14 @@ export function getSearchHomeAddress(searchText, successCallback, failCallback) 
     });
 }
 
-export function getHomeDetails(id, successCallback, failCallback) {
+export function getListRoomOfHome(params, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/homeInfo',
-        params: { id: id}
+        url: '/api/reversation/listRoomOfHome',
+        params: params
     };
 
     Services.makeGetRequest(requestOptions, (response) => {
-        successCallback(response.data);
-    }, (error) => {
-        failCallback(error);
-    });
-}
-
-export function getAllMediaHome(id, successCallback, failCallback) {
-    let requestOptions = {
-        url: '/api/homes/getAllMedia',
-        params: { id: id}
-    };
-
-    Services.makeGetRequest(requestOptions, (response) => {
-        successCallback(response.data);
+        successCallback({ data: response.data, count: response.count ? response.count : response.data.length });
     }, (error) => {
         failCallback(error);
     });
