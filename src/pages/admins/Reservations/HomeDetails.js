@@ -7,7 +7,7 @@ import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as CONSTANTS from '../../Constants';
-import {getHomeDetails} from "./HomesServices";
+import {getHomeDetails} from "./ReservationsServices";
 import AddRoom from "../RoomsNew/AddRoom";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";

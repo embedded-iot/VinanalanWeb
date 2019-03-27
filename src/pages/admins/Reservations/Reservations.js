@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import * as Services from './HomesServices';
+import * as Services from './ReservationsServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
 import {Button, Col, Modal, notification, Row, Tooltip} from 'antd';

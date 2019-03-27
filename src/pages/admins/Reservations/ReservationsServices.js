@@ -13,38 +13,15 @@ export function getHomes(params, successCallback, failCallback) {
     });
 }
 
-export function deleteHome(id, successCallback, failCallback) {
+export function getSearchHomeAddress(searchText, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/deleteHome',
-        params: { id: id}
-    };
-    Services.makeDeleteRequest(requestOptions, (response) => {
-        successCallback(response.data);
-    }, (error) => {
-        failCallback(error);
-    });
-}
-
-export function createNewHome(data, successCallback, failCallback) {
-    let requestOptions = {
-        url: '/api/homes/addNewHome',
-        data: data
+        url: '/api/reversation/searchHomeAddress',
+        params: {
+            searchText
+        }
     };
 
-    Services.makePostRequest(requestOptions, (response) => {
-        successCallback(response);
-    }, (error) => {
-        failCallback(error);
-    });
-}
-
-export function editHome(data, successCallback, failCallback) {
-    let requestOptions = {
-        url: '/api/homes/updateHome',
-        data: data
-    };
-
-    Services.makePutRequest(requestOptions, (response) => {
+    Services.makeGetRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
         failCallback(error);
