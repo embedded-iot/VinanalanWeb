@@ -265,7 +265,6 @@ class Reservations extends Component {
             <TableCustom {...TableConfig} />
           </div>
         </div>
-
       </div>
     );
   }

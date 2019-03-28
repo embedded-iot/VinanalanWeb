@@ -7,4 +7,26 @@
       padding-top: 35px;
     }
   }
+  .reservations-footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+  }
+
+  .steps-wrapper {
+    .box-contents {
+      display: flex;
+      flex-flow: row nowrap;
+      .box-left {
+        width: 27%;
+        flex-shrink: 0;
+      }
+      .box-right {
+        padding-left: 25px;
+        flex-grow: 1;
+      }
+    }
+  }
 }

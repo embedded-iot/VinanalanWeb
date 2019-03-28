@@ -35,7 +35,7 @@ export function getListRoomOfHome(params, successCallback, failCallback) {
     };
 
     Services.makeGetRequest(requestOptions, (response) => {
-        successCallback({ data: response.data, count: response.count ? response.count : response.data.length });
+        successCallback(response.data);
     }, (error) => {
         failCallback(error);
     });

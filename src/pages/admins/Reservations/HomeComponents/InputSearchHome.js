@@ -22,13 +22,13 @@ class InputSearchHome extends Component {
     this.timeout = null;
   }
 
-  generateOptions = source =>
+  generateOptions = source =>(
     source.map(group => (
       <OptGroup key={group.title} label={<span>{group.title}</span>}>
         {group && group.children && group.children.length > 0 && group.children.map(opt => (
           <Option
             key={opt.value}
-            value={opt.title +  (opt.key !== 'homeName' ? ' (' + opt.value + ')' : '')}
+            value={opt.title +  (opt.key !== 'homeName' ? ' (' + opt.description + ')' : '')}
             className="search-item"
           >
             <span className="title">{opt.title}</span>
@@ -36,14 +36,15 @@ class InputSearchHome extends Component {
           </Option>
         ))}
       </OptGroup>
-    ));
+    ))
+  );
 
   concatAddress = (originAddress, address, key, description) => [
     ...originAddress,
     ...address.map(item => ({
       title: item.name,
       value: item.code,
-      description,
+      description: item.path_with_type || description,
       key
     }))
   ];
