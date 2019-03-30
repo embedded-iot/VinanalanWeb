@@ -15,15 +15,17 @@ class Slider extends Component {
   };
 
   onChange = (value) => {
-    console.log('onChange: ', value);
+    const { name, onChange } = this.props;
+    // console.log('onChange: ', value);
+    onChange(name, value)
   };
 
   onAfterChange = (value) => {
-    console.log('onAfterChange: ', value);
+    // console.log('onAfterChange: ', value);
   };
 
   render() {
-    const { title, isRequired, value, min, max, step, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
+    const { title, isRequired, value, min, max, step, unit, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
     return (
       <div className="slider-wrapper" style={ !title ? {margin: 0} : {}}>
         {
@@ -34,7 +36,12 @@ class Slider extends Component {
             }
           </div>)
         }
-        <SliderAntd range min={min} max={max} step={step} defaultValue={[min, max]} onChange={this.onChange} onAfterChange={this.onAfterChange} />
+        <div className="slider-bar">
+          <span>{unit && !!min ? `${min} ${unit}`: min}</span>
+          <SliderAntd range min={min} max={max} step={step} defaultValue={[min, max]} onChange={this.onChange} onAfterChange={this.onAfterChange} />
+          <span>{unit && !!max ? `${max} ${unit}`: max}</span>
+        </div>
+
         {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );

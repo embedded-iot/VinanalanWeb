@@ -30,13 +30,14 @@ class Reservations extends Component {
         sorter: {},
         searchText: ""
       },
+      searchHome: {},
       isShowAddOrEdit: false,
       isShowViewDetails: false,
       selected: {},
       filterObject: {},
       roomCatalogs: [],
       selectedStep: 0
-    }
+    };
 
     this.sortTypesByHomes = [
       { text: "Gợi ý của chúng tôi", value: 'normal'},
@@ -147,8 +148,12 @@ class Reservations extends Component {
     this.setState({selectedStep: step});
   };
 
+  onChangeSearchHome = params => {
+    console.log('params', params);
+  };
+
   render() {
-    const { tableSettings, dataSource, selected, selectedStep } = this.state;
+    const { tableSettings, dataSource, selected, selectedStep, searchHome } = this.state;
     const { isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
     const TableConfig = {
@@ -160,9 +165,11 @@ class Reservations extends Component {
       showHeader: false,
       isHideInputSearch: true
     };
+
     const buttonList = [
       { title: "Tìm khách sạn", type: "primary", icon: "search", onClick: () => this.selectedStep(1) }
     ];
+
     return (
       <div className="page-wrapper reservations-wrapper">
         <div className="page-headding">
@@ -170,14 +177,14 @@ class Reservations extends Component {
         </div>
         { !selectedStep && (
           <div className="steps-wrapper">
-            <SearchHome buttonList={buttonList} />
+            <SearchHome params={searchHome} onChange={this.onChangeSearchHome} buttonList={buttonList} />
           </div>
         )}
         { !!selectedStep && (
           <div className="steps-wrapper homes-wrapper">
             <div className="box-contents">
               <div className="box-left">
-                <SearchHome buttonList={buttonList} />
+                <SearchHome params={searchHome} onChange={this.onChangeSearchHome} buttonList={buttonList}/>
               </div>
               <div className="box-right">
                 <div className="homes-heading">Danh sách tòa nhà</div>

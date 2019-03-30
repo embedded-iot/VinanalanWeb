@@ -8,6 +8,9 @@
       & > div {
         max-width: none;
       }
+      &:last-child {
+        width: 65%;
+      }
     }
   }
 }

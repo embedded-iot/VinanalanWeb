@@ -3,6 +3,7 @@ import {DatePicker, Icon, Tooltip} from "antd";
 import "./InputDatePicker.scss"
 import PropTypes from 'prop-types';
 import {FormattedMessage} from "react-intl";
+import moment from 'moment';
 
 const STRINGS = {
   REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
@@ -10,12 +11,12 @@ const STRINGS = {
 
 class InputDatePicker extends Component {
 
-  handleOnChange = (e) => {
-    this.props.onChange(this.props.name, e.target.value);
-  }
+  handleOnChange = (date, dateString) => {
+    this.props.onChange(this.props.name, dateString, date);
+  };
 
   render() {
-    const { title, isRequired, value, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
+    const { title, isRequired, value, defaultValue, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
     return (
       <div className="input-date-picker-wrapper" style={ !title ? {margin: 0} : {}}>
         {
@@ -26,7 +27,7 @@ class InputDatePicker extends Component {
             }
           </div>)
         }
-        <DatePicker style={{ width: '50%' }} />
+        <DatePicker defaultValue={defaultValue ? moment(defaultValue, 'YYYY-MM-DD') : null} style={{ width: '50%' }} onChange={this.handleOnChange}/>
         {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );

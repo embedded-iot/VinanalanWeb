@@ -8,23 +8,32 @@ import Slider from "../../../../components/commons/Slider/Slider";
 import ButtonList from "../../../../components/commons/ButtonList/ButtonList";
 import {getRoomsCatalog} from "../../../config/RoomsCatalog/RoomsCatalogServices";
 import "./SearchHome.scss"
+import {Button} from "antd";
 
 
 const MAX_GUEST = 10;
+const MIN_COST = 0;
+const MAX_COST = 3000000;
+const STEPS_COST = 50000;
+
 
 class SearchHome extends Component{
 
   constructor(props) {
     super(props);
+    const today = new Date();
     this.state = {
       params: {
         homeName: '',
-        checkin: '',
+        country_code: '',
+        province_code: '',
+        district_code: '',
+        checkin: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate(),
         checkout: '',
         roomTypeId: '',
-        numGuest: 0,
-        minCost: 0,
-        maxCost: 10000000
+        numGuest: 1,
+        minCost: MIN_COST,
+        maxCost: MAX_COST
       },
       roomCatalogs: [],
       numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})),
@@ -49,8 +58,38 @@ class SearchHome extends Component{
     });
   };
 
+  onChange = (name, value) => {
+    const { params } = this.state;
+    switch (name) {
+      case 'homeName':
+        params.country_code = '';
+        params.province_code = '';
+        params.district_code = '';
+        break;
+      case 'country_code':
+      case 'province_code':
+      case 'district_code':
+        params.homeName = '';
+        break;
+    }
+
+    if (name === "slider") {
+      params.minCost = value[0];
+      params.maxCost = value[1];
+    } else {
+      params[name] = value;
+    }
+    this.setState({ params: params});
+  };
+
+  onSearch = () => {
+    const { onChange } = this.props;
+    const { params } = this.state;
+    onChange(params);
+  };
+
   render() {
-    const { buttonList } = this.props;
+    const { buttonList, intl } = this.props;
     const { params, roomCatalogs, numberGuest, numberDays } = this.state;
     const { homeName, checkin, checkout, roomTypeId, numGuest, minCost, maxCost } = params;
     return (
@@ -59,32 +98,29 @@ class SearchHome extends Component{
         <div className="group-content">
           <InputSearchHome
             title="Thành phố, địa điểm hoặc tên khách sạn"
+            onChange={this.onChange}
           />
           <div className="search-home-box">
             <div className="search-home-item">
               <InputDatePicker title="Ngày nhận phòng"
-                               name="homeDescription"/>
+                               name="checkin"
+                               defaultValue={checkin}
+                               onChange={this.onChange}
+              />
             </div>
             <div className="search-home-item">
               <InputDatePicker title="Ngày trả phòng"
-                               name="homeDescription"/>
-            </div>
-            {/*<div className="search-home-item">
-              <DropdownList
-                name="numberGuest"
-                title="Số đêm"
-                list={numberDays}
-                value={numberGuest}
-                onChange={this.onChangeDropdown}
+                               name="checkout"
+                               onChange={this.onChange}
               />
-            </div>*/}
+            </div>
             <div className="search-home-item">
               <DropdownInputSearch
                 name="roomTypeId"
                 title="Chọn loại phòng"
                 list={roomCatalogs}
                 value={roomTypeId}
-                onChange={this.onChangeDropdown}
+                onChange={this.onChange}
               />
             </div>
             <div className="search-home-item">
@@ -93,25 +129,33 @@ class SearchHome extends Component{
                 title="Số lượng người"
                 list={numberGuest}
                 value={numGuest}
-                onChange={this.onChangeDropdown}
+                onChange={this.onChange}
               />
             </div>
             <div className="search-home-item">
               <Slider
                 title="Khoảng giá cho 1 đêm"
-                max={300000}
-                step={50000}
+                name="slider"
+                min={MIN_COST}
+                max={MAX_COST}
+                step={STEPS_COST}
+                unit="VNĐ"
+                onChange={this.onChange}
               />
             </div>
           </div>
-          <div className="button-list text-right">
-            <ButtonList list={ buttonList}/>
+          <div className="text-right" style={{marginButton: '15px'}}>
+            <Button type="primary" icon="search" onClick={this.onSearch}>{intl.formatMessage({id: 'SETTING_HOME'})}</Button>
           </div>
         </div>
       </div>
     );
   }
-
 }
+
+SearchHome.defaultProps = {
+  params: {},
+  onChange: f => f
+};
 
 export default injectIntl(SearchHome)

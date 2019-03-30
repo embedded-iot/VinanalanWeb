@@ -28,7 +28,7 @@ class InputSearchHome extends Component {
         {group && group.children && group.children.length > 0 && group.children.map(opt => (
           <Option
             key={opt.value}
-            value={opt.title +  (opt.key !== 'homeName' ? ' (' + opt.description + ')' : '')}
+            value={ opt.key === 'homeName' ?  opt.title : opt.description }
             className="search-item"
           >
             <span className="title">{opt.title}</span>
@@ -44,7 +44,7 @@ class InputSearchHome extends Component {
     ...address.map(item => ({
       title: item.name,
       value: item.code,
-      description: item.path_with_type || description,
+      description: item.path_with_type || (description + ' ' + item.name),
       key
     }))
   ];
@@ -75,7 +75,7 @@ class InputSearchHome extends Component {
         addressGroup.children,
         province,
         "province_code",
-        "Tỉnh/Thành phố"
+        "Tỉnh"
       );
     }
     if (district && district.length > 0) {
@@ -113,19 +113,38 @@ class InputSearchHome extends Component {
         this.setState({ searchOptions: source})
       }
     });
-  }
+  };
+
+  findObjectByText = text => {
+    const { searchOptions } = this.state;
+    let obj;
+    for ( let i = 0; i < searchOptions.length; i++) {
+      obj =  searchOptions[i].children.find(option => {
+        return  option.title === text || option.description === text;
+      });
+      if (obj) {
+        break;
+      }
+    }
+    if (obj) {
+      this.props.onChange(obj.key, obj.value);
+    } else {
+      this.props.onChange('homeName', text);
+    }
+  };
 
   onSearchText = value => {
     if (this.timeout) {
       clearTimeout(this.timeout)
     }
     this.timeout = setTimeout(() => {
-      if (value.length >= 2 && value.indexOf('(') < 0) {
+      this.findObjectByText(value);
+      if (value.length >= 2) {
         this.fetchSearchHomeAddress(value);
       } else {
         this.setState({ searchOptions: []})
       }
-    }, 500);
+    }, 1000);
   };
 
   render() {
