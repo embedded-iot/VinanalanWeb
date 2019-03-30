@@ -17,6 +17,9 @@ import "./HomeDetails.scss";
 import {getHomeDetails} from "../Homes/HomesServices";
 import InputNumber from "../../../components/commons/InputNumber/InputNumber";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
+import { ViewReservationsDetails } from "./HomeComponents/ViewReservationsDetails";
+import {ViewPaymentDetails} from "./HomeComponents/ViewPaymentDetails";
+import CheckInCustomerInfo from "./HomeComponents/CheckInCustomerInfo";
 
 
 const confirmModal = Modal.confirm;
@@ -59,7 +62,7 @@ class HomeDetails extends Component {
       income_service: [],
       extra_service: [],
       selectedStep: 0,
-      loading: false,
+      loading: null,
       homeId: '',
       numberDays: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})),
     }
@@ -333,7 +336,7 @@ class HomeDetails extends Component {
 
   buttonList = [
     { title: "Quay lại", onClick: () => this.selectedStep(0) },
-    { title: "Hoàn tất đặt phòng", type: "primary", icon: "save", onClick: this.postReservations }
+    { title: "Hoàn tất đặt phòng", type: "primary", icon: "save", onClick: this.postReservations}
   ];
 
   selectedStep = step => {
@@ -361,7 +364,7 @@ class HomeDetails extends Component {
     };
 
     return (
-      <div className="page-wrapper add-home-page-wrapper reservations-wrapper home-details-wrapper">
+      <div className="page-wrapper home-details-wrapper">
         <div className="page-headding">
           <div style={{width: "100%"}}>{ `Khách sạn ${homeName}`}</div>
           <div style={{fontWeight: 'normal', fontSize: '20px'}}>{ address && address.address_text ? address.address_text : '-' }</div>
@@ -371,14 +374,14 @@ class HomeDetails extends Component {
             <div className='home-image'>
               <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
             </div>
-            <div className='home-details'>
+            <div className="home-details">
               <Alert
                 message="Giới thiệu:"
                 description={homeDescription}
                 type="info"
               />
               <div style={{marginTop: '15px'}}>
-                { !loading && <GoogleMapSearchBox location={location} disabled={true}/>}
+                { loading === false && <GoogleMapSearchBox location={location} disabled={true}/>}
               </div>
             </div>
           </div>
@@ -422,45 +425,13 @@ class HomeDetails extends Component {
         <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
           <div className="box-contents">
             <div className="box-left">
-              <div className="group-box">
-                <div className="group-sub-heading">Chi tiết đặt phòng của bạn</div>
-                <div className="group-content">
-                  <div style={{margin: "10px 0 7px", fontWeight: 'bold'}}>Nhận phòng:</div>
-                  <div style={{margin: "10px 0 7px", fontWeight: 'bold'}}>Trả phòng:</div>
-                  <div style={{margin: "10px 0 7px", fontWeight: 'bold'}}>Nhận phòng:</div>
-                  <div style={{margin: "10px 0 7px", fontWeight: 'bold'}}>Phòng đã chọn:</div>
-                  {
-                    reservations.map(room => <div key={room.id}>- {room.roomName}</div>)
-                  }
-                </div>
-              </div>
-              <div className="group-box">
-                <div className="group-sub-heading">Tóm tắt giá</div>
-                <div className="group-content">
-                  {
-                    reservations.map(room => (
-                      <div key={room.id}>
-                        <div style={{margin: "10px 0 7px", fontWeight: 'bold'}}>Phòng: {room.roomName}</div>
-                        <Row>
-                          <Col span={12}>Giá</Col>
-                          <Col span={12}>: {room.priceType ? room.roomDatePrice : room.roomMonthPrice} VNĐ</Col>
-                        </Row>
-                        { !!room.prePayment && (
-                          <Row>
-                            <Col span={12}>Đặt trước</Col>
-                            <Col span={12}>: {room.prePayment} VNĐ</Col>
-                          </Row>
-                        )}
-                      </div>
-                    ))
-                  }
-                  <div style={{margin: "10px 0 7px", fontWeight: 'bold'}}>Số tiền chưa thanh toán: <span className="is-required">{ this.totalAfterPayment()}</span> VNĐ</div>
-                </div>
-              </div>
+              <ViewReservationsDetails reservations={reservations}/>
+              <ViewPaymentDetails reservations={reservations} />
             </div>
             <div className="box-right">
-              <div className="button-list">
-                <ButtonList list={ this.buttonList}/>
+              <CheckInCustomerInfo />
+              <div className="text-right">
+                <ButtonList list={ this.buttonList} />
               </div>
             </div>
           </div>

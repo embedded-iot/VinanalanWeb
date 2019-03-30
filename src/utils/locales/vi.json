@@ -279,6 +279,12 @@
   "REQUIRED_ALERT": "Trường này không để trống",
   "INVALID_EMAIL": "Email không đúng định dạng",
   "SELECT_AVATAR_FOR_ROOM": "Chọn ảnh đại diện cho phòng",
+  "ENTER_CHECKIN_CUSTOMER_INFORMATION": "Nhập thông tin chi tiết người nhận phòng",
+  "NOTICE_AUTO_SEND_TO_THIS_EMAIL": "Email xác nhận đặt phòng sẽ được gửi đến địa chỉ này!",
+  "SELLER_NAME": "Người chốt sale",
+  "BOOKER_NAME": "Người dẫn khách",
+  "BOOKING_SOURCE": "Nguồn đặt phòng",
+  "PAY_METHOD": "Phương thức thanh toán",
   "SETTING_HOME": "Cài đặt tòa nhà",
   "EMPTY_IMAGE_IN_HOME": "Không có hình ảnh nào trong tòa nhà \"{homeName}\". Chọn nút \"Cài đặt tòa nhà\" để thêm hình ảnh!",
   "STT": "Stt"

@@ -1,26 +1,20 @@
 .reservations-wrapper {
-  .page-contents-wrapper {
-    margin-top: 30px;
-    .search-home-wrapper {
-      .search-home-box {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-between;
-        .search-home-item {
-          width: 30%;
-          & > div {
-            max-width: none;
-          }
-        }
+  .steps-wrapper {
+    .box-contents {
+      display: flex;
+      flex-flow: row nowrap;
+      .box-left {
+        width: 27%;
+        flex-shrink: 0;
+      }
+      .box-right {
+        padding-left: 25px;
+        flex-grow: 1;
       }
     }
   }
-  .homes-contents-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
+  .homes-wrapper {
     .search-home-wrapper {
-      width: 27%;
-      flex-shrink: 0;
       .input-search-home-wrapper {
         margin-bottom: 0;
         .search-box {
@@ -40,7 +34,7 @@
         }
       }
     }
-    .homes-wrapper {
+    .box-right {
       padding-left: 25px;
       flex-grow: 1;
       .homes-heading {
@@ -62,26 +56,23 @@
           }
         }
       }
+    }
+  }
 
-      .home-details {
-        display: flex;
-        flex-flow: row wrap;
-        .home-img {
-          width: 30%;
-          img {
-            width: 100%;
-          }
-        }
-        .home-contents {
-          padding: 20px;
-          .home-name {
-            font-size: 16px;
-            font-weight: bold;
-          }
-          .home-address {
-
-          }
-        }
+  .home-details {
+    display: flex;
+    flex-flow: row wrap;
+    .home-img {
+      width: 30%;
+      img {
+        width: 100%;
+      }
+    }
+    .home-contents {
+      padding: 20px;
+      .home-name {
+        font-size: 16px;
+        font-weight: bold;
       }
     }
   }

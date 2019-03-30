@@ -6,14 +6,9 @@ import {Button, Col, Modal, notification, Row, Tooltip} from 'antd';
 import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ButtonList from "../../../components/commons/ButtonList/ButtonList";
-import InputSearchHome from "./HomeComponents/InputSearchHome";
-import InputDatePicker from "../../../components/commons/InputDatePicker/InputDatePicker";
-import DropdownInputSearch from "../../../components/commons/DropdownInputSearch/DropdownInputSearch";
-import {getRoomsCatalog} from "../../config/RoomsCatalog/RoomsCatalogServices";
 import DropdownList from "../../../components/commons/DropdownList/DropdownList";
-import Slider from "../../../components/commons/Slider/Slider";
 import "./Reservations.scss"
+import SearchHome from "./HomeComponents/SearchHome";
 
 const confirmModal = Modal.confirm;
 
@@ -23,8 +18,6 @@ const STRINGS = {
   TYPES_OFF_HOMES: <FormattedMessage id="TYPES_OFF_HOMES" />,
   VIEW: <FormattedMessage id="VIEW" />,
 }
-
-const MAX_GUEST = 10;
 
 class Reservations extends Component {
   constructor(props) {
@@ -42,9 +35,7 @@ class Reservations extends Component {
       selected: {},
       filterObject: {},
       roomCatalogs: [],
-      selectedStep: 0,
-      numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})),
-      numberDays: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)}))
+      selectedStep: 0
     }
 
     this.sortTypesByHomes = [
@@ -56,21 +47,7 @@ class Reservations extends Component {
 
   componentWillMount() {
     this.onChange();
-    this.getInnitData();
   }
-
-  getInnitData = () => {
-    let param = {skip: 0, limit: 100};
-    getRoomsCatalog(param, response => {
-      if (response.data && response.data.length) {
-        const roomCatalogs = response.data.map(item => ({
-          text: item.catalogName,
-          value: item.id
-        }));
-        this.setState({roomCatalogs: roomCatalogs});
-      }
-    });
-  };
 
   columns = [
     {
@@ -172,7 +149,7 @@ class Reservations extends Component {
 
   render() {
     const { tableSettings, dataSource, selected, selectedStep } = this.state;
-    const { isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, numberDays, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
+    const { isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
     const TableConfig = {
       columns: this.columns,
@@ -184,7 +161,6 @@ class Reservations extends Component {
       isHideInputSearch: true
     };
     const buttonList = [
-      { title: "Quay lại", onClick: () => this.selectedStep(0) },
       { title: "Tìm khách sạn", type: "primary", icon: "search", onClick: () => this.selectedStep(1) }
     ];
     return (
@@ -192,79 +168,33 @@ class Reservations extends Component {
         <div className="page-headding">
           {STRINGS.RESERVATIONS}
         </div>
-        <div className={ selectedStep === 0 ? "page-contents-wrapper" : "page-contents-wrapper homes-contents-wrapper"}>
-          <div className="search-home-wrapper">
-            <div className="group-box">
-              <div className="group-sub-heading">Tìm kiếm khách sạn</div>
-              <div className="group-content">
-                <InputSearchHome
-                  title="Thành phố, địa điểm hoặc tên khách sạn"
-                />
-                <div className="search-home-box">
-                  <div className="search-home-item">
-                    <InputDatePicker title="Ngày nhận phòng"
-                                     name="homeDescription"/>
-                  </div>
-                  <div className="search-home-item">
-                    <InputDatePicker title="Ngày trả phòng"
-                                     name="homeDescription"/>
-                  </div>
-                  <div className="search-home-item">
-                    <DropdownList
-                      name="maxGuest"
-                      title="Số đêm"
-                      list={numberDays}
-                      value={maxGuest}
-                      onChange={this.onChangeDropdown}
-                    />
-                  </div>
-                  <div className="search-home-item">
-                    <DropdownInputSearch
-                      name="roomTypeId"
-                      title="Chọn loại phòng"
-                      list={roomCatalogs}
-                      value={roomTypeId}
-                      onChange={this.onChangeDropdown}
-                    />
-                  </div>
-                  <div className="search-home-item">
-                    <DropdownList
-                      name="maxGuest"
-                      title="Số lượng người"
-                      list={numberGuest}
-                      value={maxGuest}
-                      onChange={this.onChangeDropdown}
-                    />
-                  </div>
-                  <div className="search-home-item">
-                    <Slider
-                      title="Khoảng giá cho 1 đêm"
-                      max={300000}
-                      step={50000}
-                    />
-                  </div>
+        { !selectedStep && (
+          <div className="steps-wrapper">
+            <SearchHome buttonList={buttonList} />
+          </div>
+        )}
+        { !!selectedStep && (
+          <div className="steps-wrapper homes-wrapper">
+            <div className="box-contents">
+              <div className="box-left">
+                <SearchHome buttonList={buttonList} />
+              </div>
+              <div className="box-right">
+                <div className="homes-heading">Danh sách tòa nhà</div>
+                <div className="sort-home-wrapper">
+                  <span>Sắp xếp theo:</span>
+                  <DropdownList
+                    name="maxGuest"
+                    list={this.sortTypesByHomes}
+                    value={'normal'}
+                    onChange={this.onChangeDropdown}
+                  />
                 </div>
-                <div>
-                  <div className="search-home-item">
-                    <div style={{textAlign: 'right', marginBottom: "15px"}}><ButtonList list={ buttonList}/></div></div>
-                </div>
+                <TableCustom {...TableConfig} />
               </div>
             </div>
           </div>
-          <div className="homes-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
-            <div className="homes-heading">Danh sách tòa nhà</div>
-            <div className="sort-home-wrapper">
-              <span>Sắp xếp theo:</span>
-              <DropdownList
-                name="maxGuest"
-                list={this.sortTypesByHomes}
-                value={'normal'}
-                onChange={this.onChangeDropdown}
-              />
-            </div>
-            <TableCustom {...TableConfig} />
-          </div>
-        </div>
+        )}
       </div>
     );
   }

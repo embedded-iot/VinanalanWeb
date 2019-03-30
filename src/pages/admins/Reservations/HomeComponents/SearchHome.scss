@@ -1,0 +1,13 @@
+.search-home-wrapper {
+  .search-home-box {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    .search-home-item {
+      width: 30%;
+      & > div {
+        max-width: none;
+      }
+    }
+  }
+}
