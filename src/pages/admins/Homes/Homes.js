@@ -66,9 +66,29 @@ class Homes extends Component {
       render: homeCatalog => homeCatalog && homeCatalog.catalogName ? homeCatalog.catalogName : '-',
       width: '10%'
     }, {
+      title: "Ngày tạo",
+      dataIndex: 'create_at',
+      render: create_at => {
+        if (create_at) {
+          const day = new Date(create_at);
+          return day.getDate() + '-' + (day.getMonth() + 1) + '-' + day.getFullYear();
+        }
+        return '-'
+      },
+      width: '6%'
+    }, {
       title: "Người quản trị",
       dataIndex: 'manager',
-      render: manager => manager && manager.userName ? manager.userName : '-',
+      render: manager => {
+        if (manager && manager.userName ) {
+          return (
+            <Tooltip title={<div className="text-center"><p>{manager.email}</p>{manager.phoneNumber}</div>}>
+              <span>{manager.userName}</span>
+            </Tooltip>
+          )
+        }
+        return '-'
+      },
       width: '10%'
     }, {
       title: "Địa chỉ",
@@ -78,11 +98,11 @@ class Homes extends Component {
     }, {
       title: "Số tầng",
       dataIndex: 'numFloor',
-      width: '10%',
+      width: '5%',
     }, {
       title: "Số phòng",
       dataIndex: 'numRoom',
-      width: '10%',
+      width: '5%',
     }, {
       title: "Hotline",
       dataIndex: 'hotline',
