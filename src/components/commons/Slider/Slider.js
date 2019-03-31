@@ -25,7 +25,7 @@ class Slider extends Component {
   };
 
   render() {
-    const { title, isRequired, value, min, max, step, unit, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
+    const { title, isRequired, value, min, max, step, defaultValue, unit, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
     return (
       <div className="slider-wrapper" style={ !title ? {margin: 0} : {}}>
         {
@@ -38,7 +38,7 @@ class Slider extends Component {
         }
         <div className="slider-bar">
           <span>{unit && !!min ? `${min} ${unit}`: min}</span>
-          <SliderAntd range min={min} max={max} step={step} defaultValue={[min, max]} onChange={this.onChange} onAfterChange={this.onAfterChange} />
+          <SliderAntd range min={min} max={max} step={step} defaultValue={ defaultValue || [min, max]} onChange={this.onChange} onAfterChange={this.onAfterChange} />
           <span>{unit && !!max ? `${max} ${unit}`: max}</span>
         </div>
 

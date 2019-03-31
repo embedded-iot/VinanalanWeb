@@ -24,6 +24,7 @@ class SearchHome extends Component{
     const today = new Date();
     this.state = {
       params: {
+        searchText: '',
         homeName: '',
         country_code: '',
         province_code: '',
@@ -33,7 +34,8 @@ class SearchHome extends Component{
         roomTypeId: '',
         numGuest: 1,
         minCost: MIN_COST,
-        maxCost: MAX_COST
+        maxCost: MAX_COST,
+        ...props.params
       },
       roomCatalogs: [],
       numberGuest: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})),
@@ -58,8 +60,11 @@ class SearchHome extends Component{
     });
   };
 
-  onChange = (name, value) => {
+  onChange = (name, value, searchText) => {
     const { params } = this.state;
+    if (typeof searchText === "string") {
+      params.searchText = searchText;
+    }
     switch (name) {
       case 'homeName':
         params.country_code = '';
@@ -91,13 +96,14 @@ class SearchHome extends Component{
   render() {
     const { buttonList, intl } = this.props;
     const { params, roomCatalogs, numberGuest, numberDays } = this.state;
-    const { homeName, checkin, checkout, roomTypeId, numGuest, minCost, maxCost } = params;
+    const { homeName, checkin, checkout, roomTypeId, numGuest, minCost, maxCost, searchText } = params;
     return (
       <div className="group-box search-home-wrapper">
         <div className="group-sub-heading">Tìm kiếm khách sạn</div>
         <div className="group-content">
           <InputSearchHome
             title="Thành phố, địa điểm hoặc tên khách sạn"
+            defaultValue={ searchText ? searchText : ''}
             onChange={this.onChange}
           />
           <div className="search-home-box">
@@ -111,6 +117,7 @@ class SearchHome extends Component{
             <div className="search-home-item">
               <InputDatePicker title="Ngày trả phòng"
                                name="checkout"
+                               defaultValue={checkout}
                                onChange={this.onChange}
               />
             </div>
@@ -139,6 +146,7 @@ class SearchHome extends Component{
                 min={MIN_COST}
                 max={MAX_COST}
                 step={STEPS_COST}
+                defaultValue={ [minCost, maxCost] }
                 unit="VNĐ"
                 onChange={this.onChange}
               />

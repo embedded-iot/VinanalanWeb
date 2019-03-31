@@ -2,12 +2,12 @@ import * as Services from "../../../utils/cuiResource";
 
 export function getHomes(params, successCallback, failCallback) {
     let requestOptions = {
-        url: '/api/homes/getAllHomes',
+        url: '/api/reversation/searchHome',
         params: params
     };
 
     Services.makeGetRequest(requestOptions, (response) => {
-        successCallback(response.data);
+        successCallback({ data: response.data, count: response.data.length });
     }, (error) => {
         failCallback(error);
     });

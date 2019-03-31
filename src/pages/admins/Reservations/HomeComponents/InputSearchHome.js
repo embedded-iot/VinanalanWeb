@@ -127,9 +127,9 @@ class InputSearchHome extends Component {
       }
     }
     if (obj) {
-      this.props.onChange(obj.key, obj.value);
+      this.props.onChange(obj.key, obj.value, text);
     } else {
-      this.props.onChange('homeName', text);
+      this.props.onChange('homeName', text, text);
     }
   };
 
@@ -148,7 +148,7 @@ class InputSearchHome extends Component {
   };
 
   render() {
-    const { title, isRequired, value, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
+    const { title, isRequired, value, defaultValue, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
     const { searchOptions } = this.state;
     return (
       <div className="input-search-home-wrapper" style={ !title ? {margin: 0} : {}}>
@@ -170,6 +170,7 @@ class InputSearchHome extends Component {
             dataSource={this.generateOptions(searchOptions)}
             optionLabelProp="value"
             placeholder="Nhập thông tin tìm kiếm"
+            defaultValue={defaultValue}
             onChange={this.onSearchText}
           >
             <Input
@@ -186,10 +187,12 @@ class InputSearchHome extends Component {
 InputSearchHome.propTypes = {
   name: PropTypes.string,
   onChange:PropTypes.func,
+  defaultValue: PropTypes.string
 };
 
 InputSearchHome.defaultProps = {
   name: '',
+  defaultValue: '',
   onChange: f => f
 };
 

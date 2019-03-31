@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import DropdownList from "../../../components/commons/DropdownList/DropdownList";
 import "./Reservations.scss"
 import SearchHome from "./HomeComponents/SearchHome";
+import {removeEmptyFields} from "../../../utils/utils";
 
 const confirmModal = Modal.confirm;
 
@@ -47,7 +48,7 @@ class Reservations extends Component {
   }
 
   componentWillMount() {
-    this.onChange();
+    // this.onChange();
   }
 
   columns = [
@@ -102,7 +103,7 @@ class Reservations extends Component {
     };
     const { dispatch } = this.props;
     const { filterObject } = this.state;
-
+    const searchHome = { ...filterObject, searchText: null};
     let isActive = filters.isActive;
     let params = {
       limit: pagination.pageSize || 10,
@@ -110,10 +111,9 @@ class Reservations extends Component {
       sortField: sorter.field,
       sortOrder: sorter.order,
       searchText,
-      ...filterObject,
+      ...searchHome,
       isActive
     };
-
 
     this.setState({
       tableSettings: tableSettings,
@@ -136,24 +136,30 @@ class Reservations extends Component {
       dispatch(spinActions.hideSpin());
       console.log("error:", error)
     })
-  }
+  };
 
   onReload = () => {
     let { pagination, filters, sorter, searchText } = { ...this.state.tableSettings };
     this.onChange(pagination, filters, sorter, {}, searchText);
-  }
+  };
 
 
-  selectedStep = step => {
-    this.setState({selectedStep: step});
+  selectedStep = (step, callback) => {
+    this.setState({selectedStep: step}, () => {
+      callback();
+    });
   };
 
   onChangeSearchHome = params => {
     console.log('params', params);
+    this.setState({filterObject : removeEmptyFields(params)}, () => {
+      this.selectedStep(1, this.onChange);
+    })
   };
 
+
   render() {
-    const { tableSettings, dataSource, selected, selectedStep, searchHome } = this.state;
+    const { tableSettings, dataSource, selected, selectedStep, searchHome, filterObject } = this.state;
     const { isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
     const TableConfig = {
@@ -177,14 +183,14 @@ class Reservations extends Component {
         </div>
         { !selectedStep && (
           <div className="steps-wrapper">
-            <SearchHome params={searchHome} onChange={this.onChangeSearchHome} buttonList={buttonList} />
+            <SearchHome params={searchHome} onChange={this.onChangeSearchHome} />
           </div>
         )}
         { !!selectedStep && (
           <div className="steps-wrapper homes-wrapper">
             <div className="box-contents">
               <div className="box-left">
-                <SearchHome params={searchHome} onChange={this.onChangeSearchHome} buttonList={buttonList}/>
+                <SearchHome params={filterObject} onChange={this.onChangeSearchHome} />
               </div>
               <div className="box-right">
                 <div className="homes-heading">Danh sách tòa nhà</div>
