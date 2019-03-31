@@ -40,3 +40,33 @@ export function getListRoomOfHome(params, successCallback, failCallback) {
         failCallback(error);
     });
 }
+
+export function checkRoomsStatus(params, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/reversation/checkRoomsStatus',
+        params: {
+            roomIds: params.roomIds,
+            checkin: params.checkin,
+            checkout: params.checkout
+        }
+    };
+
+    Services.makeGetRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
+export function createReservation(data, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/reversation/createReservation',
+        data: data
+    };
+
+    Services.makePostRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}

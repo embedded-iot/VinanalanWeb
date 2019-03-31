@@ -20,6 +20,9 @@ import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import { ViewReservationsDetails } from "./HomeComponents/ViewReservationsDetails";
 import {ViewPaymentDetails} from "./HomeComponents/ViewPaymentDetails";
 import CheckInCustomerInfo from "./HomeComponents/CheckInCustomerInfo";
+import DropdownList from "../../../components/commons/DropdownList/DropdownList";
+import {checkRoomsStatus} from "./ReservationsServices";
+import {createReservation} from "./ReservationsServices";
 
 
 const confirmModal = Modal.confirm;
@@ -41,6 +44,7 @@ class HomeDetails extends Component {
     this.state = {
       dataSource: [],
       reservations: [],
+      customer: {},
       tableSettings: {
         pagination: {},
         filters: {},
@@ -195,6 +199,11 @@ class HomeDetails extends Component {
     }
   ];
 
+
+  numberGuest = maxGuest => ([...Array(maxGuest)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})));
+
+  // onChangeGuest =
+
   roomColumns = [
     {
       title: 'Đơn hàng của bạn',
@@ -208,6 +217,13 @@ class HomeDetails extends Component {
               <Radio value={0}>Giá dài ngày</Radio>
             </RadioGroup>
             <InputNumber name={roomDetails.id} title="Đặt trước" placeholder="VND" value={roomDetails.prePayment} onChange={(name, value) => this.onChangePrePayment(name, value)}/>
+            <DropdownList
+              name={roomDetails.id}
+              title="Số lượng người"
+              list={this.numberGuest(roomDetails.maxGuest)}
+              value={roomDetails.guestNumber}
+              onChange={(name, value) => this.onChangeGuestNumber(name, value)}
+            />
           </div>
         );
       }
@@ -236,7 +252,15 @@ class HomeDetails extends Component {
   onChangePrePayment = (id, value) => {
     const {reservations} = this.state;
     this.setState({reservations: reservations.map(room => {
-        return room.id === id ? { ...room, prePayment: value} : room;
+        return room.id === id ? { ...room, prePayment : value} : room;
+      })});
+  };
+
+
+  onChangeGuestNumber = (id, value) => {
+    const {reservations} = this.state;
+    this.setState({reservations: reservations.map(room => {
+        return room.id === id ? { ...room, guestNumber : value} : room;
       })});
   };
 
@@ -254,9 +278,15 @@ class HomeDetails extends Component {
   };
 
   reservationRoom = selectedRoom => {
-    const {reservations} = this.state;
+    const {reservations, filterObject} = this.state;
+    if (!filterObject.checkin || !filterObject.checkout) {
+      this.openNotification('error', 'Ngày nhận phòng và ngày trả phòng là bắt buộc. Vui lòng kiểm tra lại!');
+      return;
+    }
     selectedRoom.priceType = 1;
     selectedRoom.prePayment = 0;
+    selectedRoom.guestNumber = 1;
+    selectedRoom.listExtraFee = [];
     this.setState({reservations: [...reservations, selectedRoom]});
   };
 
@@ -347,14 +377,75 @@ class HomeDetails extends Component {
     }
   };
 
-  postReservations = () => {
-    this.openNotification('info', "Hoàn tất đặt phòng");
+
+  isDisabled = () => {
+    const { customer } = this.state;
+    return customer && (
+      !customer.customerName ||
+      !customer.customerPhone ||
+      !customer.customerEmail ||
+      !customer.sellerId ||
+      !customer.bookerId
+    );
   };
 
-  buttonList = [
-    { title: "Quay lại", onClick: () => this.selectedStep(0) },
-    { title: "Hoàn tất đặt phòng", type: "primary", icon: "save", onClick: this.postReservations}
-  ];
+  checkStatusRooms = callback => {
+    const { reservations, filterObject } = this.state;
+    const params = {
+      checkin: filterObject.checkin,
+      checkout: filterObject.checkout,
+      roomIds: reservations.map(room => room.id )
+    };
+    checkRoomsStatus(params, response => {
+      console.log(response);
+      const reservattedRooms = response.filter(room => room.status > 1);
+      if (reservattedRooms.length ) {
+        forEach(reservattedRooms, room => {
+          this.openNotification('error', `Phòng ${room.name} không trống. Vui lòng chọn phòng khác!`);
+        })
+      } else {
+        callback();
+      }
+    })
+  };
+
+
+  createReservation = params => {
+    const { dispatch, history } = this.props;
+    dispatch(spinActions.showSpin());
+    createReservation(params, response => {
+      dispatch(spinActions.hideSpin());
+      this.openNotification('info', "Đặt phòng thành công!");
+      history.push('/Reservations');
+    }, error => {
+      this.openNotification('info', "Đặt phòng thất bạn!");
+      dispatch(spinActions.hideSpin());
+    })
+  };
+
+  postReservations = () => {
+    const { user } = this.props;
+    const { reservations, customer, filterObject } = this.state;
+    const reservation = {
+      userId: user.id,
+      ...customer,
+      ...filterObject,
+      rooms: reservations.map(room => (
+        {
+          roomId: room.id,
+          totalMoney: room.priceType ? room.roomDatePrice : room.roomMonthPrice,
+          prePay: room.prePayment,
+          guestNumber: room.guestNumber,
+          listExtraFee: room.listExtraFee
+        }
+      )),
+      numGuest: null
+    };
+
+    this.checkStatusRooms(() => {
+      this.createReservation(reservation);
+    });
+  };
 
   goBack = () => {
     const { history } = this.props;
@@ -373,6 +464,15 @@ class HomeDetails extends Component {
     this.setState({ filterObject: params},
       () => this.onChange()
     );
+  };
+
+  onChangeCustomer = customer => {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+    this.timeout = setTimeout(() => {
+      this.setState({ customer})
+    }, 500)
   };
 
   render() {
@@ -394,6 +494,11 @@ class HomeDetails extends Component {
       isHideTableHeader: true,
       pagination: false
     };
+
+    const buttonList = [
+      { title: "Quay lại", onClick: () => this.selectedStep(0) },
+      { title: "Hoàn tất đặt phòng", type: "primary", icon: "save", disabled: this.isDisabled(), onClick: this.postReservations}
+    ];
 
     return (
       <div className="page-wrapper home-details-wrapper">
@@ -460,13 +565,13 @@ class HomeDetails extends Component {
         <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
           <div className="box-contents">
             <div className="box-left">
-              <ViewReservationsDetails reservations={reservations}/>
+              <ViewReservationsDetails reservations={reservations} checkin={filterObject.checkin} checkout={filterObject.checkout}/>
               <ViewPaymentDetails reservations={reservations} />
             </div>
             <div className="box-right">
-              <CheckInCustomerInfo />
+              <CheckInCustomerInfo onChange={this.onChangeCustomer}/>
               <div className="text-right">
-                <ButtonList list={ this.buttonList} />
+                <ButtonList list={ buttonList} />
               </div>
             </div>
           </div>
@@ -476,4 +581,10 @@ class HomeDetails extends Component {
   }
 }
 
-export default injectIntl(withRouter(connect()(HomeDetails)));
+const mapStateToProps = function (state) {
+  return {
+    user: state.authentication.user
+  }
+}
+
+export default injectIntl(withRouter(connect(mapStateToProps)(HomeDetails)));

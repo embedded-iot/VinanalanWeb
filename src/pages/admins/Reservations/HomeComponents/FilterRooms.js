@@ -51,6 +51,7 @@ class FilterRooms extends Component {
               <InputDatePicker title="Ngày nhận phòng"
                                name="checkin"
                                defaultValue={checkin}
+                               isRequired={true}
                                onChange={this.onChange}
               />
             </div>
@@ -58,6 +59,7 @@ class FilterRooms extends Component {
               <InputDatePicker title="Ngày trả phòng"
                                name="checkout"
                                defaultValue={checkout}
+                               isRequired={true}
                                onChange={this.onChange}
               />
             </div>

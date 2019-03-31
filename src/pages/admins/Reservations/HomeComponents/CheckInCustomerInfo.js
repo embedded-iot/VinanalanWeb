@@ -44,9 +44,13 @@ class CheckInCustomerInfo extends Component{
   };
 
   onChange = (name, value) => {
+    const { onChange } = this.props;
     const { customer } = this.state;
     customer[name] = value;
-    this.setState({customer})
+    this.setState({customer}, () => {
+      const { customer } = this.state;
+      onChange(customer);
+    })
   };
 
 
@@ -81,6 +85,7 @@ class CheckInCustomerInfo extends Component{
           <InputText name="bookingSource"
                      title={intl.formatMessage({id: "BOOKING_SOURCE"})}
                      value={bookingSource}
+                     onChange={this.onChange}
           />
           <InputText name="payMethod"
                      title={intl.formatMessage({id: "PAY_METHOD"})}
@@ -106,5 +111,9 @@ class CheckInCustomerInfo extends Component{
     )
   }
 }
+
+CheckInCustomerInfo.defaultProps = {
+  onChange: f => f
+};
 
 export default injectIntl(CheckInCustomerInfo);

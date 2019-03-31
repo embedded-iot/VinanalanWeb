@@ -289,6 +289,11 @@ body,
     background-color: #ffffff !important;
     border: 1px solid #000 !important;
   }
+  &[disabled] {
+    background-color: #cccccc !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
 }
 
 .ant-btn-danger {
