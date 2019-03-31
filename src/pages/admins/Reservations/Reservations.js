@@ -48,8 +48,31 @@ class Reservations extends Component {
   }
 
   componentWillMount() {
+    const { selectedStep } = this.props.match.params;
+    console.log('selectedStep', selectedStep)
+    this.fetchData(selectedStep);
     // this.onChange();
   }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { selectedStep } = this.props.match.params;
+    console.log('componentWillReceiveProps');
+    if (nextProps.match.params.selectedStep !== selectedStep) {
+      console.log('selectedStep ----', nextProps.match.params.selectedStep);
+      this.fetchData(nextProps.match.params.selectedStep);
+    }
+  }
+
+  fetchData = selectedStep => {
+    if (selectedStep) {
+      const searchHome = localStorage.getItem("searchHome");
+      const filterObject = JSON.parse(searchHome);
+      console.log('filterObject', filterObject);
+      this.setState({ selectedStep: 1, filterObject: filterObject}, this.onChange);
+    } else {
+      this.setState({ selectedStep: 0, filterObject: {}});
+    }
+  };
 
   columns = [
     {
@@ -152,9 +175,22 @@ class Reservations extends Component {
 
   onChangeSearchHome = params => {
     console.log('params', params);
-    this.setState({filterObject : removeEmptyFields(params)}, () => {
-      this.selectedStep(1, this.onChange);
-    })
+    const { selectedStep } = this.state;
+    const { history } = this.props;
+    localStorage.setItem('searchHome', JSON.stringify(removeEmptyFields(params)));
+    if (!selectedStep) {
+      history.push('/Reservations/1');
+    } else {
+      this.onChange();
+      this.setState({filterObject: removeEmptyFields(params)}, this.onChange);
+    }
+
+    /*this.setState({filterObject : removeEmptyFields(params)}, () => {
+      history.push('/Reservations/1');
+      // this.selectedStep(1, this.onChange);
+      //
+
+    })*/
   };
 
 

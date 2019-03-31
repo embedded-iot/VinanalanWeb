@@ -58,6 +58,7 @@ const Protected = (props) => <div>
         <Route exact path="/Home/:homeId/:mode" component={AddHome}/>
 
         <Route exact path="/Reservations" component={Reservations}/>
+        <Route exact path="/Reservations/:selectedStep" component={Reservations}/>
         <Route exact path="/Reservations/HomeDetails/:homeId" component={HomeDetails}/>
 
         <Route exact path="/Settings/Users" component={Users}/>

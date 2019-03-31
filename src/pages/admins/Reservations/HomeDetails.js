@@ -252,7 +252,7 @@ class HomeDetails extends Component {
   totalAfterPayment = () => {
     const {reservations} = this.state;
     return reservations.reduce((total, item) => total + (item.priceType ? item.roomDatePrice : item.roomMonthPrice) - item.prePayment, 0);
-  }
+  };
 
   openNotification = (type, message, description) => {
     notification[type]({
@@ -339,6 +339,15 @@ class HomeDetails extends Component {
     { title: "Hoàn tất đặt phòng", type: "primary", icon: "save", onClick: this.postReservations}
   ];
 
+  goBack = () => {
+    const { history } = this.props;
+    history.goBack();
+  };
+
+  buttonListGoBack = [
+    { title: "Danh sách khách sạn", icon: 'arrow-left', onClick: this.goBack}
+  ];
+
   selectedStep = step => {
     this.setState({selectedStep: step});
   };
@@ -366,8 +375,11 @@ class HomeDetails extends Component {
     return (
       <div className="page-wrapper home-details-wrapper">
         <div className="page-headding">
-          <div style={{width: "100%"}}>{ `Khách sạn ${homeName}`}</div>
-          <div style={{fontWeight: 'normal', fontSize: '20px'}}>{ address && address.address_text ? address.address_text : '-' }</div>
+          <span>
+            <div style={{width: "100%"}}>{ `Khách sạn ${homeName}`}</div>
+            <div style={{fontWeight: 'normal', fontSize: '20px'}}>{ address && address.address_text ? address.address_text : '-' }</div>
+          </span>
+          <ButtonList list={this.buttonListGoBack} />
         </div>
         <div className="steps-wrapper"  style={{display: (selectedStep === 0 ? 'block' : 'none')}}>
           <div className='images-wrapper'>
