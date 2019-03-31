@@ -64,14 +64,30 @@ class HomeDetails extends Component {
       selectedStep: 0,
       loading: null,
       homeId: '',
+      filterObject: {
+        checkin: '',
+        checkout: '',
+        numGuest: 0
+      },
       numberDays: [...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})),
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { homeId } = this.props.match.params;
+    const searchHome = localStorage.getItem("searchHome");
+    const filterObject = JSON.parse(searchHome);
+
     if (homeId) {
-      this.setState({ homeId: homeId}, () => {
+      this.setState(
+        {
+          homeId: homeId,
+          filterObject: {
+            ...this.state.filterObject,
+            checkin: filterObject.checkin,
+            checkout: filterObject.checkout
+          }
+        }, () => {
         this.getHomeDetails(homeId, this.onChange);
       });
     }
@@ -267,10 +283,10 @@ class HomeDetails extends Component {
       return;
     }
     history.push('/Room/Details/' + id + '/View');
-  }
+  };
 
   onChange = (pagination = {}, filters = {}, sorter = {}, extra, searchText) => {
-    const { homeId } = this.state;
+    const { homeId, filterObject } = this.state;
     const tableSettings = {
       ...this.state.tableSettings,
       pagination,
@@ -288,6 +304,7 @@ class HomeDetails extends Component {
       sortOrder: sorter.order,
       searchText,
       isActive,
+      ...filterObject,
       homeId : !!homeId ? homeId : null
     };
 
@@ -328,7 +345,7 @@ class HomeDetails extends Component {
     } else {
       history.push('/Room/AddRoom')
     }
-  }
+  };
 
   postReservations = () => {
     this.openNotification('info', "Hoàn tất đặt phòng");
@@ -352,9 +369,15 @@ class HomeDetails extends Component {
     this.setState({selectedStep: step});
   };
 
+  onChangeFilterRooms = params => {
+    this.setState({ filterObject: params},
+      () => this.onChange()
+    );
+  };
+
   render() {
     const { intl } = this.props;
-    const { tableSettings, dataSource, selected, homeId, loading, extra_service, numberDays, reservations, selectedStep} = this.state;
+    const { tableSettings, dataSource, selected, homeId, loading, extra_service, numberDays, reservations, selectedStep, filterObject} = this.state;
     const {homeName, homeDescription, homeTypeId, address, location, media} = selected;
     const { images, videos} = media;
     const TableConfig = {
@@ -417,7 +440,7 @@ class HomeDetails extends Component {
             )
           }
           <div className="page-contents-wrapper">
-            <FilterRooms numberDays={numberDays}/>
+            <FilterRooms params={filterObject} onChange={this.onChangeFilterRooms}/>
           </div>
           <Row>
             <Col span={16}>

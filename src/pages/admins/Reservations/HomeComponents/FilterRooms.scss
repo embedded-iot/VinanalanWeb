@@ -1,0 +1,16 @@
+.filter-room-box {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+
+  .search-home-item {
+    width: calc( (100% - 140px) / 3 ) !important;
+    padding-right: 30px;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+  button {
+    margin-top: 35px;
+  }
+}

@@ -1,36 +1,76 @@
 import React, { Component } from "react";
 import DropdownList from "../../../../components/commons/DropdownList/DropdownList";
 import InputDatePicker from "../../../../components/commons/InputDatePicker/InputDatePicker";
-import ButtonList from "../../../../components/commons/ButtonList/ButtonList";
+import {Button} from "antd";
+import {injectIntl} from "react-intl";
+import "./FilterRooms.scss"
 
-export default class FilterRooms extends Component {
+const MAX_GUEST = 10;
+
+class FilterRooms extends Component {
+
+  constructor(props) {
+    super(props);
+    const today = new Date();
+    this.state = {
+      params: {
+        checkin: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate(),
+        checkout: '',
+        numGuest: 1,
+        ...props.params
+      },
+      numberGuest: [
+        {text: 'Mặc định', value: 0},
+        ...[ ...Array(MAX_GUEST)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)}))]
+    };
+  }
+
+
+  onChange = (name, value) => {
+    const { params } = this.state;
+    params[name] = value;
+    this.setState({ params: params});
+  };
+
+  onSearch = () => {
+    const { onChange } = this.props;
+    const { params } = this.state;
+    onChange(params);
+  };
+
   render() {
-    const { numberDays } = this.props;
-    const buttonList = [
-      { title: "Tìm phòng", type: "primary", icon: "search", onClick: () => this.selectedStep(1) }
-    ];
+    const { intl } = this.props;
+    const { params, numberGuest } = this.state;
+    const { checkin, checkout, numGuest } = params;
     return(
       <div className="group-box">
         <div className="group-sub-heading">Tìm kiếm phòng</div>
-        <div className="group-content search-home-wrapper filter-room-box">
-          <div className="search-home-box">
+        <div className="group-content">
+          <div className="search-home-box filter-room-box">
             <div className="search-home-item">
               <InputDatePicker title="Ngày nhận phòng"
-                               name="homeDescription"/>
+                               name="checkin"
+                               defaultValue={checkin}
+                               onChange={this.onChange}
+              />
             </div>
             <div className="search-home-item">
               <InputDatePicker title="Ngày trả phòng"
-                               name="homeDescription"/>
+                               name="checkout"
+                               defaultValue={checkout}
+                               onChange={this.onChange}
+              />
             </div>
             <div className="search-home-item">
               <DropdownList
-                name="maxGuest"
-                title="Số đêm"
-                list={numberDays}
-                onChange={this.onChangeDropdown}
+                name="numGuest"
+                title="Số lượng người"
+                list={numberGuest}
+                value={numGuest}
+                onChange={this.onChange}
               />
             </div>
-            <ButtonList list={ buttonList}/>
+            <Button type="primary" icon="search" onClick={this.onSearch}>{intl.formatMessage({id: 'SEARCH_ROOMS'})}</Button>
           </div>
         </div>
       </div>
@@ -39,5 +79,8 @@ export default class FilterRooms extends Component {
 }
 
 FilterRooms.defaultProps = {
-  numberDays: []
+  params: {},
+  onChange: f => f
 }
+
+export default injectIntl(FilterRooms)
