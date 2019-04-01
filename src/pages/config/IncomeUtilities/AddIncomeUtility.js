@@ -84,7 +84,11 @@ class AddIncomeUtility extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_UTILITY_FAIL' }));
+        if (error.data.indexOf('existed') > 0) {
+          this.openNotification('error', intl.formatMessage({ id: 'UTILITY_NAME_EXIST' }));
+        } else {
+          this.openNotification('error', intl.formatMessage({id: 'EDIT_UTILITY_FAIL'}));
+        }
       });
     } else {
       Services.createIncomeUtility({...selected, userId: user.id},response => {
@@ -92,9 +96,13 @@ class AddIncomeUtility extends Component {
           this.openNotification('success', intl.formatMessage({ id: 'ADD_UTILITY_SUCCESS' }));
           onChangeVisible(true);
         },
-        er => {
+        error => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_UTILITY_FAIL' }));
+          if (error.data.indexOf('existed') > 0) {
+            this.openNotification('error', intl.formatMessage({ id: 'UTILITY_NAME_EXIST' }));
+          } else {
+            this.openNotification('error', intl.formatMessage({id: 'ADD_UTILITY_FAIL'}));
+          }
         }
       );
     }
@@ -128,7 +136,7 @@ class AddIncomeUtility extends Component {
 
   onChangeUpload = fileList => {
     this.setState({fileList: fileList});
-  }
+  };
   render() {
     const {selected, isEdit, isSubmitted, fileList} = this.state;
     const { name, icon_link, isActive} = selected;

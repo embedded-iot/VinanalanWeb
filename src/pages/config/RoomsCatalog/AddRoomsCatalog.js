@@ -90,7 +90,11 @@ class AddRoomsCatalog extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_ROOM_CATALOG_FAIL' }));
+        if (error.data.indexOf('existed') > 0) {
+          this.openNotification('error', intl.formatMessage({ id: 'CATALOG_ROOM_NAME_EXIST' }));
+        } else {
+          this.openNotification('error', intl.formatMessage({id: 'EDIT_ROOM_CATALOG_FAIL'}));
+        }
       });
     } else {
       Services.createRoomCatalog({...selected, userId: user.id},response => {
@@ -98,9 +102,13 @@ class AddRoomsCatalog extends Component {
           this.openNotification('success', intl.formatMessage({ id: 'ADD_ROOM_CATALOG_SUCCESS' }));
           onChangeVisible(true);
         },
-        er => {
+        error => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_ROOM_CATALOG_FAIL' }));
+          if (error.data.indexOf('existed') > 0) {
+            this.openNotification('error', intl.formatMessage({ id: 'CATALOG_ROOM_NAME_EXIST' }));
+          } else {
+            this.openNotification('error', intl.formatMessage({ id: 'ADD_ROOM_CATALOG_FAIL' }));
+          }
         }
       );
     }

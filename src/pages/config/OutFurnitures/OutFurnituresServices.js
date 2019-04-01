@@ -33,7 +33,7 @@ export function createOutFurniture(data, successCallback, failCallback) {
     Services.makePostRequest(requestOptions, (response) => {
         successCallback(response);
     }, (error) => {
-        failCallback(error);
+        failCallback(error.response.data);
     });
 }
 
@@ -49,6 +49,6 @@ export function editOutFurniture(id, data, successCallback, failCallback) {
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error);
+        failCallback(error.response.data);
     });
 }

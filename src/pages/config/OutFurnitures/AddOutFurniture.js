@@ -84,7 +84,11 @@ class AddOutFurniture extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_FURNITURE_FAIL' }));
+        if (error.data.indexOf('existed') > 0) {
+          this.openNotification('error', intl.formatMessage({ id: 'FURNITURE_NAME_EXIST' }));
+        } else {
+          this.openNotification('error', intl.formatMessage({id: 'EDIT_FURNITURE_FAIL'}));
+        }
       });
     } else {
       Services.createOutFurniture({...selected, userId: user.id},response => {
@@ -92,9 +96,13 @@ class AddOutFurniture extends Component {
           this.openNotification('success', intl.formatMessage({ id: 'ADD_FURNITURE_SUCCESS' }));
           onChangeVisible(true);
         },
-        er => {
+        error => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_FURNITURE_FAIL' }));
+          if (error.data.indexOf('existed') > 0) {
+            this.openNotification('error', intl.formatMessage({ id: 'FURNITURE_NAME_EXIST' }));
+          } else {
+            this.openNotification('error', intl.formatMessage({id: 'ADD_FURNITURE_FAIL'}));
+          }
         }
       );
     }

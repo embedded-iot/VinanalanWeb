@@ -90,7 +90,11 @@ class AddHomeCatalog extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_FAIL' }));
+        if (error.data.indexOf('existed') > 0) {
+          this.openNotification('error', intl.formatMessage({ id: 'CATALOG_HOME_NAME_EXIST' }));
+        } else {
+          this.openNotification('error', intl.formatMessage({id: 'EDIT_HOME_CATALOG_FAIL'}));
+        }
       });
     } else {
       Services.createHomeCatalog({...selected, userId: user.id},response => {
@@ -98,9 +102,13 @@ class AddHomeCatalog extends Component {
           this.openNotification('success', intl.formatMessage({ id: 'ADD_HOME_CATALOG_SUCCESS' }));
           onChangeVisible(true);
         },
-        er => {
+        error => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_HOME_CATALOG_FAIL' }));
+          if (error.data.indexOf('existed') > 0) {
+            this.openNotification('error', intl.formatMessage({ id: 'CATALOG_HOME_NAME_EXIST' }));
+          } else {
+            this.openNotification('error', intl.formatMessage({id: 'ADD_HOME_CATALOG_FAIL'}));
+          }
         }
       );
     }

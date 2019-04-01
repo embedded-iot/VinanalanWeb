@@ -79,7 +79,11 @@ class AddExtraFee extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_EXTRA_FEE_FAIL' }));
+        if (error.data.indexOf('existed') > 0) {
+          this.openNotification('error', intl.formatMessage({ id: 'EXTRA_FEE_NAME_EXIST' }));
+        } else {
+          this.openNotification('error', intl.formatMessage({id: 'EDIT_EXTRA_FEE_FAIL'}));
+        }
       });
     } else {
       Services.createExtraFee({...selected, userId: user.id},response => {
@@ -87,9 +91,13 @@ class AddExtraFee extends Component {
           this.openNotification('success', intl.formatMessage({ id: 'ADD_EXTRA_FEE_SUCCESS' }));
           onChangeVisible(true);
         },
-        er => {
+        error => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_EXTRA_FEE_FAIL' }));
+          if (error.data.indexOf('existed') > 0) {
+            this.openNotification('error', intl.formatMessage({ id: 'EXTRA_FEE_NAME_EXIST' }));
+          } else {
+            this.openNotification('error', intl.formatMessage({id: 'ADD_EXTRA_FEE_FAIL'}));
+          }
         }
       );
     }

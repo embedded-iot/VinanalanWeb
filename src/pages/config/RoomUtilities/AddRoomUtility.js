@@ -84,17 +84,25 @@ class AddRoomUtility extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        this.openNotification('error', intl.formatMessage({ id: 'EDIT_UTILITY_FAIL' }));
+        if (error.data.indexOf('existed') > 0) {
+          this.openNotification('error', intl.formatMessage({ id: 'UTILITY_NAME_EXIST' }));
+        } else {
+          this.openNotification('error', intl.formatMessage({id: 'EDIT_UTILITY_FAIL'}));
+        }
       });
     } else {
       Services.createRoomUtility({...selected, userId: user.id},response => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('success', intl.formatMessage({ id: 'ADD_UTILITY_SUCCESS' }));
           onChangeVisible(true);
+          this.openNotification('success', intl.formatMessage({ id: 'ADD_UTILITY_SUCCESS' }));
         },
-        er => {
+        error => {
           dispatch(spinActions.hideSpin());
-          this.openNotification('error', intl.formatMessage({ id: 'ADD_UTILITY_FAIL' }));
+          if (error.data.indexOf('existed') > 0) {
+            this.openNotification('error', intl.formatMessage({ id: 'UTILITY_NAME_EXIST' }));
+          } else {
+            this.openNotification('error', intl.formatMessage({id: 'ADD_UTILITY_FAIL'}));
+          }
         }
       );
     }
