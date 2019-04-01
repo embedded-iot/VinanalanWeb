@@ -79,7 +79,7 @@ class AddExtraFee extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        if (error.data.indexOf('existed') > 0) {
+        if (error.data.statusCode === 422) {
           this.openNotification('error', intl.formatMessage({ id: 'EXTRA_FEE_NAME_EXIST' }));
         } else {
           this.openNotification('error', intl.formatMessage({id: 'EDIT_EXTRA_FEE_FAIL'}));

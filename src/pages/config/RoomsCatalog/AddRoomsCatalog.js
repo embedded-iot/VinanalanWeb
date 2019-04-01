@@ -90,7 +90,7 @@ class AddRoomsCatalog extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        if (error.data.indexOf('existed') > 0) {
+        if (error.data.statusCode === 422) {
           this.openNotification('error', intl.formatMessage({ id: 'CATALOG_ROOM_NAME_EXIST' }));
         } else {
           this.openNotification('error', intl.formatMessage({id: 'EDIT_ROOM_CATALOG_FAIL'}));

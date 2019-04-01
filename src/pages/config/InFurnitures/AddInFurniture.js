@@ -84,7 +84,7 @@ class AddInFurniture extends Component {
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        if (error.data.indexOf('existed') > 0) {
+        if (error.data.statusCode === 422) {
           this.openNotification('error', intl.formatMessage({ id: 'FURNITURE_NAME_EXIST' }));
         } else {
           this.openNotification('error', intl.formatMessage({id: 'EDIT_FURNITURE_FAIL'}));
