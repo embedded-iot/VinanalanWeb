@@ -163,7 +163,7 @@ class AddRoomUtility extends Component {
         <Row>
           <Col span={8}>Icon<span className="is-required">*</span></Col>
           <Col span={16}>
-            <UploadImageList onChange={this.onChangeUpload}/>
+            <UploadImageList onChange={this.onChangeUpload} list={icon_link ? [icon_link] : []}/>
             { isSubmitted && !fileList.length && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
           </Col>
         </Row>

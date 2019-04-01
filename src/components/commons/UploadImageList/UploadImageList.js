@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {Upload, Button, Icon} from "antd";
+import {openNotification} from "../../../utils/utils";
 
-export default class UploadImageList extends Component {
+class UploadImageList extends Component {
 
   constructor(props) {
     super(props);
@@ -9,6 +10,31 @@ export default class UploadImageList extends Component {
       fileList: []
     };
   }
+
+  componentWillMount() {
+    const { list } = this.props;
+    let images = list.map((item, index) => (
+      {
+        uid: index,
+        name: item.substring(item.lastIndexOf('/') + 1),
+        status: 'done',
+        url: item
+      }
+    ));
+    this.setState({fileList: images})
+  }
+
+  validateFile = (file) => {
+    const isJPG = file.type.toLowerCase() === 'image/jpeg' || file.type.toLowerCase() === 'image/png';
+    if (!isJPG) {
+      openNotification('error','Bạn chỉ có thể tải ảnh định dạng PNG hoặc JPEG!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      openNotification('error','File bạn chọn đã vượt quá 2MB!');
+    }
+    return isJPG && isLt2M;
+  };
 
   render() {
     const { onChange, multiFile} = this.props;
@@ -23,6 +49,9 @@ export default class UploadImageList extends Component {
       },
       beforeUpload: (file) => {
         let newFileList ;
+        if (!this.validateFile(file)) {
+          return false;
+        }
         if (multiFile) {
           newFileList = [...fileList, file];
         } else {
@@ -43,3 +72,11 @@ export default class UploadImageList extends Component {
     );
   }
 }
+
+UploadImageList.defaultProps = {
+  list: [],
+  onChange: f => f,
+  multiFile: false
+};
+
+export default UploadImageList;
