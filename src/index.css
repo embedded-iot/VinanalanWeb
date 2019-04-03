@@ -8,3 +8,8 @@ input.form-control {
 input[type=file] {
   width: 100%;
 }
+
+
+body {
+  color: #000000 !important;
+}
