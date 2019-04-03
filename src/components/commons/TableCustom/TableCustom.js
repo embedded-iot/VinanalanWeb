@@ -37,7 +37,8 @@ export default class TableCustom extends Component {
   onSearchText = text => {
     console.log("searchText", text)
     let { pagination, filters, sorter} = {...this.props.tableSettings};
-    this.props.onChange(pagination, filters, sorter, {}, text ? text : null);
+    let newPagination = { ...pagination, current: 1};
+    this.props.onChange(newPagination, filters, sorter, {}, text ? text : null);
   }
 
   render() {
