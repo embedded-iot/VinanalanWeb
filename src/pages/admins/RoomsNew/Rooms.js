@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import * as Services from './RoomsServices';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TableCustom from "../../../components/commons/TableCustom/TableCustom";
-import { Modal, notification, Tooltip } from 'antd';
+import {Icon, Modal, notification, Tooltip} from 'antd';
 import { spinActions } from "../../../actions/spinAction";
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -268,8 +268,12 @@ class Rooms extends Component {
     } else {
       history.push('/Room/AddRoom')
     }
-  }
+  };
 
+  goToHomePage = () => {
+    const { history } = this.props;
+    history.push('/Home');
+  };
 
   render() {
     const { intl } = this.props;
@@ -288,6 +292,7 @@ class Rooms extends Component {
       <div className="page-wrapper">
         <div className="page-headding">
           <span>
+            { !!homeId && <span style={{cursor: 'pointer', marginRight: '15px'}} onClick={this.goToHomePage}><Icon type="double-left" /></span> }
             { !homeId ? intl.formatMessage({ id: 'ROOMS' }) : intl.formatMessage({ id: 'ROOMS' }) + ` ( Tòa nhà ${homeName} )`}
           </span>
           <ButtonList list={buttonList} />
