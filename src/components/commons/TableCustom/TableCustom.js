@@ -26,23 +26,34 @@ export default class TableCustom extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      searchText: ''
+    }
   }
 
   setPageSize = pageSize => {
-    let { pagination, filters, sorter, searchText } = {...this.props.tableSettings};
+    let { pagination, filters, sorter } = {...this.props.tableSettings};
+    const { searchText } = this.state;
     let newPagination = { ...pagination, pageSize, current: 1};
     this.props.onChange(newPagination, filters, sorter, {}, searchText);
-  }
+  };
 
   onSearchText = text => {
-    console.log("searchText", text)
+    console.log("searchText", text);
+    this.setState({ searchText: text});
     let { pagination, filters, sorter} = {...this.props.tableSettings};
     let newPagination = { ...pagination, current: 1};
     this.props.onChange(newPagination, filters, sorter, {}, text ? text : null);
-  }
+  };
+
+  onChange = (pagination = {}, filters = {}, sorter = {}, extra) => {
+    const { onChange } = this.props;
+    const { searchText } = this.state;
+    onChange(pagination, filters, sorter, extra, searchText);
+  };
 
   render() {
-    const config = { ...defaultProps, ...this.props };
+    const config = { ...defaultProps, ...this.props, onChange: this.onChange };
     const { pagination } = this.props;
     return (
       <div className="table-custom-wrapper">
