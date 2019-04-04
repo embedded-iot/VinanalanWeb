@@ -219,7 +219,7 @@ class AddHome extends Component {
     const {intl, dispatch, user, history} = this.props;
     this.setState({isSubmitted: true});
     if (!selected.homeDescription) return;
-
+    selected.isActive = !!selected.isActive;
     dispatch(spinActions.showSpin());
     if (isEdit) {
       var id =
@@ -466,7 +466,7 @@ class AddHome extends Component {
     const { address_text, country_code, district_code, province_code, ward_code } = address;
     const {phoneNumber, email} = homeManager;
     const {onChangeVisible} = this.props;
-    const [...status] = CONSTANTS.STATUS;
+    const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
     const { isEdit, isView} = this.state;
     let title;
     if (isEdit) {
@@ -496,6 +496,16 @@ class AddHome extends Component {
                 name="homeName"
                 isRequired={true}
                 onChange={this.onChangeInput}
+                disabled={isView}
+              />
+              <DropdownList
+                name="isActive"
+                title="Trạng thái"
+                list={status}
+                value={Number(isActive)}
+                isSubmitted={isSubmitted}
+                isRequired='true'
+                onChange={this.onChangeDropdown}
                 disabled={isView}
               />
               <SubTitle title="Loại hình chỗ nghỉ của bạn?" isRequired='true'/>
