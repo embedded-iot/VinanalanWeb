@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import {Modal, Row, Col, Input, Select, Button, notification} from "antd";
 import * as Services from "./HomesServices";
 import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {spinActions} from "../../../actions";
 import * as CONSTANTS from "../../Constants";
@@ -402,9 +403,15 @@ class AddHome extends Component {
     } else {
       this.setState({isSubmitted: false, selectedStep: 0});
     }
-  }
+  };
+
+  goToHomePage = () => {
+    const { history } = this.props;
+    history.push('/Home')
+  };
 
   buttonListOne = [
+    { title: "Quay lại", onClick: this.goToHomePage},
     { title: "Tiếp theo", type: "primary", onClick: () => this.selectedStep(1)}
   ];
 
@@ -751,4 +758,4 @@ const mapStateToProps = function (state) {
   };
 };
 
-export default injectIntl(connect(mapStateToProps)(AddHome));
+export default injectIntl(withRouter(connect(mapStateToProps)(AddHome)));
