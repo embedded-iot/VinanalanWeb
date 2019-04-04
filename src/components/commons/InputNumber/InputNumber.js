@@ -17,21 +17,22 @@ class InputNumber extends Component {
   onChange = (e) => {
     const { value } = e.target;
     const {type} = this.props;
-    let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    let reg = /^-?([0-9]+)(\.[0-9]*)?$/;
     if (type === 'phone') {
-      reg = /^-?([0-9]+)(\.[0-9]*)?$/;
+      reg = /^-?([0-9]+)(\.[0-9]*){0}$/;
     }
     if ((!Number.isNaN(value) && reg.test(value)) || value === '' || value === '-') {
       if (type === 'phone') {
         this.props.onChange(this.props.name, value);
       } else {
-        this.props.onChange(this.props.name, Number(value));
+        this.props.onChange(this.props.name, value ? ( value === '-' ? value : Number(value)) : '');
       }
     }
   }
 
   render() {
-    const { isSubmitted, typeNumber, title, value, defaultValue, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
+    const { isSubmitted, type, title, value, defaultValue, maxLength, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
+
     return (
       <div className="input-number-wrapper" style={ !title ? {margin: 0} : {}}>
         { !!title && <div className="heading"> {title }
@@ -44,7 +45,7 @@ class InputNumber extends Component {
         <Input
           value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder}
           onChange={this.onChange}
-          maxLength={25}
+          maxLength={type === 'phone' ? 10 : (maxLength || 20)}
         />
         {isSubmitted && isRequired && value === '' && <p style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</p>}
         {description && <span>{ description }</span>}
@@ -55,11 +56,13 @@ class InputNumber extends Component {
 
 InputNumber.propTypes = {
   name: PropTypes.string,
+  type: PropTypes.string,
   onChange:PropTypes.func,
 };
 
 InputNumber.defaultProps = {
   name: '',
+  type: '',
   onChange: f => f
 };
 
