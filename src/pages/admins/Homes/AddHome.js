@@ -654,7 +654,7 @@ class AddHome extends Component {
             </div>
             <div className="group-content">
               <ViewTopUtilities
-                list={extra_service}
+                list={outcome_service}
                 emptyMessage='Chưa có tiện nghi nào.'/>
             </div>
           </div>

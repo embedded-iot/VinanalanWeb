@@ -64,7 +64,7 @@ class AddUtilities extends Component {
   }
 
   onChange = checkedValues => {
-    console.log(checkedValues);
+    // console.log(checkedValues);
     this.setState({ selectedIdList: checkedValues});
   }
 
