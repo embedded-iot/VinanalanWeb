@@ -335,21 +335,31 @@ class AddHome extends Component {
   };
 
   onChangeAddress = (name, value) => {
+    let { countries, provinces, districts, wards} = this.state;
     let address = { ...this.state.selected.address};
     address[name] = value;
-    const selected = { ...this.state.selected, address: address};
-    this.setState({ selected: { ...selected}});
     switch (name) {
       case "country_code":
+        address.province_code = null;
+        address.district_code = null;
+        address.ward_code = null;
+        provinces: [];
         this.getProvincesByCountry(value);
         break;
       case "province_code":
+        address.district_code = null;
+        address.ward_code = null;
+        districts: [];
         this.getDistrictsByProvince(value);
         break;
       case "district_code":
+        address.ward_code = null;
+        wards: [];
         this.getWardsByDistrict(value);
         break;
     }
+    const selected = { ...this.state.selected, address: address};
+    this.setState({ selected: { ...selected} , provinces: provinces, districts: districts});
   }
 
   findHomeManageById = id => {
