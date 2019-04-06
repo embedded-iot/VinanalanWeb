@@ -75,29 +75,28 @@ class AddHomeCatalog extends Component {
     this.setState({isSubmitted: true});
     if (!selected.catalogName || !selected.catalogDescription) return;
 
+    const data = {
+      catalogDescription: selected.catalogDescription,
+      catalogName: selected.catalogName,
+      isActive: selected.isActive,
+      userId: user.id
+    };
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      let Info = {
-        catalogDescription: selected.catalogDescription,
-        catalogName: selected.catalogName,
-        id: selected.id,
-        isActive: selected.isActive,
-        userId: user.id
-      }
-      Services.editHomeCatalog(selected.id, Info, response => {
+      Services.editHomeCatalog(selected.id, data, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_HOME_CATALOG_SUCCESS' }));
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        if (error.data.statusCode === 422) {
+        if (error.status === 422) {
           this.openNotification('error', intl.formatMessage({ id: 'CATALOG_HOME_NAME_EXIST' }));
         } else {
           this.openNotification('error', intl.formatMessage({id: 'EDIT_HOME_CATALOG_FAIL'}));
         }
       });
     } else {
-      Services.createHomeCatalog({...selected, userId: user.id},response => {
+      Services.createHomeCatalog(data,response => {
           dispatch(spinActions.hideSpin());
           this.openNotification('success', intl.formatMessage({ id: 'ADD_HOME_CATALOG_SUCCESS' }));
           onChangeVisible(true);

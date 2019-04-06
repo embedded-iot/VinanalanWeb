@@ -38,17 +38,17 @@ export function createExtraFee(data, successCallback, failCallback) {
 }
 
 export function editExtraFee(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
     let requestOptions = {
-        url: '/api/extra_fees/' + id,
-        data: data
+        url: '/api/extra_fees/updateExtrafee',
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

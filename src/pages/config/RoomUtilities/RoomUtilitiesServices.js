@@ -38,17 +38,18 @@ export function createRoomUtility(data, successCallback, failCallback) {
 }
 
 export function editRoomUtility(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
+
     let requestOptions = {
-        url: '/api/RoomUtilities/' + id,
-        data: data
+        url: '/api/RoomUtilities/updateRoomUtilities',
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

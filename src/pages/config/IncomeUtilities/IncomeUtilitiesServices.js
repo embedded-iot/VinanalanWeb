@@ -38,17 +38,17 @@ export function createIncomeUtility(data, successCallback, failCallback) {
 }
 
 export function editIncomeUtility(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
     let requestOptions = {
-        url: '/api/income_utilities/' + id,
-        data: data
+        url: '/api/income_utilities/updateIncomeutilities',
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

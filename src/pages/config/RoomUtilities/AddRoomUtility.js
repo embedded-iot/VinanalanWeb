@@ -36,6 +36,7 @@ class AddRoomUtility extends Component {
     this.state = {
       selected: {
         name: '',
+        description: '',
         icon_link: '',
         isActive: true,
         ...props.selected
@@ -74,24 +75,33 @@ class AddRoomUtility extends Component {
     const { selected, isEdit } = this.state;
     const { onChangeVisible, intl, dispatch, user } = this.props;
 
+    this.setState({isSubmitted: true});
+    if (!selected.name || !selected.icon_link) return;
+
+    const data = {
+      name: selected.name,
+      description: selected.description,
+      icon_link: selected.icon_link,
+      isActive: selected.isActive,
+      userId: user.id
+    };
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      var id = typeof selected.create_by === "object" ? selected.create_by.id : '';
-      selected.create_by = id;
-      Services.editRoomUtility(selected.id, selected, response => {
+
+      Services.editRoomUtility(selected.id, data, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_UTILITY_SUCCESS' }));
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        if (error.data.statusCode === 422) {
+        if (error.status === 422) {
           this.openNotification('error', intl.formatMessage({ id: 'UTILITY_NAME_EXIST' }));
         } else {
           this.openNotification('error', intl.formatMessage({id: 'EDIT_UTILITY_FAIL'}));
         }
       });
     } else {
-      Services.createRoomUtility({...selected, userId: user.id},response => {
+      Services.createRoomUtility(data,response => {
           dispatch(spinActions.hideSpin());
           onChangeVisible(true);
           this.openNotification('success', intl.formatMessage({ id: 'ADD_UTILITY_SUCCESS' }));
@@ -113,9 +123,14 @@ class AddRoomUtility extends Component {
     const formData = new FormData();
     const { selected } = this.state;
 
-    this.setState({isSubmitted: true});
-    if (!selected.name || !fileList.length) return;
     if (fileList.length) {
+      const uploadedFileList = fileList.filter(file => {
+        return file.status === 'done';
+      });
+      if (uploadedFileList.length === fileList.length) {
+        callback();
+        return;
+      }
       fileList.forEach((file) => {
         formData.append('file', file);
       });
@@ -130,7 +145,9 @@ class AddRoomUtility extends Component {
         this.openNotification('error', "Tải hình ảnh thất bại. Vui lòng chọn hình ảnh khác!");
       })
     } else {
-      callback();
+      this.setState({ selected: { ... selected, icon_link: ''} }, () => {
+        callback();
+      });
     }
   }
 

@@ -38,17 +38,18 @@ export function createInFurniture(data, successCallback, failCallback) {
 }
 
 export function editInFurniture(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
+
     let requestOptions = {
-        url: '/api/InFurnitures/' + id,
-        data: data
+        url: '/api/InFurnitures/updateInFurniture',
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

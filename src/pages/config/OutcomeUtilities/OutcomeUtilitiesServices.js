@@ -38,17 +38,17 @@ export function createOutcomeUtility(data, successCallback, failCallback) {
 }
 
 export function editOutcomeUtility(id, data, successCallback, failCallback) {
-    if (data.id) {
-        delete data.id;
-    }
     let requestOptions = {
-        url: '/api/outcome_utilities/' + id,
-        data: data
+        url: '/api/outcome_utilities/updateOutcomeutilities',
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

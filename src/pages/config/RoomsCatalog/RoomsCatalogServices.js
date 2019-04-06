@@ -40,12 +40,15 @@ export function createRoomCatalog(data, successCallback, failCallback) {
 export function editRoomCatalog(id, data, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/room-catalog/updateRoomCatalog',
-        data: data
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

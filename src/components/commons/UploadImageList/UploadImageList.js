@@ -12,7 +12,7 @@ class UploadImageList extends Component {
   }
 
   componentWillMount() {
-    const { list } = this.props;
+    const { list, onChange } = this.props;
     let images = list.map((item, index) => (
       {
         uid: index,
@@ -21,7 +21,8 @@ class UploadImageList extends Component {
         url: item
       }
     ));
-    this.setState({fileList: images})
+    this.setState({fileList: images});
+    onChange(images);
   }
 
   validateFile = (file) => {

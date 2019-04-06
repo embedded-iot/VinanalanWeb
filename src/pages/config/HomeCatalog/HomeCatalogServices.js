@@ -40,12 +40,15 @@ export function createHomeCatalog(data, successCallback, failCallback) {
 export function editHomeCatalog(id, data, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/home-catalog/updateHomeCatalog',
-        data: data
+        data: {
+            ...data,
+            id: id
+        }
     };
 
     Services.makePutRequest(requestOptions, (response) => {
         successCallback(response.data);
     }, (error) => {
-        failCallback(error.response.data);
+        failCallback(error.response);
     });
 }

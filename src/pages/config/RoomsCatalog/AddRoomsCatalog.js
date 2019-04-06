@@ -75,29 +75,29 @@ class AddRoomsCatalog extends Component {
     this.setState({isSubmitted: true});
     if (!selected.catalogName || !selected.catalogDescription) return;
 
+    const data = {
+      catalogDescription: selected.catalogDescription,
+      catalogName: selected.catalogName,
+      isActive: selected.isActive,
+      userId: user.id
+    };
+
     dispatch(spinActions.showSpin());
     if (isEdit) {
-      let Info = {
-        catalogDescription: selected.catalogDescription,
-        catalogName: selected.catalogName,
-        id: selected.id,
-        isActive: selected.isActive,
-        userId: user.id
-      }
-      Services.editRoomCatalog(selected.id, Info, response => {
+      Services.editRoomCatalog(selected.id, data, response => {
         dispatch(spinActions.hideSpin());
         this.openNotification('success', intl.formatMessage({ id: 'EDIT_ROOM_CATALOG_SUCCESS' }));
         onChangeVisible(true);
       }, error => {
         dispatch(spinActions.hideSpin());
-        if (error.data.statusCode === 422) {
+        if (error.status === 422) {
           this.openNotification('error', intl.formatMessage({ id: 'CATALOG_ROOM_NAME_EXIST' }));
         } else {
           this.openNotification('error', intl.formatMessage({id: 'EDIT_ROOM_CATALOG_FAIL'}));
         }
       });
     } else {
-      Services.createRoomCatalog({...selected, userId: user.id},response => {
+      Services.createRoomCatalog(data,response => {
           dispatch(spinActions.hideSpin());
           this.openNotification('success', intl.formatMessage({ id: 'ADD_ROOM_CATALOG_SUCCESS' }));
           onChangeVisible(true);
