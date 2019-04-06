@@ -19,6 +19,7 @@ const STRINGS = {
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_EXTRA_FEES: <FormattedMessage id="TYPES_OFF_EXTRA_FEES" />,
   ACTION: <FormattedMessage id="ACTION" />,
+  DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
   STATUS: <FormattedMessage id="STATUS" />,
   YES: <FormattedMessage id="YES" />,
   NO: <FormattedMessage id="NO" />,
@@ -52,7 +53,12 @@ class ExtraFees extends Component {
   columns = [
     {
       title: STRINGS.TYPES_OFF_EXTRA_FEES,
-      dataIndex: 'name'
+      dataIndex: 'name',
+      width: '20%'
+    }, {
+      title: STRINGS.DESCRIPTION,
+      dataIndex: 'description',
+      render: description => description || '-'
     }, {
       title: 'Icon',
       dataIndex: 'icon_link',

@@ -8,6 +8,7 @@ import {spinActions} from "../../../actions";
 import * as CONSTANTS from '../../Constants';
 import UploadImageList from "../../../components/commons/UploadImageList/UploadImageList";
 import * as UploadService from "../../../components/commons/UploadService";
+import InputTextArea from "../../../components/commons/InputTextArea/InputTextArea";
 
 const Option = Select.Option;
 
@@ -15,6 +16,7 @@ const STRINGS = {
   ADD_IN_FURNITURE: <FormattedMessage id="ADD_IN_FURNITURE" />,
   EDIT_IN_FURNITURE: <FormattedMessage id="EDIT_IN_FURNITURE" />,
   FURNITURE_NAME: <FormattedMessage id="FURNITURE_NAME" />,
+  DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
   STATUS: <FormattedMessage id="STATUS" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
@@ -152,10 +154,16 @@ class AddInFurniture extends Component {
 
   onChangeUpload = fileList => {
     this.setState({fileList: fileList});
-  }
+  };
+
+  onChangeInput = (name, value) => {
+    let selected = {...this.state.selected};
+    selected[name] = value;
+    this.setState({selected: selected});
+  };
   render() {
     const {selected, isEdit, isSubmitted, fileList} = this.state;
-    const { name, icon_link, isActive} = selected;
+    const { name, description, icon_link, isActive} = selected;
     const { onChangeVisible} = this.props;
     const [...status] = CONSTANTS.STATUS;
     return (
@@ -174,6 +182,17 @@ class AddInFurniture extends Component {
           <Col span={16}>
             <Input value={name} onChange={this.onChangeName} />
             { isSubmitted && !name && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>{ STRINGS.DESCRIPTION}</Col>
+          <Col span={16}>
+            <InputTextArea
+              value={description}
+              name="description"
+              style={{margin: 0}}
+              onChange={this.onChangeInput}
+              />
           </Col>
         </Row>
         <Row>

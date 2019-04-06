@@ -21,12 +21,14 @@ class InputTextArea extends Component {
     const { title, value, defaultValue, isRequired, placeholder, titleInfo, placeholderInfo, style, isSubmitted, disabled} = this.props;
     return (
       <div className="input-text-area-wrapper" style={style}>
-        <div className="heading">{ title }
-          { isRequired && <span className="is-required">*</span> }
-          {
-            titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
-          }
-        </div>
+        {
+          !!title && (<div className="heading">{ title }
+            { isRequired && <span className="is-required">*</span> }
+            {
+              titleInfo && (<Tooltip placement={ placeholderInfo || "top" } title={titleInfo}><Icon type="info-circle" /></Tooltip>)
+            }
+          </div>)
+        }
         <TextArea value={value} autosize={{ minRows: 2, maxRows: 6 }}
                   defaultValue={defaultValue}
                   placeholder={placeholder}

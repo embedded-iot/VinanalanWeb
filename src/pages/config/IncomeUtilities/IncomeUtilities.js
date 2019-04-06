@@ -20,6 +20,7 @@ const STRINGS = {
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_UTILITIES: <FormattedMessage id="TYPES_OFF_UTILITIES" />,
   ACTION: <FormattedMessage id="ACTION" />,
+  DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
   STATUS: <FormattedMessage id="STATUS" />,
   YES: <FormattedMessage id="YES" />,
   NO: <FormattedMessage id="NO" />,
@@ -53,7 +54,12 @@ class IncomeUtilities extends Component {
   columns = [
     {
       title: STRINGS.TYPES_OFF_UTILITIES,
-      dataIndex: 'name'
+      dataIndex: 'name',
+      width: '20%'
+    }, {
+      title: STRINGS.DESCRIPTION,
+      dataIndex: 'description',
+      render: description => description || '-'
     }, {
       title: 'Icon',
       dataIndex: 'icon_link',

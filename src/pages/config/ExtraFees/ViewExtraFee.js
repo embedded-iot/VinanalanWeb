@@ -2,10 +2,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import {Modal, Row, Col} from "antd";
 import {FormattedMessage} from "react-intl";
+import InputTextArea from "../../../components/commons/InputTextArea/InputTextArea";
 
 const STRINGS = {
   VIEW_EXTRA_FEE: <FormattedMessage id="VIEW_EXTRA_FEE" />,
   EXTRA_FEE_NAME: <FormattedMessage id="EXTRA_FEE_NAME" />,
+  DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
   STATUS: <FormattedMessage id="STATUS" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
@@ -14,7 +16,7 @@ const STRINGS = {
 
 const ViewExtraFee = (props) => {
   const { onChangeVisible, selected} = props;
-  const { name, icon_link, isActive} = selected;
+  const { name, description, icon_link, isActive} = selected;
   return (
     <Modal title={ STRINGS.VIEW_EXTRA_FEE}
            className="modal-view-details"
@@ -28,6 +30,12 @@ const ViewExtraFee = (props) => {
       <Row>
         <Col span={8}>{STRINGS.EXTRA_FEE_NAME}</Col>
         <Col span={16}>{name}</Col>
+      </Row>
+      <Row>
+        <Col span={8}>{ STRINGS.DESCRIPTION}</Col>
+        <Col span={16}>
+          {description || '-'}
+        </Col>
       </Row>
       <Row>
         <Col span={8}>Icon</Col>
