@@ -42,7 +42,7 @@ class DropdownList extends Component {
             </Option>
           ))}
         </Select>
-        {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
+        {isSubmitted && isRequired && (value === undefined || value === null || value === '') && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}
       </div>
     );
   }
