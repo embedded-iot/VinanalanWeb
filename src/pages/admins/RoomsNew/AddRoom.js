@@ -190,6 +190,11 @@ class AddRoom extends Component {
       return;
     }
 
+    if (selected.roomDatePrice <= 0 || selected.roomMonthPrice <= 0) {
+      this.openNotification('error', intl.formatMessage({id: "INVALID_PRICE"}));
+      return;
+    }
+
     selected.inFurnitures = inFurnituresAll.map(item => ({ id: item.id, cost: item.cost}));
     dispatch(spinActions.showSpin());
     selected.isActive = !!selected.isActive;

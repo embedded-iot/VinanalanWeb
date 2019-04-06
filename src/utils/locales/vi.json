@@ -283,6 +283,7 @@
   "EDIT_ROOM_CATALOG_FAIL": "Chỉnh sửa loại phòng thất bại!",
   "REQUIRED_ALERT": "Trường này không để trống",
   "INVALID_EMAIL": "Email không đúng định dạng",
+  "INVALID_PRICE": "Giá phòng cần lớn hơn 0.",
   "SELECT_AVATAR_FOR_ROOM": "Chọn ảnh đại diện cho phòng",
   "ENTER_CHECKIN_CUSTOMER_INFORMATION": "Nhập thông tin chi tiết người nhận phòng",
   "NOTICE_AUTO_SEND_TO_THIS_EMAIL": "Email xác nhận đặt phòng sẽ được gửi đến địa chỉ này!",
