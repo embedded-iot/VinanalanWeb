@@ -115,6 +115,9 @@ export function makeGetRequest(config, successCallback, failCallback) {
                 successCallback(res);
             }
         }).catch(function (error) {
+            if (error.response.status === 401) {
+                localStorage.clear();
+            }
             failCallback(error);
         });
 }
