@@ -290,8 +290,8 @@
   "BOOKER_NAME": "Người dẫn khách",
   "BOOKING_SOURCE": "Nguồn đặt phòng",
   "PAY_METHOD": "Phương thức thanh toán",
-  "SEARCH_HOME": "Phương thức thanh toán",
-  "SETTING_HOME": "Tìm khách sạn",
+  "SEARCH_HOME": "Tìm khách sạn",
+  "SETTING_HOME": "Cài đặt khách sạn",
   "SEARCH_ROOMS": "Tìm phòng",
   "EMPTY_IMAGE_IN_HOME": "Không có hình ảnh nào trong tòa nhà \"{homeName}\". Chọn nút \"Cài đặt tòa nhà\" để thêm hình ảnh!",
   "STT": "Stt"

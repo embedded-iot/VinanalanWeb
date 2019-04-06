@@ -130,8 +130,9 @@ class AddRoom extends Component {
         let { room_utilities, inFurnitures} = room;
         selected.room_utilities = room_utilities.map(item => item.id);
         selected.inFurnitures = inFurnitures.map(item => item.id);
-        this.setState({selected: selected, room_utilities_all: room_utilities, inFurnituresAll: inFurnitures, selectedHome: room.homes});
-        callback();
+        this.setState({selected: selected, room_utilities_all: room_utilities, inFurnituresAll: inFurnitures, selectedHome: room.homes},  () => {
+          callback();
+        });
       }
     }, error => {
       dispatch(spinActions.hideSpin());
@@ -148,8 +149,13 @@ class AddRoom extends Component {
           text: item.homeName,
           value: item.id
         }));
-        let selectedHome = homes.find(item => item.id === homeId);
-        this.setState({homes: homes, selectedHome});
+        if (homeId) {
+          let selectedHome = homes.find(item => item.id === homeId);
+          this.setState({homes: homes, selectedHome});
+        } else {
+          this.setState({homes: homes});
+        }
+
       }
     });
     getRoomsCatalog(param, response => {

@@ -153,7 +153,7 @@ class SearchHome extends Component{
             </div>
           </div>
           <div className="text-right" style={{marginButton: '15px'}}>
-            <Button type="primary" icon="search" onClick={this.onSearch}>{intl.formatMessage({id: 'SETTING_HOME'})}</Button>
+            <Button type="primary" icon="search" onClick={this.onSearch}>{intl.formatMessage({id: 'SEARCH_HOME'})}</Button>
           </div>
         </div>
       </div>

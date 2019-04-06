@@ -216,7 +216,7 @@ class AddHome extends Component {
   
   handleSubmit = () => {
     const {selected, isEdit} = this.state;
-    const {intl, dispatch, user, history} = this.props;
+    const {intl, dispatch, user} = this.props;
     this.setState({isSubmitted: true});
     if (!selected.homeDescription) return;
     selected.isActive = !!selected.isActive;
@@ -232,7 +232,7 @@ class AddHome extends Component {
             "success",
             intl.formatMessage({id: "EDIT_HOME_SUCCESS"})
           );
-          history.push('/Home');
+          this.goBackPage();
         },
         error => {
           dispatch(spinActions.hideSpin());
@@ -251,7 +251,7 @@ class AddHome extends Component {
             "success",
             intl.formatMessage({id: "ADD_HOME_SUCCESS"})
           );
-          history.push('/Home');
+          this.goBackPage();
         },
         er => {
           dispatch(spinActions.hideSpin());
@@ -415,13 +415,13 @@ class AddHome extends Component {
     }
   };
 
-  goToHomePage = () => {
+  goBackPage = () => {
     const { history } = this.props;
-    history.push('/Home')
+    history.goBack();
   };
 
   buttonListOne = [
-    { title: "Quay lại", onClick: this.goToHomePage},
+    { title: "Quay lại", onClick: this.goBackPage},
     { title: "Tiếp theo", type: "primary", onClick: () => this.selectedStep(1)}
   ];
 
