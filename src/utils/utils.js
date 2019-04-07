@@ -20,3 +20,10 @@ export function openNotification(type, message, description) {
     description: description,
   });
 };
+
+export function numberDaysBetweenTwoDates(fromDate, toDate) {
+  const date1 = new Date(fromDate);
+  const date2 = new Date(toDate);
+  const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(timeDiff / (1000 * 3600 * 24));
+};

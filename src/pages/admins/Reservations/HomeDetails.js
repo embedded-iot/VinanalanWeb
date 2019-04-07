@@ -24,6 +24,7 @@ import DropdownList from "../../../components/commons/DropdownList/DropdownList"
 import {checkRoomsStatus} from "./ReservationsServices";
 import {createReservation} from "./ReservationsServices";
 import OutputNumber from "../../../components/commons/OutputNumber/OutputNumber";
+import {numberDaysBetweenTwoDates} from "../../../utils/utils";
 
 
 const confirmModal = Modal.confirm;
@@ -203,7 +204,10 @@ class HomeDetails extends Component {
 
   numberGuest = maxGuest => ([...Array(maxGuest)].map((item, index) => ({ text: (index + 1).toString(), value: (index + 1)})));
 
-  // onChangeGuest =
+  calculateReservationDays = () => {
+    const {filterObject} = this.state;
+    return numberDaysBetweenTwoDates(filterObject.checkin, filterObject.checkout);
+  };
 
   roomColumns = [
     {
@@ -238,9 +242,10 @@ class HomeDetails extends Component {
           <div>
             <div>
               <OutputNumber value={priceType ? roomDetails.roomDatePrice : roomDetails.roomMonthPrice} unit="đ" />
+              { ' x' + ' ' + this.calculateReservationDays() + ' Ngày'}
             </div>
             <div>
-              <OutputNumber value={roomDetails.prePayment > 0 ? '-' + roomDetails.prePayment : ''} unit="đ" />
+              { roomDetails.prePayment > 0 && <OutputNumber value={roomDetails.prePayment > 0 ? '-' + roomDetails.prePayment : ''} unit="đ" />}
             </div>
           </div>
         )
