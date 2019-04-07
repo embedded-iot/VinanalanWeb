@@ -23,6 +23,7 @@ import CheckInCustomerInfo from "./HomeComponents/CheckInCustomerInfo";
 import DropdownList from "../../../components/commons/DropdownList/DropdownList";
 import {checkRoomsStatus} from "./ReservationsServices";
 import {createReservation} from "./ReservationsServices";
+import OutputNumber from "../../../components/commons/OutputNumber/OutputNumber";
 
 
 const confirmModal = Modal.confirm;
@@ -150,9 +151,9 @@ class HomeDetails extends Component {
       render: (field, row) => (
         <div style={{textAlign: 'center'}}>
           <p>Giá 1 đêm</p>
-          <p>{row.roomDatePrice} đ</p>
+          <OutputNumber value={row.roomDatePrice} unit="đ" />
           <p>Giá dài ngày</p>
-          <p>{row.roomMonthPrice} đ</p>
+          <OutputNumber value={row.roomMonthPrice} unit="đ" />
         </div>
       ),
       width: '20%'
@@ -235,8 +236,12 @@ class HomeDetails extends Component {
       render: (priceType, roomDetails) => {
         return (
           <div>
-            <p>{priceType ? roomDetails.roomDatePrice : roomDetails.roomMonthPrice}</p>
-            <p>{ roomDetails.prePayment > 0 ? '-' + roomDetails.prePayment : ''}</p>
+            <div>
+              <OutputNumber value={priceType ? roomDetails.roomDatePrice : roomDetails.roomMonthPrice} unit="đ" />
+            </div>
+            <div>
+              <OutputNumber value={roomDetails.prePayment > 0 ? '-' + roomDetails.prePayment : ''} unit="đ" />
+            </div>
           </div>
         )
       },
@@ -555,7 +560,7 @@ class HomeDetails extends Component {
               <TableCustom {...RoomTableConfig}/>
               { reservations.length > 0 && (
                 <div className="reservations-footer">
-                  <div>Số tiền chưa thanh toán: <span className="is-required">{ this.totalAfterPayment()}</span> VNĐ</div>
+                  <div>Số tiền chưa thanh toán:<span className="is-required"><OutputNumber value={this.totalAfterPayment()} unit="VNĐ" /></span></div>
                   <Button type="primary" onClick={() => this.selectedStep(1)}>Bước tiếp theo</Button>
                 </div>
               )}

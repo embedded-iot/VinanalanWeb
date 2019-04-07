@@ -10,6 +10,7 @@ import AddRoom from "./AddRoom";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import * as CONSTANTS from '../../Constants';
 import {getHomes} from "../Homes/HomesServices";
+import OutputNumber from "../../../components/commons/OutputNumber/OutputNumber";
 
 const confirmModal = Modal.confirm;
 
@@ -113,9 +114,9 @@ class Rooms extends Component {
       render: (field, row) => (
         <div style={{textAlign: 'center'}}>
           <p>Giá 1 đêm</p>
-          <p>{row.roomDatePrice} đ</p>
+          <OutputNumber value={row.roomDatePrice} unit="đ" />
           <p>Giá dài ngày</p>
-          <p>{row.roomMonthPrice} đ</p>
+          <OutputNumber value={row.roomMonthPrice} unit="đ" />
         </div>
       ),
       width: '10%'
