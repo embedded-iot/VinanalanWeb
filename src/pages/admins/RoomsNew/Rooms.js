@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import AddRoom from "./AddRoom";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import * as CONSTANTS from '../../Constants';
+import {getHomes} from "../Homes/HomesServices";
 
 const confirmModal = Modal.confirm;
 
@@ -44,7 +45,8 @@ class Rooms extends Component {
       isShowAddOrEdit: false,
       selected: {},
       homeId: '',
-      homeName: ''
+      homeName: '',
+      filterHome: []
     }
   }
 
@@ -54,6 +56,7 @@ class Rooms extends Component {
       this.setState({ homeId: homeId, homeName: homeName}, () => this.onChange());
     } else {
       this.onChange();
+      this.getAllHome();
     }
   }
 
@@ -63,6 +66,22 @@ class Rooms extends Component {
       this.setState({homeId: nextProps.match.params.homeId}, () => this.onChange());
     }
   }
+
+  getAllHome = () => {
+    const params = {
+      limit: 100,
+      skip: 0
+    };
+    getHomes(params, response => {
+      if (response.data.length) {
+        const filterHome = response.data.map(home => ({ text: home.homeName, value: home.id}));
+        this.setState({filterHome})
+      }
+    }, error => {
+    });
+  };
+
+  filterHome= [];
 
   columns = [
     {
@@ -81,9 +100,10 @@ class Rooms extends Component {
       )
     }, {
       title: "Tòa nhà",
-      dataIndex: 'homes',
+      dataIndex: 'homeId',
       centered: true,
-      render: homes => <span>{homes && homes.homeName ? homes.homeName : '-'}</span>,
+      render: (homeId, roomDetails) => <span>{roomDetails.homes && roomDetails.homes.homeName ? roomDetails.homes.homeName : '-'}</span>,
+      filters: this.filterHome,
       width: '15%'
     }, {
       title: "Giá phòng",
@@ -210,7 +230,7 @@ class Rooms extends Component {
   };
 
   onChange = (pagination = {}, filters = {}, sorter = {}, extra, searchText) => {
-    const { homeId } = this.state;
+    let { homeId } = this.state;
     const tableSettings = {
       ...this.state.tableSettings,
       pagination,
@@ -221,6 +241,9 @@ class Rooms extends Component {
     const { dispatch } = this.props;
 
     let isActive = filters.isActive;
+    if (filters.homeId) {
+      homeId = filters.homeId
+    }
     let params = {
       limit: pagination.pageSize || 10,
       skip: (pagination.current - 1) * pagination.pageSize || 0,
@@ -277,7 +300,8 @@ class Rooms extends Component {
 
   render() {
     const { intl } = this.props;
-    const { tableSettings, dataSource, isShowAddOrEdit, selected, homeId, homeName } = this.state;
+    const { tableSettings, dataSource, isShowAddOrEdit, selected, homeId, homeName, filterHome } = this.state;
+    this.columns[1].filters = filterHome;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
