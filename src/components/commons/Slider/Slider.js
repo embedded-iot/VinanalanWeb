@@ -3,6 +3,7 @@ import {Slider as SliderAntd, Icon, Tooltip} from "antd";
 import "./Slider.scss"
 import PropTypes from 'prop-types';
 import {FormattedMessage} from "react-intl";
+import OutputNumber from "../OutputNumber/OutputNumber";
 
 const STRINGS = {
   REQUIRED_ALERT: <FormattedMessage id="REQUIRED_ALERT" />,
@@ -37,9 +38,9 @@ class Slider extends Component {
           </div>)
         }
         <div className="slider-bar">
-          <span>{unit && !!min ? `${min} ${unit}`: min}</span>
+          <span><OutputNumber value={min} unit={!!min ? unit : ''} /> </span>
           <SliderAntd range min={min} max={max} step={step} defaultValue={ defaultValue || [min, max]} onChange={this.onChange} onAfterChange={this.onAfterChange} />
-          <span>{unit && !!max ? `${max} ${unit}`: max}</span>
+          <span><OutputNumber value={max} unit={!!max ? unit : ''} /> </span>
         </div>
 
         {isSubmitted && isRequired && !value && <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>}

@@ -9,6 +9,14 @@
     .ant-slider {
       flex-grow: 1;
     }
+    .output-number-wrapper {
+      .contents {
+        margin: 0;
+        & > span {
+          padding: 0;
+        }
+      }
+    }
   }
   .ant-slider-rail {
     background: #ccc !important;
