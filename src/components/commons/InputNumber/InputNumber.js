@@ -15,12 +15,14 @@ class InputNumber extends Component {
   }
 
   onChange = (e) => {
-    const { value } = e.target;
+    let { value } = e.target;
     const {type} = this.props;
     let reg = /^-?([0-9]+)(\.[0-9]*)?$/;
     if (type === 'phone') {
       reg = /^-?([0-9]+)(\.[0-9]*){0}$/;
     }
+    value = value.replace(/(,*)/g, '');
+    console.log('value', value);
     if ((!Number.isNaN(value) && reg.test(value)) || value === '' || value === '-') {
       if (type === 'phone') {
         this.props.onChange(this.props.name, value);
@@ -29,6 +31,14 @@ class InputNumber extends Component {
       }
     }
   }
+
+  formatterValue = value => {
+    const {type} = this.props;
+    if (type === 'phone') {
+      return value;
+    }
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
 
   render() {
     const { isSubmitted, type, title, value, defaultValue, maxLength, min, max, disabled, isRequired, placeholder, titleInfo, placeholderInfo, description} = this.props;
@@ -43,7 +53,7 @@ class InputNumber extends Component {
         </div>}
         {/*<InputNumberAntd value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder} onChange={ this.handleOnChange } />*/}
         <Input
-          value={value} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder}
+          value={ this.formatterValue(value)} defaultValue={defaultValue} min={min} max={max} disabled={disabled} placeholder={placeholder}
           onChange={this.onChange}
           maxLength={type === 'phone' ? 10 : (maxLength || 20)}
         />
