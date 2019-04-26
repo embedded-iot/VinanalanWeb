@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import AddRoom from "./AddRoom";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import * as CONSTANTS from '../../Constants';
+import {convertDatetimeToString} from "../../../utils/utils";
 import {getHomes} from "../Homes/HomesServices";
 import OutputNumber from "../../../components/commons/OutputNumber/OutputNumber";
 
@@ -17,7 +18,7 @@ const confirmModal = Modal.confirm;
 const STRINGS = {
   ROOMS: <FormattedMessage id="ROOMS" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
-  CREATE_BY: <FormattedMessage id="CREATE_BY" />,
+  UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_ROOMS: <FormattedMessage id="TYPES_OFF_ROOMS" />,
@@ -156,6 +157,15 @@ class Rooms extends Component {
       align: 'center',
       width: '10%',
     }, {
+      title: STRINGS.UPDATE_BY,
+      dataIndex: 'update_by',
+      render: (update_by = {}, { create_at }) => (
+        <Tooltip title={update_by.userName || update_by.email ? <div className="text-center"><p>{update_by.userName}</p>{update_by.email}</div> : ''}>
+          <span>{ create_at ? convertDatetimeToString(create_at) : '-'}</span>
+        </Tooltip>
+      ),
+      width: '10%'
+    }, {
       title: STRINGS.ACTION,
       dataIndex: 'id',
       render: id => {
@@ -173,7 +183,7 @@ class Rooms extends Component {
           </div>
         )
       },
-      width: '15%',
+      width: '10%',
       align: 'center'
     }
   ];

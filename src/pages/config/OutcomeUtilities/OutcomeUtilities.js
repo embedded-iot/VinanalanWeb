@@ -10,12 +10,14 @@ import AddOutcomeUtility from "./AddOutcomeUtility";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import ViewOutcomeUtility from "./ViewOutcomeUtility";
 import * as CONSTANTS from '../../Constants';
+import {convertDatetimeToString} from "../../../utils/utils";
 
 
 const confirmModal = Modal.confirm;
 
 const STRINGS = {
   OUTCOME_UTILITIES: <FormattedMessage id="OUTCOME_UTILITIES" />,
+  UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_UTILITIES: <FormattedMessage id="TYPES_OFF_UTILITIES" />,
@@ -73,6 +75,15 @@ class OutcomeUtilities extends Component {
       filters: CONSTANTS.STATUS,
       width: '10%',
     }, {
+      title: STRINGS.UPDATE_BY,
+      dataIndex: 'update_by',
+      render: (update_by = {}, { create_at }) => (
+        <Tooltip title={update_by.userName || update_by.email ? <div className="text-center"><p>{update_by.userName}</p>{update_by.email}</div> : ''}>
+          <span>{ create_at ? convertDatetimeToString(create_at) : '-'}</span>
+        </Tooltip>
+      ),
+      width: '10%'
+    }, {
       title: STRINGS.ACTION,
       dataIndex: 'id',
       render: id => {
@@ -90,7 +101,7 @@ class OutcomeUtilities extends Component {
           </div>
         )
       },
-      width: '20%',
+      width: '10%',
       align: 'center'
     }
   ];

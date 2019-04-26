@@ -10,6 +10,7 @@ import AddHomeCatalog from "./AddHomeCatalog";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import ViewHomeCatalog from "./ViewHomeCatalog";
 import * as CONSTANTS from '../../Constants';
+import {convertDatetimeToString} from "../../../utils/utils";
 
 const confirmModal = Modal.confirm;
 
@@ -60,17 +61,20 @@ class HomeCatalog extends Component {
       title: STRINGS.DESCRIPTION,
       dataIndex: 'catalogDescription'
     }, {
-      title: STRINGS.UPDATE_BY,
-      dataIndex: 'update_by',
-      width: '10%',
-      render: update_by => typeof update_by === "object" ? update_by.userName : '-',
-      align: 'center'
-    }, {
       title: STRINGS.STATUS,
       dataIndex: 'isActive',
       render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
       filters: CONSTANTS.STATUS,
       width: '10%',
+    }, {
+      title: STRINGS.UPDATE_BY,
+      dataIndex: 'update_by',
+      render: (update_by = {}, { create_at }) => (
+        <Tooltip title={update_by.userName || update_by.email ? <div className="text-center"><p>{update_by.userName}</p>{update_by.email}</div> : ''}>
+          <span>{ create_at ? convertDatetimeToString(create_at) : '-'}</span>
+        </Tooltip>
+      ),
+      width: '10%'
     }, {
       title: STRINGS.ACTION,
       dataIndex: 'id',
@@ -89,7 +93,7 @@ class HomeCatalog extends Component {
           </div>
         )
       },
-      width: '20%',
+      width: '10%',
       align: 'center'
     }
   ];

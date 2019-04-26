@@ -10,6 +10,7 @@ import AddHome from "./AddHome";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
 import ViewHome from "./ViewHome";
 import * as CONSTANTS from '../../Constants';
+import {convertDatetimeToString} from "../../../utils/utils";
 import FilterLocationHome from "./HomeComponents/FilterLocationHome";
 
 const confirmModal = Modal.confirm;
@@ -17,7 +18,7 @@ const confirmModal = Modal.confirm;
 const STRINGS = {
   HOMES: <FormattedMessage id="HOMES" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
-  CREATE_BY: <FormattedMessage id="CREATE_BY" />,
+  UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   TYPES_OFF_HOMES: <FormattedMessage id="TYPES_OFF_HOMES" />,
@@ -66,17 +67,6 @@ class Homes extends Component {
       render: homeCatalog => homeCatalog && homeCatalog.catalogName ? homeCatalog.catalogName : '-',
       width: '10%'
     }, {
-      title: "Ngày tạo",
-      dataIndex: 'create_at',
-      render: create_at => {
-        if (create_at) {
-          const day = new Date(create_at);
-          return day.getDate() + '-' + (day.getMonth() + 1) + '-' + day.getFullYear();
-        }
-        return '-'
-      },
-      width: '6%'
-    }, {
       title: "Người quản trị",
       dataIndex: 'manager',
       render: manager => {
@@ -113,6 +103,15 @@ class Homes extends Component {
       render: isActive => isActive ? STRINGS.ACTION_ACTIVE : STRINGS.ACTION_DEACTIVE,
       filters: CONSTANTS.STATUS,
       width: '10%',
+    }, {
+      title: STRINGS.UPDATE_BY,
+      dataIndex: 'update_by',
+      render: (update_by = {}, { create_at }) => (
+        <Tooltip title={update_by.userName || update_by.email ? <div className="text-center"><p>{update_by.userName}</p>{update_by.email}</div> : ''}>
+          <span>{ create_at ? convertDatetimeToString(create_at) : '-'}</span>
+        </Tooltip>
+      ),
+      width: '10%'
     }, {
       title: STRINGS.ACTION,
       dataIndex: 'id',
