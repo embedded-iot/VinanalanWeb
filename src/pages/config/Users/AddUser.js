@@ -138,7 +138,7 @@ class AddUser extends Component {
       }
 
       Services.editUser(
-        selected,
+        { ...selected, userId: user.id },
         response => {
           dispatch(spinActions.hideSpin());
           this.openNotification(

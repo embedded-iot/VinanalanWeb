@@ -73,10 +73,10 @@ class Users extends Component {
     {
       title: STRINGS.USER_FULL_NAME,
       dataIndex: 'userName',
-      width: '15%',
+      width: '15%'
     }, {
       title: STRINGS.EMAIL,
-      dataIndex: 'email',
+      dataIndex: 'email'
     }, {
       title: STRINGS.USER_PERMISSION,
       dataIndex: 'role',
