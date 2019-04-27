@@ -18,6 +18,7 @@ const confirmModal = Modal.confirm;
 const STRINGS = {
   ROOMS: <FormattedMessage id="ROOMS" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+  BACK_HOMES: <FormattedMessage id="BACK_HOMES" />,
   UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
@@ -327,8 +328,12 @@ class Rooms extends Component {
       <div className="page-wrapper">
         <div className="page-headding">
           <span>
-            { !!homeId && <span style={{cursor: 'pointer', marginRight: '15px'}} onClick={this.goToHomePage}><Icon type="double-left" /></span> }
-            { !homeId ? intl.formatMessage({ id: 'ROOMS' }) : intl.formatMessage({ id: 'ROOMS' }) + ` ( Tòa nhà ${homeName} )`}
+            { !!homeId && (
+              <Tooltip title={STRINGS.BACK_HOMES}>
+                <span style={{cursor: 'pointer', marginRight: '15px'}} onClick={this.goToHomePage}><Icon type="double-left" /></span>
+              </Tooltip>
+            ) }
+            { !homeId ? intl.formatMessage({ id: 'ROOMS' }) : intl.formatMessage({ id: 'ROOMS' }) + ` ${homeName}`}
           </span>
           <ButtonList list={buttonList} />
         </div>

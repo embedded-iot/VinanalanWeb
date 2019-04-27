@@ -47,7 +47,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
                 : <Redirect to='/Login'/>
         )}/>
     )
-}
+};
 
 const Protected = (props) => <div>
     <Switch>
@@ -88,7 +88,24 @@ const Protected = (props) => <div>
 
         <Route component={PageNotFound}></Route>
     </Switch>
-</div>
+</div>;
+
+
+const ContentWrapper = (props) =>{
+    const { location } = props;
+    console.log(location.pathname);
+    const hideLeftMenu = location.pathname === '/Login';
+    return (
+      <div className={"content-container" + (hideLeftMenu ? ' hide-left-menu': '')}>
+          <Switch>
+              <Route exact path="/Login" component={Login}/>
+              <Route path="/Register" component={Register}/>
+              <Route path="/ForgotPw" component={ForgotPW}/>
+              <PrivateRoute component={Protected}/>
+          </Switch>
+      </div>
+    );
+};
 
 const Routes = (props) => {
     return (
@@ -99,14 +116,7 @@ const Routes = (props) => {
                 <ConfirmModal/>
                 <HeaderAdmin/>
                 <LeftSideBar/>
-                <div className="content-container">
-                    <Switch>
-                        <Route exact path="/Login" component={Login}/>
-                        <Route path="/Register" component={Register}/>
-                        <Route path="/ForgotPw" component={ForgotPW}/>
-                        <PrivateRoute component={Protected}/>
-                    </Switch>
-                </div>
+                <ContentWrapper location={location} />
             </div>
         </Router>
     );

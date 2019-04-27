@@ -121,7 +121,8 @@
 }
 
 
-/* Small devices (portrait tablets and large phones, 600px and down) */
+/*
+!* Small devices (portrait tablets and large phones, 600px and down) *!
 @media only screen and (max-width: 600px) {
   .page-content {
     width: 100%;
@@ -153,7 +154,7 @@
   }
 }
 
-/*devices (portrait tablets and large phones, 600px and up 1170px) */
+!*devices (portrait tablets and large phones, 600px and up 1170px) *!
 @media only screen and (min-width: 600px) {
   .page-content {
     min-width: 400px;
@@ -207,4 +208,4 @@
       }
     }
   }
-}
+}*/

@@ -1,12 +1,15 @@
 $menu-size: 230px;
 .left-side-bar {
+  position: fixed;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
   background-image: linear-gradient(174deg, #2c2d32, #53535b);
-  z-index: 100;
+  z-index: 23;
   width: $menu-size;
   .branch-box {
     height: 56px;
     border-bottom: solid 1px #4c4c4c;
-    position: fixed;
     width: $menu-size;
     .ic-logo {
       height: 55px;
@@ -15,9 +18,6 @@ $menu-size: 230px;
   }
   .menu-wrapper {
     padding-top: 6px;
-    position: fixed;
-    z-index: 1;
-    width: $menu-size;
     top: 63px;
     .menu-item {
       height: 32px;

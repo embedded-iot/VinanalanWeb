@@ -92,15 +92,15 @@ body,
   }
 
   #content {
-    display: flex;
-    flex-flow: row wrap;
-    min-width: 1350px;
+    min-width: 1330px;
     .content-container {
       min-height: 100vh;
-      flex-grow: 1;
       padding-top: 56px;
       background: #f3f3f3;
-      width: calc(100% - 250px);
+      margin-left: 230px;
+      &.hide-left-menu {
+        margin-left: 0;
+      }
     }
   }
 

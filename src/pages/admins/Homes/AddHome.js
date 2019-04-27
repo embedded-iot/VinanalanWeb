@@ -650,9 +650,9 @@ class AddHome extends Component {
               <OutputText title="Số điện thoại" value={phoneNumber}/>
               <OutputText title="Email" value={email}/>
             </div>
-            <div className='button-list-wrapper'>
-              <ButtonList list={this.buttonListOne}/>
-            </div>
+          </div>
+          <div className='button-list-wrapper'>
+            <ButtonList list={this.buttonListOne}/>
           </div>
         </div>
         <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>

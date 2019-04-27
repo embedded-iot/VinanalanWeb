@@ -87,6 +87,8 @@
     .ant-table-tbody {
       .ant-table-row {
         border-radius: 4px;
+        word-break: break-word;
+        word-wrap: break-word;
         &:hover {
           td {
             background: transparent;
