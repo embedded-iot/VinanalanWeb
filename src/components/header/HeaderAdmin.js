@@ -76,9 +76,9 @@ class HeaderAdmin extends Component {
   render() {
     const { username, email, image_profile } = this.state;
     const urlPage = window.location.pathname.toLowerCase();
-
+    const user = JSON.parse(localStorage.getItem("user"));
     return (
-      <div className="header-session">
+      <div className="header-session" style={{display: user ? 'block' : 'none'}}>
         <div className="main-header">
           <div className="header-contents">
             {/*<button className="locale-box" onClick={this.changeLanguage}>
