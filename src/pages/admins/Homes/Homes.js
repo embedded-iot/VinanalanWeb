@@ -184,7 +184,8 @@ class Homes extends Component {
         centered: true,
         cancelText: intl.formatMessage({ id: 'NO' }),
         okType: 'danger',
-        onOk: () => {
+      autoFocusButton: null,
+      onOk: () => {
           dispatch(spinActions.showSpin());
           Services.deleteHome(id, response => {
             dispatch(spinActions.hideSpin());

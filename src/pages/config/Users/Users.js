@@ -178,6 +178,7 @@ class Users extends Component {
       centered: true,
       cancelText: intl.formatMessage({ id: 'NO' }),
       okType: 'danger',
+      autoFocusButton: null,
       onOk: () => {
         dispatch(spinActions.showSpin());
         Services.deleteUser(id, response => {

@@ -135,6 +135,7 @@ class HomeCatalog extends Component {
       centered: true,
       cancelText: intl.formatMessage({ id: 'NO' }),
       okType: 'danger',
+      autoFocusButton: null,
       onOk: () => {
         dispatch(spinActions.showSpin());
         Services.deleteHomeCatalog(id, response => {
