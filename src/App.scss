@@ -270,30 +270,31 @@ body,
   margin-left: 10px;
 }
 
+
 .ant-btn {
   border-radius: 100px !important;
-  border: solid 1px #4a4a4a !important;
-  color: #4a4a4a !important;
+  //border: solid 1px #4a4a4a !important;
+  //color: #4a4a4a !important;
   min-width: 100px;
-  &:hover {
-    color: #ffffff !important;
-    background-color: #4a4a4a !important;
-    border: 1px solid #4a4a4a !important;
+  &:hover, &:focus {
+    //color: #ffffff !important;
+    //background-color: #4a4a4a !important;
+    //border: 1px solid #4a4a4a !important;
   }
 }
 .ant-btn-primary {
-  color: #ffffff !important;
-  background-color: #000000 !important;
-  border: 1px solid #000 !important;
-  &:hover {
-    color: #000 !important;
+  //color: #ffffff !important;
+  //background-color: #000000 !important;
+  //border: 1px solid #000 !important;
+  &:hover, &:focus {
+    color: #1890ff !important;
     background-color: #ffffff !important;
-    border: 1px solid #000 !important;
+    border: 1px solid #1890ff !important;
   }
   &[disabled] {
-    background-color: #cccccc !important;
-    color: #ffffff !important;
-    border: none !important;
+    //background-color: #cccccc !important;
+    //color: #ffffff !important;
+    //border: none !important;
   }
 }
 
@@ -301,7 +302,7 @@ body,
   color: #ffffff !important;
   background-color: #f5222d !important;
   border: 1px solid #f5222d !important;
-  &:hover {
+  &:hover, &:focus {
     color: #f5222d !important;
     background-color: #ffffff !important;
     border: 1px solid #f5222d !important;
