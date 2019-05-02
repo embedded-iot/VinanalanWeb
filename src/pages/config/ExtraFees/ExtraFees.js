@@ -221,12 +221,14 @@ class ExtraFees extends Component {
 
   render() {
     const { tableSettings, dataSource, isShowAddOrEdit, isShowViewDetails, selected} = this.state;
+    const { intl } = this.props;
     const TableConfig = {
       columns: this.columns,
       dataSource: dataSource,
       pagination: tableSettings.pagination,
       onChange: this.onChange,
-      tableSettings: tableSettings
+      tableSettings: tableSettings,
+      placeholder: intl.formatMessage({id: 'ENTER_KEYWORD_SEARCH_FOR_FEES'})
     };
     const buttonList = [
       { title: "Thêm", type: "primary",  icon: "plus", onClick: () => this.onChangeVisible()}

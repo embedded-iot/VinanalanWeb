@@ -1,6 +1,7 @@
 import {Button, Input, Table, Select } from 'antd';
 import React, {Component} from "react";
 import './TableCustom.scss'
+import {injectIntl} from "react-intl";
 const Option = Select.Option;
 const Search = Input.Search;
 
@@ -13,7 +14,8 @@ const defaultProps = {
   loading: false,
   onChange: () => { },
   isHideInputSearch: false,
-  isHideTableHeader: false
+  isHideTableHeader: false,
+  placeholder: null
 }
 
 const pageSizes = [
@@ -22,7 +24,7 @@ const pageSizes = [
   { title: "20 hàng", value: 20},
 ];
 
-export default class TableCustom extends Component {
+class TableCustom extends Component {
 
   constructor(props) {
     super(props);
@@ -54,12 +56,12 @@ export default class TableCustom extends Component {
 
   render() {
     const config = { ...defaultProps, ...this.props, onChange: this.onChange };
-    const { pagination } = this.props;
+    const { pagination, intl } = this.props;
     return (
       <div className="table-custom-wrapper">
         <div className="table-header" style={{display: config.isHideTableHeader ? 'none': ''}}>
           <Search
-            placeholder="Nhập thông tin tìm kiếm"
+            placeholder={ config.placeholder ? config.placeholder : intl.formatMessage({id: 'ENTER_INPUT_SEARCH'})}
             onSearch={this.onSearchText}
             style={{display: config.isHideInputSearch ? 'none': ''}}
           />
@@ -78,3 +80,4 @@ export default class TableCustom extends Component {
   }
 }
 
+export default injectIntl(TableCustom);

@@ -295,6 +295,13 @@
   "SEARCH_HOME": "Tìm khách sạn",
   "SETTING_HOME": "Cài đặt khách sạn",
   "SEARCH_ROOMS": "Tìm phòng",
+  "ENTER_INPUT_SEARCH": "Nhập thông tin tìm kiếm",
+"ENTER_KEYWORD_SEARCH_FOR_FEES": "Nhập keyword tìm kiếm theo loại phụ phí hoặc mô tả",
+  "ENTER_KEYWORD_SEARCH_FOR_FURNITURES": "Nhập keyword tìm kiếm theo loại thiết bị hoặc mô tả",
+  "ENTER_KEYWORD_SEARCH_FOR_UTILITIES": "Nhập keyword tìm kiếm theo loại tiện ích hoặc mô tả",
+  "ENTER_INPUT_SEARCH_FOR_ACCOUNTS": "Nhập keyword tìm kiếm theo họ và tên, email hoặc số điện thoại",
+  "ENTER_INPUT_SEARCH_FOR_ROOM_CATALOG": "Nhập keyword tìm kiếm theo loại tòa phòng hoặc mô tả",
+  "ENTER_INPUT_SEARCH_FOR_HOME_CATALOG": "Nhập keyword tìm kiếm theo loại tòa nhà hoặc mô tả",
   "EMPTY_IMAGE_IN_HOME": "Không có hình ảnh nào trong tòa nhà \"{homeName}\". Chọn nút \"Cài đặt tòa nhà\" để thêm hình ảnh!",
   "STT": "Stt"
 }
