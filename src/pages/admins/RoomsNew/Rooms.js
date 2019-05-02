@@ -160,9 +160,9 @@ class Rooms extends Component {
     }, {
       title: STRINGS.UPDATE_BY,
       dataIndex: 'update_by',
-      render: (update_by = {}, { create_at }) => (
+      render: (update_by = {}, { update_at }) => (
         <Tooltip title={update_by.userName || update_by.email ? <div className="text-center"><p>{update_by.userName}</p>{update_by.email}</div> : ''}>
-          <span>{ create_at ? convertDatetimeToString(create_at) : '-'}</span>
+          <span>{ update_at ? convertDatetimeToString(update_at) : '-'}</span>
         </Tooltip>
       ),
       width: '10%'
