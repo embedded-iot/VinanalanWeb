@@ -149,31 +149,31 @@ class Users extends Component {
   };
 
   editIncomeUtility = (id) => {
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
-    if (!selectedUtility) {
+    const selectedUser = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUser) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowAddOrEdit: !this.state.isShowAddOrEdit })
+    this.setState({ selected: selectedUser, isShowAddOrEdit: !this.state.isShowAddOrEdit })
   }
 
   viewIncomeUtility = (id) => {
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
-    if (!selectedUtility) {
+    const selectedUser = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUser) {
       return;
     }
-    this.setState({ selected: selectedUtility, isShowViewDetails: !this.state.isShowViewDetails })
+    this.setState({ selected: selectedUser, isShowViewDetails: !this.state.isShowViewDetails })
   }
 
   deleteIncomeUtility = (id) => {
     const { intl, dispatch } = this.props;
 
-    const selectedUtility = this.state.dataSource.find(utility => utility.id === id);
-    if (!selectedUtility) {
+    const selectedUser = this.state.dataSource.find(utility => utility.id === id);
+    if (!selectedUser) {
       return;
     }
     confirmModal({
       title: intl.formatMessage({ id: 'DELETE_USER_QUESTION' }),
-      content: <b>{selectedUtility.catalogName}</b>,
+      content: <b>{selectedUser.userName}</b>,
       okText: intl.formatMessage({ id: 'YES' }),
       centered: true,
       cancelText: intl.formatMessage({ id: 'NO' }),
