@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import {Modal, Row, Col} from "antd";
 import {FormattedMessage} from "react-intl";
-import InputTextArea from "../../../components/commons/InputTextArea/InputTextArea";
 
 const STRINGS = {
   VIEW_EXTRA_FEE: <FormattedMessage id="VIEW_EXTRA_FEE" />,

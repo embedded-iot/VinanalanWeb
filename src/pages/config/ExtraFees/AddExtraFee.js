@@ -9,6 +9,7 @@ import * as CONSTANTS from '../../Constants';
 import UploadImageList from "../../../components/commons/UploadImageList/UploadImageList";
 import * as UploadService from "../../../components/commons/UploadService";
 import InputTextArea from "../../../components/commons/InputTextArea/InputTextArea";
+import InputText from "../../../components/commons/InputText/InputText";
 
 const Option = Select.Option;
 
@@ -44,24 +45,6 @@ class AddExtraFee extends Component {
       fileList: [],
       isSubmitted: false
     };
-  }
-
-  onChangeName = (e) => {
-    const { value } = e.target;
-    const selected = {...this.state.selected, name: value };
-    this.setState({ selected: selected});
-  }
-
-  onChangeUnit = (e) => {
-    const { value } = e.target;
-    const selected = {...this.state.selected, unit: value };
-    this.setState({ selected: selected});
-  }
-
-  onChangeIconLink = (e) => {
-    const { value } = e.target;
-    const selected = {...this.state.selected, icon_link: value };
-    this.setState({ selected: selected});
   }
 
   setStatus = status => {
@@ -186,7 +169,7 @@ class AddExtraFee extends Component {
         <Row>
           <Col span={8}>{STRINGS.EXTRA_FEE_NAME}<span className="is-required">*</span></Col>
           <Col span={16}>
-            <Input value={name} onChange={this.onChangeName} />
+            <InputText name="name" value={name} onChange={this.onChangeInput} />
             { isSubmitted && !name && <span style={{color: 'red'}}>{STRINGS.REQUIRED_ALERT}</span>}
           </Col>
         </Row>
@@ -204,7 +187,7 @@ class AddExtraFee extends Component {
         <Row>
           <Col span={8}>{STRINGS.UNIT}</Col>
           <Col span={16}>
-            <Input value={unit} onChange={this.onChangeUnit} />
+            <InputText name="unit" value={unit} onChange={this.onChangeInput} />
           </Col>
         </Row>
         <Row>
