@@ -17,6 +17,7 @@ const STRINGS = {
   EDIT_EXTRA_FEE: <FormattedMessage id="EDIT_EXTRA_FEE" />,
   EXTRA_FEE_NAME: <FormattedMessage id="EXTRA_FEE_NAME" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+  UNIT: <FormattedMessage id="UNIT" />,
   STATUS: <FormattedMessage id="STATUS" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
@@ -35,6 +36,7 @@ class AddExtraFee extends Component {
         name: '',
         description: '',
         icon_link: '',
+        unit: '',
         isActive: true,
         ...props.selected
       },
@@ -47,6 +49,12 @@ class AddExtraFee extends Component {
   onChangeName = (e) => {
     const { value } = e.target;
     const selected = {...this.state.selected, name: value };
+    this.setState({ selected: selected});
+  }
+
+  onChangeUnit = (e) => {
+    const { value } = e.target;
+    const selected = {...this.state.selected, unit: value };
     this.setState({ selected: selected});
   }
 
@@ -78,6 +86,7 @@ class AddExtraFee extends Component {
     const data = {
       name: selected.name,
       description: selected.description,
+      unit: selected.unit,
       icon_link: selected.icon_link,
       isActive: selected.isActive,
       userId: user.id
@@ -160,7 +169,7 @@ class AddExtraFee extends Component {
 
   render() {
     const {selected, isEdit, isSubmitted, fileList } = this.state;
-    const { name, description, icon_link, isActive} = selected;
+    const { name, description, icon_link, isActive, unit} = selected;
     const { onChangeVisible} = this.props;
     const [...status] = CONSTANTS.STATUS;
     return (
@@ -190,6 +199,12 @@ class AddExtraFee extends Component {
               style={{margin: 0}}
               onChange={this.onChangeInput}
               />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>{STRINGS.UNIT}</Col>
+          <Col span={16}>
+            <Input value={unit} onChange={this.onChangeUnit} />
           </Col>
         </Row>
         <Row>

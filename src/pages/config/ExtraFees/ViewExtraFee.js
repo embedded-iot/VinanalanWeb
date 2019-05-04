@@ -8,6 +8,7 @@ const STRINGS = {
   VIEW_EXTRA_FEE: <FormattedMessage id="VIEW_EXTRA_FEE" />,
   EXTRA_FEE_NAME: <FormattedMessage id="EXTRA_FEE_NAME" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
+  UNIT: <FormattedMessage id="UNIT" />,
   STATUS: <FormattedMessage id="STATUS" />,
   UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
@@ -17,7 +18,7 @@ const STRINGS = {
 
 const ViewExtraFee = (props) => {
   const { onChangeVisible, selected} = props;
-  const { name, description, icon_link, isActive} = selected;
+  const { name, description, icon_link, isActive, unit } = selected;
   return (
     <Modal title={ STRINGS.VIEW_EXTRA_FEE}
            className="modal-view-details"
@@ -36,6 +37,12 @@ const ViewExtraFee = (props) => {
         <Col span={8}>{ STRINGS.DESCRIPTION}</Col>
         <Col span={16}>
           {description || '-'}
+        </Col>
+      </Row>
+      <Row>
+        <Col span={8}>{ STRINGS.UNIT}</Col>
+        <Col span={16}>
+          {unit || '-'}
         </Col>
       </Row>
       <Row>
