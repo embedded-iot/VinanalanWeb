@@ -15,9 +15,9 @@ class InputText extends Component {
   }
 
   render() {
-    const { title, isRequired, value, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled} = this.props;
+    const { title, isRequired, value, placeholder, titleInfo, placeholderInfo, isSubmitted, disabled, style} = this.props;
     return (
-      <div className="input-text-wrapper" style={ !title ? {margin: 0} : {}}>
+      <div className="input-text-wrapper" style={ !title ? {margin: 0, ...style} : {...style}}>
         {
           !!title && (<div className="heading">{ title }
             { isRequired && <span className="is-required">*</span> }

@@ -9,7 +9,7 @@ class OutputText extends Component {
   render() {
     const { title, isRequired, value, titleInfo, placeholderInfo} = this.props;
     return (
-      <div className="input-text-wrapper">
+      <div className="output-text-wrapper">
         <div className="heading">{ title }
           { isRequired && <span className="is-required">*</span> }
           {

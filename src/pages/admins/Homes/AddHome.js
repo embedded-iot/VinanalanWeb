@@ -35,6 +35,7 @@ import ViewTopUtilities from "./HomeComponents/ViewTopUtilities";
 import {getHomeDetails} from "./HomesServices";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
+import InputDatePicker from "../../../components/commons/InputDatePicker/InputDatePicker";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -79,6 +80,8 @@ class AddHome extends Component {
         numRoom: 0,
         hotline: '',
         managerId: '',
+        startDate: '',
+        orientation: '',
         isActive: true,
         outcome_service: [],
         income_service: [],
@@ -470,13 +473,13 @@ class AddHome extends Component {
   render() {
     const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
       outcome_service, income_service, extra_service, loading} = this.state;
-    const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId,
-      isActive} = selected;
+    const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId, isActive, startDate, orientation} = selected;
     const { images, videos} = media;
     const { address_text, country_code, district_code, province_code, ward_code } = address;
     const {phoneNumber, email} = homeManager;
     const {onChangeVisible} = this.props;
     const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
+    const orientations = CONSTANTS.ORIENTATIONS;
     const { isEdit, isView} = this.state;
     let title;
     if (isEdit) {
@@ -489,145 +492,162 @@ class AddHome extends Component {
     return (
       <div className="page-wrapper add-home-page-wrapper">
         <div className="page-headding">
-          {title}
+          {selectedStep === 1 ? homeName : title}
         </div>
         <div className="steps-wrapper" style={{display: (selectedStep === 0 ? 'block' : 'none')}}>
           <div className="group-box">
-            <div className="group-sub-heading">Thông tin "Khách sạn"</div>
+            <div className="group-sub-heading">Thông tin chung</div>
             <div className="group-content">
-              <SubTitle
-                title="Tên chỗ nghỉ của bạn?"
-                titleInfo="Tên này sẽ được hiển thị tới khách hàng khi họ tìm kiếm chỗ nghỉ."
-              />
-              <InputText
-                title="Tên tiếng việt"
-                value={homeName}
-                isSubmitted={isSubmitted}
-                name="homeName"
-                isRequired={true}
-                onChange={this.onChangeInput}
-                disabled={isView}
-              />
-              <DropdownList
-                name="isActive"
-                title="Trạng thái"
-                list={status}
-                value={Number(isActive)}
-                isSubmitted={isSubmitted}
-                isRequired='true'
-                onChange={this.onChangeDropdown}
-                disabled={isView}
-              />
-              <SubTitle title="Loại hình chỗ nghỉ của bạn?" isRequired='true'/>
-              <DropdownList
-                name="homeTypeId"
-                list={homeCatalogs}
-                value={homeTypeId}
-                isSubmitted={isSubmitted}
-                isRequired='true'
-                onChange={this.onChangeDropdown}
-                disabled={isView}
-              />
-              <SubTitle
-                title="Địa chỉ chỗ nghỉ"
-                titleInfo="Địa chỉ chỗ nghỉ của bạn là quan trọng! Vui lòng cung cấp đầy đủ thông tin về địa chỉ chỗ nghỉ của bạn."
-              />
-
               <Row>
-                <Col span={10} style={{width: '500px'}}>
-                  <DropdownInputSearch
-                    title="Quốc gia"
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    list={countries}
-                    value={country_code}
-                    name="country_code"
-                    onChange={this.onChangeAddress}
-                    disabled={isView}
-                  />
-                  <DropdownInputSearch
-                    title="Tỉnh/Thành phố"
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    list={provinces}
-                    value={province_code}
-                    name="province_code"
-                    onChange={this.onChangeAddress}
-                    disabled={isView}
-                  />
-                  <DropdownInputSearch
-                    title="Quận/Huyện"
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    list={districts}
-                    value={district_code}
-                    name="district_code"
-                    onChange={this.onChangeAddress}
-                    disabled={isView}
-                  />
-                  <DropdownInputSearch
-                    title="Tên đường, phường, xã"
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    list={wards}
-                    value={ward_code}
-                    name="ward_code"
-                    onChange={this.onChangeAddress}
-                    disabled={isView}
-                  />
-                  <InputTextArea
-                    title="Số nhà, tầng, tòa nhà,..."
-                    value={address_text}
-                    name="address_text"
-                    onChange={this.onChangeAddress}
-                    disabled={isView}
-                  />
+                <Col span={12}>
+                  <Row>
+                    <InputText
+                      title="Tên"
+                      value={homeName}
+                      isSubmitted={isSubmitted}
+                      name="homeName"
+                      isRequired={true}
+                      onChange={this.onChangeInput}
+                      disabled={isView}
+                      style={{maxWidth: 'none'}}
+
+                    />
+                  </Row>
+                  <Row>
+                    <Col span={12} className="padding-right-30">
+                      <DropdownList
+                        name="isActive"
+                        title="Trạng thái"
+                        list={status}
+                        value={Number(isActive)}
+                        isSubmitted={isSubmitted}
+                        isRequired='true'
+                        onChange={this.onChangeDropdown}
+                        disabled={isView}
+                      />
+                      <DropdownList
+                        title="Loại hình"
+                        name="homeTypeId"
+                        list={homeCatalogs}
+                        value={homeTypeId}
+                        isSubmitted={isSubmitted}
+                        isRequired='true'
+                        onChange={this.onChangeDropdown}
+                        disabled={isView}
+                      />
+                      <DropdownList
+                        title="Hướng"
+                        name="orientation"
+                        list={orientations}
+                        value={orientation}
+                        onChange={this.onChangeDropdown}
+                        disabled={isView}
+                      />
+                      <DropdownInputSearch
+                        title="Quốc gia"
+                        isRequired="true"
+                        isSubmitted={isSubmitted}
+                        list={countries}
+                        value={country_code}
+                        name="country_code"
+                        onChange={this.onChangeAddress}
+                        disabled={isView}
+                      />
+
+                      <DropdownInputSearch
+                        title="Quận/Huyện"
+                        isRequired="true"
+                        isSubmitted={isSubmitted}
+                        list={districts}
+                        value={district_code}
+                        name="district_code"
+                        onChange={this.onChangeAddress}
+                        disabled={isView}
+                      />
+
+                    </Col>
+                    <Col span={12} className="padding-left-30">
+                      <InputDatePicker title="Ngày bắt đầu hoạt động"
+                                       name="startDate"
+                                       defaultValue={startDate}
+                                       onChange={this.onChangeInput}
+                      />
+                      <InputNumber
+                        title="Số tầng"
+                        name="numFloor"
+                        value={numFloor}
+                        isRequired="true"
+                        isSubmitted={isSubmitted}
+                        onChange={this.onChangeInput}
+                        disabled={isView}
+                      />
+                      <InputNumber
+                        title="Hot line"
+                        name="hotline"
+                        type="phone"
+                        value={hotline}
+                        isSubmitted={isSubmitted}
+                        isRequired="true"
+                        onChange={this.onChangeInput}
+                        disabled={isView}
+                      />
+                      <DropdownInputSearch
+                        title="Tỉnh/Thành phố"
+                        isRequired="true"
+                        isSubmitted={isSubmitted}
+                        list={provinces}
+                        value={province_code}
+                        name="province_code"
+                        onChange={this.onChangeAddress}
+                        disabled={isView}
+                      />
+                      <DropdownInputSearch
+                        title="Đường/Phường/Xã"
+                        isRequired="true"
+                        isSubmitted={isSubmitted}
+                        list={wards}
+                        value={ward_code}
+                        name="ward_code"
+                        onChange={this.onChangeAddress}
+                        disabled={isView}
+                      />
+                    </Col>
+                    <Col span={24}>
+                      <InputTextArea
+                        title="Địa chỉ chi tiết"
+                        value={address_text}
+                        name="address_text"
+                        onChange={this.onChangeAddress}
+                        disabled={isView}
+                        style={{maxWidth: 'none'}}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
-                <Col span={10}>
+                <Col span={12} className="padding-left-60">
                   { !loading && <GoogleMapSearchBox onChangeLocation={this.onChangeLocation} location={location} disabled={isView}/>}
-                </Col>
-              </Row>
-              <Row >
-                <Col span={10} style={{width: '500px'}}>
-                  <InputNumber
-                    title="Hot line"
-                    name="hotline"
-                    type="phone"
-                    value={hotline}
-                    isSubmitted={isSubmitted}
-                    isRequired="true"
-                    onChange={this.onChangeInput}
-                    disabled={isView}
-                  />
-                  <InputNumber
-                    title="Số tầng"
-                    name="numFloor"
-                    value={numFloor}
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    onChange={this.onChangeInput}
-                    disabled={isView}
-                  />
-                </Col>
-                <Col span={10}>
-                  <InputNumber
-                    title="Vĩ độ"
-                    name="lat"
-                    value={location.lat}
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    onChange={this.onChangeInputLatLong}
-                    disabled={isView}
-                  />
-                  <InputNumber
-                    title="Kinh độ"
-                    name="lng"
-                    value={location.lng}
-                    isRequired="true"
-                    isSubmitted={isSubmitted}
-                    onChange={this.onChangeInputLatLong}
-                    disabled={isView}
-                  />
+                  <Col span={12} className="padding-right-30">
+                    <InputNumber
+                      title="Vĩ độ"
+                      name="lat"
+                      value={location.lat}
+                      isRequired="true"
+                      isSubmitted={isSubmitted}
+                      onChange={this.onChangeInputLatLong}
+                      disabled={isView}
+                    />
+                  </Col>
+                  <Col span={12} className="padding-left-30">
+                    <InputNumber
+                      title="Kinh độ"
+                      name="lng"
+                      value={location.lng}
+                      isRequired="true"
+                      isSubmitted={isSubmitted}
+                      onChange={this.onChangeInputLatLong}
+                      disabled={isView}
+                    />
+                  </Col>
                 </Col>
               </Row>
             </div>
@@ -647,8 +667,14 @@ class AddHome extends Component {
                 onChange={this.onChangeDropdownManager}
                 disabled={isView}
               />
-              <OutputText title="Số điện thoại" value={phoneNumber}/>
-              <OutputText title="Email" value={email}/>
+              <Row>
+                <Col span={2}>
+                  <OutputText title="Số điện thoại" value={phoneNumber}/>
+                </Col>
+                <Col span={8}>
+                  <OutputText title="Email" value={email}/>
+                </Col>
+              </Row>
             </div>
           </div>
           <div className='button-list-wrapper'>
@@ -661,14 +687,12 @@ class AddHome extends Component {
               <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
             </div>
             <div className='home-details'>
-              <div className='home-title'>{homeName}</div>
               <div className='home-description'>{address_text}</div>
+              { !loading && <GoogleMapSearchBox onChangeLocation={this.onChangeLocation} location={location} disabled={true}/>}
             </div>
           </div>
-          <div>
-            {
-              images && images.length > 1 && <ReactSlick list={images}/>
-            }
+          <div className='react-slick-wrapper'>
+            <ReactSlick list={images}/>
           </div>
           { !isView && (
             <Button onClick={this.toggleAddUploadModal}>

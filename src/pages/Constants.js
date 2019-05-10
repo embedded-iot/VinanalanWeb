@@ -26,6 +26,14 @@ const STRINGS = {
   ALL: <FormattedMessage id="ALL" />,
   ACTION_DELETE: <FormattedMessage id="ACTION_DELETE" />,
   DELETE_USER_QUESTION: <FormattedMessage id="DELETE_USER_QUESTION" />,
+  EAST: <FormattedMessage id="EAST" />,
+  EAST_NORTH: <FormattedMessage id="EAST_NORTH" />,
+  EAST_SOUTH: <FormattedMessage id="EAST_SOUTH" />,
+  WEST: <FormattedMessage id="WEST" />,
+  WEST_NORTH: <FormattedMessage id="WEST_NORTH" />,
+  WEST_SOUTH: <FormattedMessage id="WEST_SOUTH" />,
+  SOUTH: <FormattedMessage id="SOUTH" />,
+  NORTH: <FormattedMessage id="NORTH" />,
 }
 
 export const STATUS = [
@@ -34,9 +42,15 @@ export const STATUS = [
   { text: STRINGS.ACTION_DEACTIVE, value: false },
 ]
 
-export const STATUS_NOT_ALL = [
-  { text: STRINGS.ACTION_ACTIVE, value: true },
-  { text: STRINGS.ACTION_DEACTIVE, value: false },
+export const ORIENTATIONS = [
+  { text: STRINGS.EAST, value: 'EAST' },
+  { text: STRINGS.EAST_NORTH, value: 'EAST_NORTH' },
+  { text: STRINGS.EAST_SOUTH, value: 'EAST_SOUTH'},
+  { text: STRINGS.WEST, value: 'WEST' },
+  { text: STRINGS.WEST_NORTH, value: 'WEST_NORTH' },
+  { text: STRINGS.WEST_SOUTH, value: 'WEST_SOUTH' },
+  { text: STRINGS.SOUTH, value: 'SOUTH' },
+  { text: STRINGS.NORTH, value: 'NORTH' },
 ]
 
 export const USER_PERMISSION = [

@@ -11,8 +11,10 @@
   .images-wrapper {
     display: flex;
     margin-bottom: 15px;
+    position: relative;
+    max-height: 500px;
     .home-image {
-      width: 50%;
+      width: 60%;
       height: auto;
       border-radius: 6px;
       padding: 10px 20px;
@@ -27,16 +29,20 @@
     }
     .home-details {
       padding-left: 20px;
-      width: 50%;
-      .home-title {
-        font-weight: bold;
-        font-size: 25px;
-        text-align: center;
-      }
+      width: 40%;
+      display: flex;
       .home-description {
-        font-size: 16px;
-        text-align: center;
-        margin-top: 15px;
+        font-size: 25px;
+        position: absolute;
+        top: -55px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      & > div {
+        flex-grow: 1;
+        & > div {
+          height: 100% !important;
+        }
       }
     }
   }

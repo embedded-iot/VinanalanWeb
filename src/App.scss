@@ -341,7 +341,7 @@ body,
   }
   .group-content {
     border-radius: 6px;
-    padding: 10px 20px;
+    padding: 25px;
     border: 1px solid #40404040;
     min-height: 125px;
     .sub-title {
@@ -375,3 +375,19 @@ body,
   color: #000000 !important;
   cursor: not-allowed !important;
 }
+
+.padding-right-60 {
+  padding-right: 60px !important;
+}
+.padding-right-30 {
+  padding-right: 30px !important;
+}
+
+.padding-left-60 {
+  padding-left: 60px !important;
+}
+
+.padding-left-30 {
+  padding-left: 30px !important;
+}
+
