@@ -8,6 +8,7 @@ const STRINGS = {
   FURNITURE_NAME: <FormattedMessage id="FURNITURE_NAME" />,
   DESCRIPTION: <FormattedMessage id="DESCRIPTION" />,
   STATUS: <FormattedMessage id="STATUS" />,
+  UPDATE_BY: <FormattedMessage id="UPDATE_BY" />,
   ACTION_ACTIVE: <FormattedMessage id="ACTION_ACTIVE" />,
   ACTION_DEACTIVE: <FormattedMessage id="ACTION_DEACTIVE" />,
   CLOSE: <FormattedMessage id="CLOSE" />
@@ -24,6 +25,8 @@ const ViewOutFurniture = (props) => {
            visible={true}
            cancelText={STRINGS.CLOSE}
            maskClosable={false}
+           okText={STRINGS.UPDATE_BY}
+           onOk={() => {onChangeVisible(); props.onOk(selected.id)}}
            onCancel={() => onChangeVisible()}
     >
       <Row>

@@ -245,7 +245,7 @@ class InFurnitures extends Component {
           isShowAddOrEdit && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewInFurniture selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewInFurniture selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editInFurniture} />
         }
       </div>
     );

@@ -250,7 +250,7 @@ class ExtraFees extends Component {
           isShowAddOrEdit && <AddExtraFee selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewExtraFee selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewExtraFee selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editIncomeUtility}/>
         }
       </div>
     );

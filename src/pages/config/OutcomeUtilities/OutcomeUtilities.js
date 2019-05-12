@@ -245,7 +245,7 @@ class OutcomeUtilities extends Component {
           isShowAddOrEdit && <AddOutcomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewOutcomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewOutcomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editIncomeUtility} />
         }
       </div>
     );

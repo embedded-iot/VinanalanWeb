@@ -26,6 +26,8 @@ const ViewExtraFee = (props) => {
            visible={true}
            cancelText={STRINGS.CLOSE}
            maskClosable={false}
+           okText={STRINGS.UPDATE_BY}
+           onOk={() => {onChangeVisible(); props.onOk(selected.id)}}
            onCancel={() => onChangeVisible()}
     >
       <Row>

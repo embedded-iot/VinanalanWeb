@@ -245,7 +245,7 @@ class RoomUtilities extends Component {
           isShowAddOrEdit && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewRoomUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewRoomUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editRoomUtility} />
         }
       </div>
     );

@@ -224,7 +224,7 @@ class AddUser extends Component {
             {isSubmitted && !email && (
               <span style={{ color: "red" }}>{STRINGS.REQUIRED_ALERT}</span>
             )}*/}
-            <InputEmail name='email' value={email} isRequired='true' onChange={this.onChangeEmail} isSubmitted={isSubmitted} disabled={isEdit}/>
+            <InputEmail name='email' value={email} isRequired='true' onChange={this.onChangeEmail} isSubmitted={isSubmitted} disabled={!!isEdit}/>
           </Col>
         </Row>
         <Row>

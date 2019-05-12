@@ -238,7 +238,7 @@ class RoomsCatalog extends Component {
           isShowAddOrEdit && <AddRoomsCatalog selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewRoomsCatalog selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewRoomsCatalog selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editIncomeUtility} />
         }
       </div>
     );

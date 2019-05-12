@@ -288,7 +288,7 @@ class Users extends Component {
           isShowAddOrEdit && <AddUser selected={selected} onChangeVisible={this.onChangeVisible} />
         }
         {
-          isShowViewDetails && <ViewUser selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} />
+          isShowViewDetails && <ViewUser selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editIncomeUtility}/>
         }
       </div>
     );

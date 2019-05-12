@@ -237,7 +237,7 @@ class HomeCatalog extends Component {
           isShowAddOrEdit && <AddHomeCatalog selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewHomeCatalog selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewHomeCatalog selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editIncomeUtility} />
         }
       </div>
     );

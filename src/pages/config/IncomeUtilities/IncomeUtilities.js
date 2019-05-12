@@ -245,7 +245,7 @@ class IncomeUtilities extends Component {
           isShowAddOrEdit && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewIncomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewIncomeUtility selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editIncomeUtility} />
         }
       </div>
     );

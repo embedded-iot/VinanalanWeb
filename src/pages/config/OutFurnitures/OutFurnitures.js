@@ -245,7 +245,7 @@ class OutFurnitures extends Component {
           isShowAddOrEdit && <AddIncomeUtility selected={selected} onChangeVisible={this.onChangeVisible}/>
         }
         {
-          isShowViewDetails && <ViewOutFurniture selected={selected} onChangeVisible={this.onChangeVisibleViewDetails}/>
+          isShowViewDetails && <ViewOutFurniture selected={selected} onChangeVisible={this.onChangeVisibleViewDetails} onOk={this.editOutFurniture} />
         }
       </div>
     );
