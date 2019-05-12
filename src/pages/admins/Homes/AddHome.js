@@ -36,6 +36,9 @@ import {getHomeDetails} from "./HomesServices";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
 import InputDatePicker from "../../../components/commons/InputDatePicker/InputDatePicker";
+import camera from "../../../public/images/icons/camera.png";
+import no_image from "../../../public/images/icons/no-image.png";
+import no_video from "../../../public/images/icons/no-video.png";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -74,7 +77,8 @@ class AddHome extends Component {
           lng: 0
         },
         media: {
-          images: []
+          images: [],
+          videos: []
         },
         numFloor: 0,
         numRoom: 0,
@@ -468,7 +472,20 @@ class AddHome extends Component {
     }
     const selected = { ...this.state.selected, location: location, address: address};
     this.setState({ selected: { ...selected}})
-  }
+  };
+
+  getMediaList = () => {
+    const { images, videos} = this.state.selected.media;
+    let img = [...images];
+    if (img.length < 3) {
+      const countPush = 3 - img.length;
+      for (let i = 0; i < countPush; i++) {
+        img.push(no_image);
+      }
+    }
+    const vd = videos && videos.length > 0 ? [videos] : [no_video];
+    return [...img, ...vd]
+  };
 
   render() {
     const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
@@ -489,6 +506,19 @@ class AddHome extends Component {
     } else {
       title = 'Thêm mới tòa nhà';
     }
+    const slickSettings = {
+      slidesToShow: 4,
+      slidesToScroll: 4,
+      initialSlide: 0,
+      responsive: [
+        {
+          breakpoint: 1366,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3
+          }
+        }]
+    };
     return (
       <div className="page-wrapper add-home-page-wrapper">
         <div className="page-headding">
@@ -684,20 +714,20 @@ class AddHome extends Component {
         <div className="steps-wrapper" style={{display: (selectedStep === 1 ? 'block' : 'none')}}>
           <div className='images-wrapper'>
             <div className='home-image'>
-              <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
+              <img src={ images && images.length > 0 ? images[0] : no_image} alt="Ảnh tòa nhà"/>
             </div>
             <div className='home-details'>
               <div className='home-description'>{address_text}</div>
               { !loading && <GoogleMapSearchBox onChangeLocation={this.onChangeLocation} location={location} disabled={true}/>}
             </div>
           </div>
-          <div className='react-slick-wrapper'>
-            <ReactSlick list={images}/>
-          </div>
           { !isView && (
-            <Button onClick={this.toggleAddUploadModal}>
-              Chỉnh sửa thư viện ảnh
-            </Button>)
+          <div className='image-slick-wrapper'>
+            <ReactSlick list={this.getMediaList()} settings={slickSettings}/>
+            <div className="camera-icon" onClick={this.toggleAddUploadModal}>
+              <img src={camera} alt="Ảnh tòa nhà"/>
+            </div>
+          </div>)
           }
           <div className="group-box">
             <div className="group-header">
@@ -751,7 +781,6 @@ class AddHome extends Component {
                 name="homeDescription"
                 value={homeDescription}
                 isSubmitted={isSubmitted}
-                isRequired='true'
                 isRequired='true'
                 onChange={this.onChangeInput}
                 style={{maxWidth: "none"}}
