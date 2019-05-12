@@ -10,22 +10,32 @@ const STRINGS = {
   REPORT: <FormattedMessage id="REPORT" />,
   CONFIG: <FormattedMessage id="CONFIG" />,
   HOME_CATALOG: <FormattedMessage id="HOME_CATALOG" />,
-  ROOM_CATALOG: <FormattedMessage id="ROOM_CATALOG" />
+  ROOM_CATALOG: <FormattedMessage id="ROOM_CATALOG" />,
+  USERS_MANAGE: <FormattedMessage id="USERS_MANAGE" />,
+  TYPES_OFF_HOME_CATALOGS: <FormattedMessage id="TYPES_OFF_HOME_CATALOGS" />,
+  TYPES_OFF_ROOM_CATALOGS: <FormattedMessage id="TYPES_OFF_ROOM_CATALOGS" />,
+  INCOME_UTILITIES: <FormattedMessage id="INCOME_UTILITIES" />,
+  USERS: <FormattedMessage id="USERS" />,
+  OUTCOME_UTILITIES: <FormattedMessage id="OUTCOME_UTILITIES" />,
+  OUT_FURNITURES: <FormattedMessage id="OUT_FURNITURES" />,
+  ROOM_UTILITIES: <FormattedMessage id="ROOM_UTILITIES" />,
+  IN_FURNITURES: <FormattedMessage id="IN_FURNITURES" />,
+  EXTRA_FEES: <FormattedMessage id="EXTRA_FEES" />
 };
 
 
 const Settings = (props) => {
   let menuConfig = [
-    { pathName: "/Users", name: "Quản lý tài khoản" },
-    { pathName: "/RoomsCatalog", name: "Loại phòng" },
-    { pathName: "/HomeCatalog", name: "Loại tòa nhà" },
-    { pathName: "/IncomeUtilities", name: "Tiện ích trong tòa nhà" },
-    { pathName: "/OutcomeUtilities", name: "Tiện ích ngoài tòa nhà" },
-    { pathName: "/RoomUtilities", name: "Tiện ích phòng" },
-    { pathName: "/InFurnitures", name: "Thiết bị phòng" },
-    { pathName: "/OutFurnitures", name: "Thiết bị tòa nhà" },
-    { pathName: "/ExtraFees", name: "Các loại phí khác" }
-  ]
+    { pathName: "/Users", name: STRINGS.USERS },
+    { pathName: "/HomeCatalog", name: STRINGS.TYPES_OFF_HOME_CATALOGS },
+    { pathName: "/RoomsCatalog", name: STRINGS.TYPES_OFF_ROOM_CATALOGS },
+    { pathName: "/IncomeUtilities", name: STRINGS.INCOME_UTILITIES },
+    { pathName: "/OutcomeUtilities", name: STRINGS.OUTCOME_UTILITIES },
+    { pathName: "/OutFurnitures", name: STRINGS.OUT_FURNITURES },
+    { pathName: "/RoomUtilities", name: STRINGS.ROOM_UTILITIES },
+    { pathName: "/InFurnitures", name: STRINGS.IN_FURNITURES },
+    { pathName: "/ExtraFees", name: STRINGS.EXTRA_FEES }
+  ];
 
   return (
     <div>
@@ -36,7 +46,7 @@ const Settings = (props) => {
       }
     </div>
   )
-}
+};
 
 class LeftSideBar extends Component {
   constructor(props) {
