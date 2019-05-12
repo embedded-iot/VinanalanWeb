@@ -53,4 +53,11 @@
       cursor: pointer;
     }
   }
+  .steps-wrapper:last-child {
+    .input-text-area-wrapper {
+      textarea {
+        min-height: 100px !important;
+      }
+    }
+  }
 }

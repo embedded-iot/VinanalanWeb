@@ -9,6 +9,7 @@ import {spinActions} from "../../../../actions";
 import {getIncomeUtilities} from "../../../config/IncomeUtilities/IncomeUtilitiesServices";
 import {getOutcomeUtilities} from "../../../config/OutcomeUtilities/OutcomeUtilitiesServices";
 import {getExtraFees} from "../../../config/ExtraFees/ExtraFeesServices";
+import {getOutFurnitures} from "../../../config/OutFurnitures/OutFurnituresServices";
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -25,91 +26,96 @@ class AddUtilities extends Component {
     super(props);
     this.state = {
       list: [],
-      nameModal: '',
-      selectedIdList: [],
-      selectedList: []
+      selected: [...this.props.selected],
+      indeterminate: true,
+      checkAll: false
     }
   }
 
   fetchInitData = service => {
     const { dispatch} = this.props;
     dispatch(spinActions.showSpin());
-    let param = {skip: 0, limit: 100};
+    let param = {skip: 0, limit: 100, isActive: true};
     return service(param, response => {
       dispatch(spinActions.hideSpin());
       if (response.data && response.data.length) {
-        this.setState({list: response.data})
+        this.setState({list: response.data} , () => this.initState())
       }
     }, error => {
       dispatch(spinActions.hideSpin());
     })
   }
 
+  initState = () => {
+    const { selected, list } = this.state;
+    this.setState({
+      indeterminate: !!selected.length && selected.length > 0 && selected.length < list.length,
+      checkAll: selected.length === list.length,
+    });
+  };
+
   componentWillMount() {
     const { type} = this.props;
-
     switch (type) {
       case 'income_service':
-        this.setState( {nameModal: 'Xin mời chọn tiện ích trong cho toà nhà'});
         this.fetchInitData(getIncomeUtilities);
         break;
       case 'outcome_service':
-        this.setState( {nameModal: 'Xin mời chọn tiện ích ngoài cho toà nhà'});
         this.fetchInitData(getOutcomeUtilities);
         break;
+      case 'out_furniture':
+        this.fetchInitData(getOutFurnitures);
+        break;
       default:
-        this.setState( {nameModal: 'Xin mời chọn phụ phí cho toà nhà'});
         this.fetchInitData(getExtraFees);
     }
   }
 
   onChange = checkedValues => {
-    // console.log(checkedValues);
-    this.setState({ selectedIdList: checkedValues});
-  }
-
-  saveUtilities = () => {
-    const { type, onOk, onCancel} = this.props;
-    const { list, selectedIdList, selectedList} = this.state;
-    const selectList = list.filter(item => {
-      return selectedIdList.indexOf(item.id) >= 0;
+    this.setState({
+      selected: checkedValues,
+      indeterminate: !!checkedValues.length && (checkedValues.length < this.state.list.length),
+      checkAll: checkedValues.length === this.state.list.length,
     });
-    onOk(type, selectedIdList, selectList);
-    onCancel();
-  }
+  };
+
+  onCheckAllChange = (e) => {
+    const { list } = this.state;
+    console.log(list);
+    this.setState({
+      selected: e.target.checked ? list.map(item => item.id) : [],
+      indeterminate: false,
+      checkAll: e.target.checked,
+    });
+  };
 
   render() {
-    const { onCancel, selected} = this.props;
-    const { list} = this.state;
-    const { nameModal } = this.state;
+    const { list, selected} = this.state;
     return(
-      <Modal title={ nameModal }
-             centered
-             width="800px"
-             visible={true}
-             okText={STRINGS.SAVE}
-             cancelText={STRINGS.CLOSE}
-             maskClosable={false}
-             onOk={() => this.saveUtilities()}
-             onCancel={() => onCancel()}
+    <div className="add-utilities-wrapper">
+      <Checkbox
+          indeterminate={this.state.indeterminate}
+          onChange={this.onCheckAllChange}
+          checked={this.state.checkAll}
       >
-        <div className="add-utilities-wrapper">
-          { list.length && (
-            <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange} defaultValue={selected}>
-              <Row>
-                {
-                  list.map(item => (
-                    <Col span={8} key={item.id}>
-                      <Checkbox value={item.id}>{item.name}</Checkbox>
-                      { item.icon_link && <img src={item.icon_link} style={{width: '32px', height: '32px'}}/>}
-                    </Col>))
-                }
-              </Row>
-            </Checkbox.Group>
-            )
+        Tất cả
+      </Checkbox>
+      <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange} value={selected}>
+        <Row>
+          {
+            !!list.length && list.map(item => (
+                <Col span={6} key={item.id}>
+                  <Checkbox value={item.id}>
+                    <div className="checkbox-text">
+                      { item.icon_link && <img src={item.icon_link} className="icon-item" />}
+                      <span className="break-word">{item.name}</span>
+                    </div>
+                  </Checkbox>
+                </Col>))
           }
-        </div>
-      </Modal>
+        </Row>
+      </Checkbox.Group>
+    </div>
     );
   }
 }
@@ -117,15 +123,13 @@ class AddUtilities extends Component {
 AddUtilities.propTypes = {
   type: PropTypes.string,
   selected: PropTypes.array,
-  onOk: PropTypes.func,
-  onCancel: PropTypes.func
+  onChange: PropTypes.func,
 }
 
 AddUtilities.defaultProps = {
   type: '',
   selected: [],
-  onOk: f => f,
-  onCancel: f => f
-}
+  onChange: f => f
+};
 
 export default injectIntl(withRouter(connect()(AddUtilities)));

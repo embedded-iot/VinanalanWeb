@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from "react";
-import {Modal, Row, Col, Input, Select, Button, notification} from "antd";
+import {Modal, Row, Col, Input, Select, Button, notification, Tooltip} from "antd";
 import * as Services from "./HomesServices";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
@@ -31,7 +31,6 @@ import './AddHome.scss'
 import {getIncomeUtilities} from "../../config/IncomeUtilities/IncomeUtilitiesServices";
 import {getOutcomeUtilities} from "../../config/OutcomeUtilities/OutcomeUtilitiesServices";
 import {getExtraFees} from "../../config/ExtraFees/ExtraFeesServices";
-import ViewTopUtilities from "./HomeComponents/ViewTopUtilities";
 import {getHomeDetails} from "./HomesServices";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
@@ -101,13 +100,9 @@ class AddHome extends Component {
       outcome_service: [],
       income_service: [],
       extra_service: [],
+      out_furniture: [],
       isEdit: false,
       isSubmitted: false,
-      utilitiesModal: {
-        type: "",
-        visible: false,
-        selected: []
-      },
       isShowUploadModal: false,
       homeManager: {},
       selectedStep: 0,
@@ -138,11 +133,12 @@ class AddHome extends Component {
       dispatch(spinActions.hideSpin());
       if (response.data) {
         let selected = { ...this.state.selected, ...response.data};
-        let { extraFees, outcomeUtilities, incomeUtilities} = response.data;
+        let { extraFees, outcomeUtilities, incomeUtilities, outFurniture} = response.data;
         selected.income_service = incomeUtilities.map(item => item.id);
         selected.outcome_service = outcomeUtilities.map(item => item.id);
         selected.extra_service = extraFees.map(item => item.id);
-        this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees }, () => {
+        selected.home_out_furniture = outFurniture && outFurniture.map(item => item.id);
+        this.setState({selected: selected, outcome_service: outcomeUtilities, income_service: incomeUtilities, extra_service: extraFees, out_furniture: outFurniture || [] }, () => {
           this.setState({loading: false});
         });
         const { address_text, country_code, district_code, province_code, ward_code } = selected.address;
@@ -269,36 +265,6 @@ class AddHome extends Component {
         }
       );
     }
-  };
-
-  showUtilitiesModal = type => {
-    const {outcome_service, income_service, extra_service} = this.state.selected;
-    let selected;
-    switch (type) {
-      case 'outcome_service':
-        selected = outcome_service;
-        break;
-      case 'income_service':
-        selected = income_service;
-        break;
-      default:
-        selected = extra_service;
-        break;
-    }
-    this.setState({
-      utilitiesModal: {
-        ...this.state.utilitiesModal,
-        type: type,
-        selected: selected,
-        visible: true
-      }
-    });
-  };
-
-  hideUtilitiesModal = () => {
-    this.setState({
-      utilitiesModal: {...this.state.utilitiesModal, visible: false}
-    });
   };
 
   toggleAddUploadModal = () => {
@@ -441,7 +407,7 @@ class AddHome extends Component {
     { title: "Quay lại", onClick: () => this.selectedStep(0)}
   ];
 
-  onOkAddUtilities = (type, selectedIdList, selectedList) => {
+  onChangeAddUtilities = (type, selectedIdList, selectedList) => {
     let selected = { ...this.state.selected};
     selected[type] = selectedIdList;
     switch (type) {
@@ -450,6 +416,9 @@ class AddHome extends Component {
         break;
       case 'outcome_service':
         this.setState({ selected: selected, outcome_service: selectedList});
+        break;
+      case 'out_furniture':
+        this.setState({ selected: selected, home_out_furniture: selectedList});
         break;
       default:
         this.setState({ selected: selected, extra_service: selectedList});
@@ -488,8 +457,8 @@ class AddHome extends Component {
   };
 
   render() {
-    const {selected, isSubmitted, homeCatalogs, users, utilitiesModal, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
-      outcome_service, income_service, extra_service, loading} = this.state;
+    const {selected, isSubmitted, homeCatalogs, users, isShowUploadModal, countries, provinces, districts, wards, homeManager, selectedStep,
+      outcome_service, income_service, extra_service, out_furniture, loading} = this.state;
     const {homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId, isActive, startDate, orientation} = selected;
     const { images, videos} = media;
     const { address_text, country_code, district_code, province_code, ward_code } = address;
@@ -725,92 +694,68 @@ class AddHome extends Component {
           <div className='image-slick-wrapper'>
             <ReactSlick list={this.getMediaList()} settings={slickSettings}/>
             <div className="camera-icon" onClick={this.toggleAddUploadModal}>
-              <img src={camera} alt="Ảnh tòa nhà"/>
+              <Tooltip title="Thêm hình ảnh và video">
+                <img src={camera} alt="Ảnh tòa nhà"/>
+              </Tooltip>
             </div>
           </div>)
           }
+          <InputTextArea
+              title="Giới thiệu"
+              placeholder="Mô tả thông tin chi tiết hơn về tòa nhà từ 300-500 chữ"
+              name="homeDescription"
+              className="input-text-area"
+              value={homeDescription}
+              isSubmitted={isSubmitted}
+              isRequired='true'
+              onChange={this.onChangeInput}
+              style={{maxWidth: "none"}}
+              disabled={isView}
+          />
           <div className="group-box">
             <div className="group-header">
-              <div className="group-title">Tiện nghi nổi bật</div>
+              <div className="group-title">Tiện ích xung quanh</div>
             </div>
             <div className="group-content">
-              <ViewTopUtilities
-                list={outcome_service}
-                emptyMessage='Chưa có tiện nghi nào.'/>
-            </div>
-          </div>
-          <div className="group-box">
-            <div className="group-header">
-              <div className="group-title">Tiện ích ngoài</div>
-              { !isView && (
-              <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("outcome_service")}>
-                  Chỉnh sửa
-                </a>
-              </div>
-              )}
-            </div>
-            <div className="group-content">
-              <ViewUtilities
-                list={outcome_service}
-                emptyMessage='Tòa nhà chưa gắn với tiện ích ngoài nào. Chọn nút "Chỉnh sửa" để thêm tiện ích.'/>
+              <AddUtilities type="outcome_service" selected={outcome_service} onChange={this.onChangeAddUtilities} />
             </div>
           </div>
           <div className="group-box">
             <div className="group-header">
-              <div className="group-title">Tiện ích trong</div>
-              { !isView && ( <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("income_service")}>
-                  Chỉnh sửa
-                </a>
-              </div>
-              )}
+              <div className="group-title">Dịch vụ tiện ích trong tòa nhà</div>
             </div>
             <div className="group-content">
-              <ViewUtilities
-                list={income_service}
-                emptyMessage='Tòa nhà chưa gắn với tiện ích trong nào. Chọn nút "Chỉnh sửa" để thêm tiện ích.'/>
-            </div>
-          </div>
-          <div className="group-box">
-            <div className="group-sub-heading">Giới thiệu "Khách sạn"</div>
-            <div className=''></div>
-            <div className="group-content">
-              <InputTextArea
-                title="Hãy mô tả ngắn gọn chỗ nghỉ của bạn"
-                name="homeDescription"
-                value={homeDescription}
-                isSubmitted={isSubmitted}
-                isRequired='true'
-                onChange={this.onChangeInput}
-                style={{maxWidth: "none"}}
-                disabled={isView}
-              />
+              <AddUtilities type="income_service" selected={income_service} onChange={this.onChangeAddUtilities} />
             </div>
           </div>
           <div className="group-box">
             <div className="group-header">
-              <div className="group-title">Dịch vụ đi kèm</div>
-              { !isView && ( <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("extra_service")}>Chỉnh sửa</a>
-              </div>)}
+              <div className="group-title">Trang thiết bị trong tòa nhà</div>
             </div>
             <div className="group-content">
-              <ViewUtilities
-                list={extra_service}
-                emptyMessage='Tòa nhà chưa gắn với phụ phí nào nào. Chọn nút "Chỉnh sửa" để thêm tiện ích.'/>
+              <AddUtilities type="out_furniture" selected={out_furniture} onChange={this.onChangeAddUtilities} />
             </div>
           </div>
+          <div className="group-box">
+            <div className="group-header">
+              <div className="group-title">Loại phí và giá (vnđ)</div>
+            </div>
+            <div className="group-content">
+              <AddUtilities type="extra_service" selected={extra_service} onChange={this.onChangeAddUtilities} />
+            </div>
+          </div>
+          <InputTextArea
+              title="Quy định đặt phòng và nội quy"
+              placeholder="Mô tả các luật lệ về đặt phòng được sử dụng trong tòa nhà 1000 chữ"
+              name="homeDescription"
+              value={homeDescription}
+              onChange={this.onChangeInput}
+              style={{maxWidth: "none"}}
+              disabled={isView}
+          />
           <div className='button-list-wrapper'>
             <ButtonList list={ isView ? this.buttonListTwoViewMode : this.buttonListTwo}/>
           </div>
-          {utilitiesModal.visible && (
-            <AddUtilities
-              {...utilitiesModal}
-              onCancel={this.hideUtilitiesModal}
-              onOk={this.onOkAddUtilities}
-            />
-          )}
           {isShowUploadModal && (
             <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages} list={images}/>
           )}

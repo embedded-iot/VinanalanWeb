@@ -18,7 +18,7 @@ class InputTextArea extends Component {
   }
 
   render() {
-    const { title, value, defaultValue, isRequired, placeholder, titleInfo, placeholderInfo, style, isSubmitted, disabled} = this.props;
+    const { title, value, defaultValue, isRequired, placeholder, titleInfo, placeholderInfo, style, styleInput, isSubmitted, disabled} = this.props;
     return (
       <div className="input-text-area-wrapper" style={style}>
         {

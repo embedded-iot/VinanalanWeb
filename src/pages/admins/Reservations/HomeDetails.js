@@ -10,7 +10,6 @@ import * as CONSTANTS from '../../Constants';
 import AddRoom from "../RoomsNew/AddRoom";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
-import ViewTopUtilities from "../Homes/HomeComponents/ViewTopUtilities";
 import FilterRooms from "./HomeComponents/FilterRooms";
 import "./Reservations.scss";
 import "./HomeDetails.scss";
@@ -540,20 +539,6 @@ class HomeDetails extends Component {
               images && images.length > 1 && <ReactSlick list={images}/>
             }
           </div>
-          {
-            extra_service && extra_service.length > 0 && (
-              <div className="group-box">
-                <div className="group-header">
-                  <div className="group-title">Tiện nghi nổi bật</div>
-                </div>
-                <div className="group-content">
-                  <ViewTopUtilities
-                    list={extra_service}
-                    emptyMessage='Chưa có tiện nghi nào.'/>
-                </div>
-              </div>
-            )
-          }
           <div className="page-contents-wrapper">
             <FilterRooms params={filterObject} onChange={this.onChangeFilterRooms}/>
           </div>
