@@ -1,4 +1,4 @@
-import {Button, Input, Table, Select } from 'antd';
+import {Button, Input, Table, Select, Icon} from 'antd';
 import React, {Component} from "react";
 import './TableCustom.scss'
 import {injectIntl} from "react-intl";
@@ -41,8 +41,6 @@ class TableCustom extends Component {
   };
 
   onSearchText = text => {
-    console.log("searchText", text);
-    this.setState({ searchText: text});
     let { pagination, filters, sorter} = {...this.props.tableSettings};
     let newPagination = { ...pagination, current: 1};
     this.props.onChange(newPagination, filters, sorter, {}, text ? text : null);
@@ -54,9 +52,22 @@ class TableCustom extends Component {
     onChange(pagination, filters, sorter, extra, searchText);
   };
 
+  onChangeInput = e => {
+    const { value } = e.target;
+    this.setState({ searchText: value});
+  };
+
+  onClearButton = () => {
+    this.setState({ searchText: ''});
+    let { pagination, filters, sorter} = {...this.props.tableSettings};
+    let newPagination = { ...pagination, current: 1};
+    this.props.onChange(newPagination, filters, sorter, {}, null);
+  };
+
   render() {
     const config = { ...defaultProps, ...this.props, onChange: this.onChange };
     const { pagination, intl } = this.props;
+    const { searchText } = this.state;
     return (
       <div className="table-custom-wrapper">
         <div className="table-header" style={{display: config.isHideTableHeader ? 'none': ''}}>
@@ -64,6 +75,12 @@ class TableCustom extends Component {
             placeholder={ config.placeholder ? config.placeholder : intl.formatMessage({id: 'ENTER_INPUT_SEARCH'})}
             onSearch={this.onSearchText}
             style={{display: config.isHideInputSearch ? 'none': ''}}
+            value={searchText}
+            onChange={this.onChangeInput}
+            prefix={<Icon type="search"/>}
+            suffix={searchText ? <Icon type="close" onClick={this.onClearButton} /> : ""}
+            enterButton="Search"
+            // allowClear
           />
           <div className="dropdown-page-size">
             <span>Hiển thị</span>
