@@ -1,0 +1,63 @@
+.add-home-page-wrapper {
+  .button-list-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0 30px;
+    .button-list {
+      display: inline-block;
+    }
+  }
+
+  .images-wrapper {
+    display: flex;
+    margin-bottom: 15px;
+    position: relative;
+    max-height: 500px;
+    .home-image {
+      width: 60%;
+      min-height: 400px;
+      max-height: 500px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .home-details {
+      padding-left: 20px;
+      width: 40%;
+      display: flex;
+      .home-description {
+        font-size: 25px;
+        position: absolute;
+        top: -55px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      & > div {
+        flex-grow: 1;
+        & > div {
+          height: 100% !important;
+        }
+      }
+    }
+  }
+
+  .image-slick-wrapper {
+    display: flex;
+    align-items: center;
+    .react-slick-wrapper {
+      width: 60%;
+    }
+    .camera-icon {
+      margin-left: 25px;
+      cursor: pointer;
+    }
+  }
+  .steps-wrapper:last-child {
+    .input-text-area-wrapper {
+      textarea {
+        min-height: 100px !important;
+      }
+    }
+  }
+}

@@ -34,6 +34,7 @@ import {
     HomeDetails,
     AddHome,
     AddRoom,
+    HomeDetailsReservation,
     Rooms as RoomsNew
 } from "./pages/admins";
 
@@ -55,11 +56,12 @@ const Protected = (props) => <div>
         <Route exact path="/Home" component={Homes}/>
         <Route exact path="/HomeOld" component={Home}/>
         <Route exact path="/home/AddHome" component={AddHome}/>
+        <Route exact path="/Home/:homeId/details" component={HomeDetails}/>
         <Route exact path="/Home/:homeId/:mode" component={AddHome}/>
 
         <Route exact path="/Reservations" component={Reservations}/>
         <Route exact path="/Reservations/:selectedStep" component={Reservations}/>
-        <Route exact path="/Reservations/HomeDetails/:homeId" component={HomeDetails}/>
+        <Route exact path="/Reservations/HomeDetails/:homeId" component={HomeDetailsReservation}/>
 
         <Route exact path="/Settings/Users" component={Users}/>
         <Route exact path="/Settings/HomeCatalog" component={HomeCatalog}/>

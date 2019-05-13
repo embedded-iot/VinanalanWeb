@@ -166,7 +166,7 @@ class Homes extends Component {
     if (!id) {
       return;
     }
-    history.push('/Home/' + id + '/View');
+    history.push('/Home/' + id + '/Details');
   }
 
   deleteHome = (id) => {
