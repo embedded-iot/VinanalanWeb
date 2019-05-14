@@ -13,6 +13,18 @@ export function getUsers(params, successCallback, failCallback) {
     });
 }
 
+export function getUserDetails(id, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/users/' + id
+    };
+
+    Services.makeGetRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
 export function deleteUser(id, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/users/' + id

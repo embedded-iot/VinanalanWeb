@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from "react";
-import {notification} from "antd";
+import {Col, notification, Row} from "antd";
 import * as Services from "./HomesServices";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
@@ -16,6 +16,9 @@ import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import {GoogleMapSearchBox} from "../../../components/GoogleMaps/GoogleMapSearchBox";
 import no_image from "../../../public/images/icons/no-image.png";
 import no_video from "../../../public/images/icons/no-video.png";
+import {getHomeCatalogDetails} from "../../config/HomeCatalog/HomeCatalogServices";
+import {getUserDetails} from "../../config/Users/UsersServices";
+import {convertDatetimeToString} from "../../../utils/utils";
 
 
 const STRINGS = {
@@ -67,7 +70,7 @@ class HomeDetails extends Component {
         extraFees: [],
         outFurniture: []
       },
-      homeCatalogs: [],
+      homeCatalogs: {},
       homeManager: {},
       loading: false
     };
@@ -100,7 +103,13 @@ class HomeDetails extends Component {
   };
 
   getInnitData = () => {
-
+    const { homeTypeId, managerId } = this.state.selected;
+    getHomeCatalogDetails(homeTypeId, response => {
+      this.setState({homeCatalogs: response.data});
+    });
+    getUserDetails(managerId, response => {
+      this.setState({homeManager: response.data});
+    });
   };
 
   goBackPage = () => {
@@ -132,12 +141,12 @@ class HomeDetails extends Component {
   render() {
     const {selected, homeCatalogs, homeManager, loading} = this.state;
     const {id, homeName, homeDescription, homeTypeId, address, location, media, numFloor, numRoom, hotline, managerId, isActive, startDate, orientation,
-      outcomeUtilities, incomeUtilities, extraFees, outFurniture} = selected;
+      outcomeUtilities, incomeUtilities, extraFees, outFurniture, create_at, create_by, update_at, update_by} = selected;
     const { images, videos} = media;
     const { address_text } = address;
-    const {phoneNumber, email} = homeManager;
     const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
-    const orientations = CONSTANTS.ORIENTATIONS;
+    const ORIENTATIONS = CONSTANTS.ORIENTATIONS;
+    const homeOrientation = ORIENTATIONS.find(item => item.value === orientation);
     const slickSettings = {
       slidesToShow: 4,
       slidesToScroll: 4,
@@ -173,6 +182,28 @@ class HomeDetails extends Component {
           </div>
           <div className='image-slick-wrapper'>
             <ReactSlick list={this.getMediaList()} settings={slickSettings}/>
+          </div>
+          <div style={{margin: "30px 0 50px"}}>
+            <Row>
+              <Col span={8}>
+                <OutputText title="Loại hình" value={homeCatalogs.catalogName} horizontal={true} />
+                <OutputText title="Hướng" value={homeOrientation ? homeOrientation.name : ''} horizontal={true} />
+                <OutputText title="Ngày bắt đầu hoạt động" value={startDate} horizontal={true} />
+                <OutputText title="Số tầng" value={numFloor.toString()} horizontal={true} />
+                <OutputText title="Hotline" value={hotline} horizontal={true} />
+              </Col>
+              <Col span={8}>
+                <OutputText title="Người quản lý" value={homeManager.userName} horizontal={true} />
+                <OutputText title="Điện thoại" value={homeManager.phoneNumber} horizontal={true} />
+                <OutputText title="Email" value={homeManager.email} horizontal={true} />
+                <OutputText title="Ngày tạo" value={convertDatetimeToString(create_at, 'DD/MM/YYYY HH:mm')} horizontal={true} />
+                <OutputText title="Người tạo" value={create_by} horizontal={true} />
+              </Col>
+              <Col span={8}>
+                <OutputText title="Ngày chỉnh sửa" value={convertDatetimeToString(update_at, 'DD/MM/YYYY HH:mm')} horizontal={true} />
+                <OutputText title="Người chỉnh sửa" value={update_by} horizontal={true} />
+              </Col>
+            </Row>
           </div>
           <div className="group-box">
             <div className="group-header">

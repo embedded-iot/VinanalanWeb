@@ -13,6 +13,18 @@ export function getHomeCatalog(params, successCallback, failCallback) {
     });
 }
 
+export function getHomeCatalogDetails(id, successCallback, failCallback) {
+    let requestOptions = {
+        url: '/api/home-catalog/' + id
+    };
+
+    Services.makeGetRequest(requestOptions, (response) => {
+        successCallback(response.data);
+    }, (error) => {
+        failCallback(error);
+    });
+}
+
 export function deleteHomeCatalog(id, successCallback, failCallback) {
     let requestOptions = {
         url: '/api/home-catalog/' + id

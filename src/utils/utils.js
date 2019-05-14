@@ -1,4 +1,5 @@
 import {notification} from "antd";
+import moment from "moment";
 
 export function convertDate(time) {
   return new Date(time).toLocaleDateString();
@@ -28,10 +29,6 @@ export function numberDaysBetweenTwoDates(fromDate, toDate) {
   return Math.ceil(timeDiff / (1000 * 3600 * 24));
 };
 
-export function  convertDatetimeToString(date, format) {
-  const dateTime = new Date(date);
-  const day = dateTime.getDate() < 10 ? '0' + dateTime.getDate() : dateTime.getDate();
-  const month = (dateTime.getMonth() + 1) < 10 ? '0' + (dateTime.getMonth() + 1) : (dateTime.getMonth() + 1);
-  const year = dateTime.getFullYear();
-  return day + '/' + month + '/' + year;
+export function  convertDatetimeToString(date, format = 'DD/MM/YYYY') {
+  return moment(date).format(format);
 }

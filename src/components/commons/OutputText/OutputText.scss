@@ -1,3 +1,8 @@
 .output-text-wrapper {
-
+  &.horizontal {
+    display: flex;
+    .heading {
+      width: 50%;
+    }
+  }
 }
