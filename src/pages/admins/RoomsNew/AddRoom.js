@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {Component} from "react";
-import {Modal, Row, Col, Input, Select, Button, notification} from "antd";
+import {Modal, Row, Col, Input, Select, Button, notification, Tooltip} from "antd";
 import * as Services from "./RoomsServices";
 import {connect} from "react-redux";
 import {FormattedMessage, injectIntl} from "react-intl";
@@ -8,12 +8,9 @@ import {spinActions} from "../../../actions";
 import * as CONSTANTS from "../../Constants";
 import InputText from "../../../components/commons/InputText/InputText";
 import DropdownList from "../../../components/commons/DropdownList/DropdownList";
-import SubTitle from "../../../components/commons/SubTitle/SubTitle";
 import DropdownInputSearch from "../../../components/commons/DropdownInputSearch/DropdownInputSearch";
 import InputTextArea from "../../../components/commons/InputTextArea/InputTextArea";
 import InputNumber from "../../../components/commons/InputNumber/InputNumber";
-import OutputText from "../../../components/commons/OutputText/OutputText";
-import ViewUtilities from "./RoomComponents/ViewUtilities";
 import AddUtilities from "./RoomComponents/AddUtilities";
 import AddImagesAndVideos from "./RoomComponents/AddImagesAndVideos";
 import ButtonList from "../../../components/commons/ButtonList/ButtonList";
@@ -22,9 +19,12 @@ import {getRoomDetails} from "./RoomsServices";
 import {getRoomsCatalog} from "../../config/RoomsCatalog/RoomsCatalogServices";
 import {getHomes} from "../Homes/HomesServices";
 import EditFurniture from "./RoomComponents/EditFurniture";
+import no_image from "../../../public/images/icons/no-image.png";
+import no_video from "../../../public/images/icons/no-video.png";
+import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
+import camera from "../../../public/images/icons/camera.png";
+import ViewUtilities from "./RoomComponents/ViewUtilities";
 
-const Option = Select.Option;
-const {TextArea} = Input;
 
 const STRINGS = {
   ADD_HOME_SUCCESS: <FormattedMessage id="ADD_HOME_SUCCESS"/>,
@@ -42,11 +42,6 @@ const STRINGS = {
   CHOICE_IMAGE_UPLOAD_BY_HOME_WARNING: 'Vui lòng chọn tòa nhà trước khi thực hiện chức năng này!'
 };
 
-const status = [
-  {title: STRINGS.ACTION_ACTIVE, value: 1},
-  {title: STRINGS.ACTION_DEACTIVE, value: 0}
-];
-
 const MAX_GUEST = 10;
 
 class AddRoom extends Component {
@@ -61,7 +56,8 @@ class AddRoom extends Component {
         roomTypeId	: '',
         isActive: true,
         roomMedia: {
-          images: []
+          images: [],
+          videos: []
         },
         maxGuest: 1,
         roomDatePrice: 0,
@@ -180,7 +176,7 @@ class AddRoom extends Component {
   isDisabled = () => {
     const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomDatePrice, roomMonthPrice} = this.state.selected;
     return !roomName || roomArea === '' || !homeId || !roomTypeId || roomDatePrice === '' || roomMonthPrice === '' || !roomDescription;
-  }
+  };
 
   handleSubmit = () => {
     let {selected, isEdit, inFurnituresAll} = this.state;
@@ -241,33 +237,6 @@ class AddRoom extends Component {
     }
   };
 
-  showUtilitiesModal = type => {
-    const {inFurnitures, room_utilities} = this.state.selected;
-    let selected;
-    switch (type) {
-      case 'inFurnitures':
-        selected = inFurnitures;
-        break;
-      case 'room_utilities':
-        selected = room_utilities;
-        break;
-    }
-    this.setState({
-      utilitiesModal: {
-        ...this.state.utilitiesModal,
-        type: type,
-        selected: selected,
-        visible: true
-      }
-    });
-  };
-
-  hideUtilitiesModal = () => {
-    this.setState({
-      utilitiesModal: {...this.state.utilitiesModal, visible: false}
-    });
-  };
-
   toggleAddUploadModal = () => {
     const { homeId } = this.state.selected;
     if (homeId) {
@@ -306,7 +275,7 @@ class AddRoom extends Component {
   goBackPage = () => {
     const { history } = this.props;
     history.goBack();
-  }
+  };
 
   buttonListTwoViewMode = [
     { title: "Quay lại", onClick: () => this.goBackPage()}
@@ -317,7 +286,7 @@ class AddRoom extends Component {
     { title: "Lưu phòng", type: "primary",  icon: "save", onClick: () => this.handleSubmit()}
   ];
 
-  onOkAddUtilities = (type, selectedIdList, selectedList) => {
+  onChangeAddUtilities = (type, selectedIdList, selectedList) => {
     const { inFurnituresAll } = this.state;
     let selected = { ...this.state.selected};
     selected[type] = selectedIdList;
@@ -339,7 +308,20 @@ class AddRoom extends Component {
 
   saveImages = images => {
     this.setState({selected: { ...this.state.selected, roomMedia: { ...this.state.selected.roomMedia, images: images}}})
-  }
+  };
+
+  getMediaList = () => {
+    const { images, videos} = this.state.selected.roomMedia;
+    let img = [...images];
+    if (img.length < 3) {
+      const countPush = 3 - img.length;
+      for (let i = 0; i < countPush; i++) {
+        img.push(no_image);
+      }
+    }
+    const vd = videos && videos.length > 0 ? [videos] : [no_video];
+    return [...img, ...vd]
+  };
 
   render() {
     const {selected, isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
@@ -355,6 +337,19 @@ class AddRoom extends Component {
     } else {
       title = 'Thêm mới phòng';
     }
+    const slickSettings = {
+      slidesToShow: 4,
+      slidesToScroll: 4,
+      initialSlide: 0,
+      responsive: [
+        {
+          breakpoint: 1366,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3
+          }
+        }]
+    };
     return (
       <div className="page-wrapper add-room-page-wrapper">
         <div className="page-headding">
@@ -363,7 +358,7 @@ class AddRoom extends Component {
         <div className="steps-wrapper">
           <div className='images-wrapper'>
             <div className='home-image'>
-              <img src={ images && images.length > 0 ? images[0] : ''} alt="Ảnh tòa nhà"/>
+              <img src={ images && images.length > 0 ? images[0] : no_image} alt="Ảnh phòng"/>
             </div>
             <div className='home-details'>
               <div className="group-box">
@@ -422,12 +417,18 @@ class AddRoom extends Component {
               </div>
             </div>
           </div>
-          { !isView && <div style={{marginBottom: '15px'}}>
-              <Button onClick={this.toggleAddUploadModal}>
-                Chọn ảnh đại diện
-              </Button>
-            </div>
-          }
+          <div className='image-slick-wrapper'>
+            <ReactSlick list={this.getMediaList()} settings={slickSettings}/>
+            {
+              !isView && (
+                  <div className="camera-icon" onClick={this.toggleAddUploadModal}>
+                    <Tooltip title="Chọn ảnh từ thư viện ảnh tòa nhà">
+                      <img src={camera} alt="Ảnh tòa nhà"/>
+                    </Tooltip>
+                  </div>
+              )
+            }
+          </div>
           <div className="group-box">
             <div className="group-sub-heading">
               Khách
@@ -481,58 +482,37 @@ class AddRoom extends Component {
           <div className="group-box">
             <div className="group-header">
               <div className="group-title">Tiện ích phòng</div>
-              { !isView && ( <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("room_utilities")}>
-                  Chỉnh sửa
-                </a>
-              </div>
-              )}
             </div>
             <div className="group-content">
-              <ViewUtilities
-                list={room_utilities_all}
-                emptyMessage='Tòa nhà chưa gắn với tiện ích phòng nào. Chọn nút "Chỉnh sửa" để tiện ích.'/>
+              { isView ? <ViewUtilities list={room_utilities_all} /> : <AddUtilities type="room_utilities" selected={room_utilities_all} onChange={this.onChangeAddUtilities} /> }
             </div>
           </div>
           <div className="group-box">
             <div className="group-header">
               <div className="group-title">Dịch vụ và giá đi kèm</div>
-              { !isView && ( <div className="group-action">
-                <a onClick={() => this.showUtilitiesModal("inFurnitures")}>Chỉnh sửa</a>
-              </div>)}
             </div>
             <div className="group-content">
-                <EditFurniture emptyMessage='Tòa nhà chưa gắn với dịch vụ phòng nào. Chọn nút "Chỉnh sửa" để thêm dịch vụ.'
-                               list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>
+              {
+                isView ? <ViewUtilities list={inFurnituresAll} /> : <AddUtilities type="inFurnitures" selected={inFurnituresAll} onChange={this.onChangeAddUtilities} />
+              }
+              {/*<EditFurniture emptyMessage='Tòa nhà chưa gắn với dịch vụ phòng nào. Chọn nút "Chỉnh sửa" để thêm dịch vụ.'
+                             list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>*/}
             </div>
           </div>
-          <div className="group-box">
-            <div className="group-header">
-              <div className="group-title">Lưu ý</div>
-            </div>
-            <div className="group-content">
-              <InputTextArea
-                title="Xin mời nhập lưu ý ở đây"
-                name="roomDescription"
-                value={roomDescription}
-                isSubmitted={isSubmitted}
-                isRequired='true'
-                onChange={this.onChangeInput}
-                style={{maxWidth: "none"}}
-                disabled={isView}
-              />
-            </div>
-          </div>
+          <InputTextArea
+              title="Lưu ý"
+              placeholder="Xin mời nhập lưu ý ở đây"
+              name="roomDescription"
+              value={roomDescription}
+              isSubmitted={isSubmitted}
+              isRequired='true'
+              onChange={this.onChangeInput}
+              style={{maxWidth: "none"}}
+              disabled={isView}
+          />
           <div className='button-list-wrapper'>
             <ButtonList list={ isView ? this.buttonListTwoViewMode : this.buttonListTwo}/>
           </div>
-          {utilitiesModal.visible && (
-            <AddUtilities
-              {...utilitiesModal}
-              onCancel={this.hideUtilitiesModal}
-              onOk={this.onOkAddUtilities}
-            />
-          )}
           {isShowUploadModal && (
             <AddImagesAndVideos onCancel={this.toggleAddUploadModal} onOk={this.saveImages} selectedHome={selectedHome}/>
           )}
