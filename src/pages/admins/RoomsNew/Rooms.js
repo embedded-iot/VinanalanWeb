@@ -202,7 +202,7 @@ class Rooms extends Component {
       return;
     }
     history.push('/Room/Details/' + id + '/Edit');
-  }
+  };
 
   viewHome = (id) => {
     const { history } = this.props;
@@ -210,7 +210,7 @@ class Rooms extends Component {
       return;
     }
     history.push('/Room/Details/' + id + '/View');
-  }
+  };
 
   deleteRoom = (id) => {
     const { intl, dispatch } = this.props;

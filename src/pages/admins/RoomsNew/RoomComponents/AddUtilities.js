@@ -8,6 +8,7 @@ import {connect} from "react-redux";
 import {spinActions} from "../../../../actions";
 import {getInFurnitures} from "../../../config/InFurnitures/InFurnituresServices";
 import {getRoomUtilities} from "../../../config/RoomUtilities/RoomUtilitiesServices";
+import {getExtraFees} from "../../../config/ExtraFees/ExtraFeesServices";
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -63,6 +64,10 @@ class AddUtilities extends Component {
       case 'room_utilities':
         this.setState( {nameModal: STRINGS.ADD_ROOM_UTILITIES_IN_ROOM_PAGE});
         this.fetchInitData(getRoomUtilities);
+        break;
+      case 'extraFees':
+        this.setState( {nameModal: STRINGS.ADD_ROOM_UTILITIES_IN_ROOM_PAGE});
+        this.fetchInitData(getExtraFees);
         break;
     }
   }

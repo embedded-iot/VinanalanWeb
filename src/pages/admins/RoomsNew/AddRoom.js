@@ -63,13 +63,15 @@ class AddRoom extends Component {
         roomDatePrice: 0,
         roomMonthPrice: 0,
         inFurnitures: [],
-        room_utilities: []
+        room_utilities: [],
+        extraFees: []
       },
       homes: [],
       roomCatalogs: [],
       inFurnituresAll: [],
       room_utilities_all: [],
       isEdit: false,
+      isView: false,
       isSubmitted: false,
       utilitiesModal: {
         type: "",
@@ -84,28 +86,36 @@ class AddRoom extends Component {
   }
 
   componentWillMount() {
-    const { roomId, mode, homeId } = this.props.match.params;
+    this.initState();
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { mode } = this.props.match.params;
+    if (nextProps.match.params && nextProps.match.params.mode !== mode) {
+      console.log('componentWillReceiveProps');
+      this.initState(nextProps);
+    }
+  }
+
+  initState = (props) => {
+    const { roomId, mode, homeId } = props ? props.match.params : this.props.match.params;
     if (roomId) {
       this.getRoomDetails(roomId, this.getInnitData);
     } else {
       this.getInnitData();
     }
     if (mode === 'Edit') {
-      this.setState({isEdit: true})
+      this.setState({isEdit: true, isView: false})
     }
     if (mode === 'View') {
-      this.setState({isView: true})
+      this.setState({isView: true, isEdit: false})
     }
     if (!!homeId) {
       let selected = this.state.selected;
       selected.homeId = homeId;
       this.setState({selected: selected, homeIdFromProps: homeId})
     }
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    console.log('componentWillReceiveProps');
-  }
+  };
 
   getRoomDetails = (id, callback)  => {
     const { dispatch } = this.props;
@@ -114,19 +124,33 @@ class AddRoom extends Component {
       dispatch(spinActions.hideSpin());
       if (response.data && response.data.room) {
         let room = response.data.room;
-        room.roomArea = Number(room.roomArea);
-        room.inFurnitures = room.inFurnitures.map(item => {
-          const furniture = item.roomInfurnitures.find(fur => fur.inFurnitureId === item.id);
-          return { icon_link: item.icon_link,
-            id: item.id,
-            name: item.name,
-            cost: furniture && furniture.cost ? furniture.cost : 0}
-          });
-        let selected = { ...this.state.selected, ...room};
-        let { room_utilities, inFurnitures} = room;
-        selected.room_utilities = room_utilities.map(item => item.id);
-        selected.inFurnitures = inFurnitures.map(item => item.id);
-        this.setState({selected: selected, room_utilities_all: room_utilities, inFurnituresAll: inFurnitures, selectedHome: room.homes},  () => {
+        let roomDetails = {
+          roomName: room.roomName,
+          roomDescription: room.roomDescription,
+          roomArea: room.roomArea,
+          homeId: room.homeId,
+          roomTypeId: room.roomTypeId,
+          isActive: room.isActive,
+          roomMedia: {
+            images: room.roomMedia && room.roomMedia.images ? room.roomMedia.images : [],
+            videos: room.roomMedia && room.roomMedia.videos ? room.roomMedia.videos : []
+          },
+          maxGuest: room.maxGuest,
+          roomDatePrice: room.roomDatePrice,
+          roomMonthPrice: room.roomMonthPrice,
+          inFurnitures: room.inFurnitures.length ? room.inFurnitures.map(item => {
+            const furniture = item.roomInfurnitures.find(fur => fur.inFurnitureId === item.id);
+            return { icon_link: item.icon_link,
+              id: item.id,
+              name: item.name,
+              cost: furniture && furniture.cost ? furniture.cost : 0}
+          }) : [],
+          room_utilities: room.room_utilities.length ? room.room_utilities.map(item => item.id) : [],
+          extraFees: room.extraFees && room.extraFees.length ? room.extraFees.map(item => item.id) : [],
+          create_by: room.create_by
+        };
+
+        this.setState({selected: {...roomDetails}, selectedHome: room.homes}, () => {
           callback();
         });
       }
@@ -149,9 +173,8 @@ class AddRoom extends Component {
           let selectedHome = homes.find(item => item.id === homeId);
           this.setState({homes: homes, selectedHome});
         } else {
-          this.setState({homes: homes});
+          this.setState({homes: homes, selected: { ...this.state.selected, homeId: homes.length && homes[0] ? homes[0].value : ''}});
         }
-
       }
     });
     getRoomsCatalog(param, response => {
@@ -192,12 +215,13 @@ class AddRoom extends Component {
     }
 
     selected.inFurnitures = inFurnituresAll.map(item => ({ id: item.id, cost: item.cost}));
-    dispatch(spinActions.showSpin());
     selected.isActive = !!selected.isActive;
+    selected.userId= user.id;
+
+    console.log(selected);
+    dispatch(spinActions.showSpin());
     if (isEdit) {
-      var id =
-        typeof selected.create_by === "object" ? selected.create_by.id : "";
-      selected.create_by = id;
+      selected.create_by = typeof selected.create_by === "object" ? selected.create_by.id : selected.create_by;
       Services.editRoom(selected,
         response => {
           dispatch(spinActions.hideSpin());
@@ -217,7 +241,7 @@ class AddRoom extends Component {
       );
     } else {
       Services.createNewRoom(
-        {...selected, userId: user.id},
+          selected,
         response => {
           dispatch(spinActions.hideSpin());
           this.openNotification(
@@ -258,7 +282,7 @@ class AddRoom extends Component {
     } else {
       this.setState({selected: selected});
     }
-  }
+  };
 
   onChangeInput = (name, value) => {
     let selected = {...this.state.selected};
@@ -277,8 +301,17 @@ class AddRoom extends Component {
     history.goBack();
   };
 
+  editRoom = (id) => {
+    const { history } = this.props;
+    if (!id) {
+      return;
+    }
+    history.push('/Room/Details/' + id + '/Edit');
+  };
+
   buttonListTwoViewMode = [
-    { title: "Quay lại", onClick: () => this.goBackPage()}
+    { title: "Quay lại", onClick: () => this.goBackPage()},
+    { title: "Chỉnh sửa", type: "primary", onClick: () => this.editRoom(this.state.selected.id)},
   ];
 
   buttonListTwo = [
@@ -304,7 +337,7 @@ class AddRoom extends Component {
         this.setState({ selected: selected, room_utilities_all: selectedList});
         break;
     }
-  }
+  };
 
   saveImages = images => {
     this.setState({selected: { ...this.state.selected, roomMedia: { ...this.state.selected.roomMedia, images: images}}})
@@ -325,7 +358,7 @@ class AddRoom extends Component {
 
   render() {
     const {selected, isSubmitted, homes, selectedHome, roomCatalogs, utilitiesModal, isShowUploadModal, numberGuest, inFurnituresAll, room_utilities_all, homeIdFromProps} = this.state;
-    const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, isActive} = selected;
+    const {roomName, roomDescription, roomArea, homeId, roomTypeId, roomMedia, maxGuest, roomDatePrice, roomMonthPrice, inFurnitures, room_utilities, extraFees, isActive} = selected;
     const { images} = roomMedia;
     const [...status] = CONSTANTS.STATUS.map(item => ({ ...item, value: Number(item.value)}));
     const { isEdit, isView} = this.state;
@@ -487,13 +520,24 @@ class AddRoom extends Component {
               { isView ? <ViewUtilities list={room_utilities_all} /> : <AddUtilities type="room_utilities" selected={room_utilities_all} onChange={this.onChangeAddUtilities} /> }
             </div>
           </div>
+
           <div className="group-box">
             <div className="group-header">
-              <div className="group-title">Dịch vụ và giá đi kèm</div>
+              <div className="group-title">Thiết bị phòng</div>
             </div>
             <div className="group-content">
               {
                 isView ? <ViewUtilities list={inFurnituresAll} /> : <AddUtilities type="inFurnitures" selected={inFurnituresAll} onChange={this.onChangeAddUtilities} />
+              }
+            </div>
+          </div>
+          <div className="group-box">
+            <div className="group-header">
+              <div className="group-title">Dịch vụ và bảng giá</div>
+            </div>
+            <div className="group-content">
+              {
+                isView ? <ViewUtilities list={extraFees} /> : <AddUtilities type="extraFees" selected={extraFees} onChange={this.onChangeAddUtilities} />
               }
               {/*<EditFurniture emptyMessage='Tòa nhà chưa gắn với dịch vụ phòng nào. Chọn nút "Chỉnh sửa" để thêm dịch vụ.'
                              list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>*/}

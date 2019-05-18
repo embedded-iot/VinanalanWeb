@@ -22,7 +22,7 @@ class InputNumber extends Component {
       reg = /^-?([0-9]+)(\.[0-9]*){0}$/;
     }
     value = value.replace(/(,*)/g, '');
-    console.log('value', value);
+    // console.log('value', value);
     if ((!Number.isNaN(value) && reg.test(value)) || value === '' || value === '-') {
       if (type === 'phone') {
         this.props.onChange(this.props.name, value);
