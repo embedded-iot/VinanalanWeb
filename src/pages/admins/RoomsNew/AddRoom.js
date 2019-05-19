@@ -24,6 +24,7 @@ import no_video from "../../../public/images/icons/no-video.png";
 import ReactSlick from "../../../components/commons/ReactSlick/ReactSlick";
 import camera from "../../../public/images/icons/camera.png";
 import ViewUtilities from "./RoomComponents/ViewUtilities";
+import AddFees from "./RoomComponents/AddFees";
 
 
 const STRINGS = {
@@ -320,23 +321,24 @@ class AddRoom extends Component {
   ];
 
   onChangeAddUtilities = (type, selectedIdList, selectedList) => {
-    const { inFurnituresAll } = this.state;
-    let selected = { ...this.state.selected};
-    selected[type] = selectedIdList;
+    console.log(type);
+    console.log(selectedIdList);
+    console.log(selectedList);
+
+    let list = [];
     switch (type) {
       case 'inFurnitures':
-        const inFurnituresAllNew = selectedList.map(item => {
-          let existFurniture = inFurnituresAll.find(furniture => furniture.id === item.id);
-          return {
-            ...item, cost: existFurniture && existFurniture.cost ? existFurniture.cost : 0
-          }
-        });
-        this.setState({ selected: selected, inFurnituresAll: inFurnituresAllNew });
+        list = selectedIdList.map(item => ({
+          id: item.id,
+          cost: item.cost ? item.cost : 0
+        }));
         break;
       case 'room_utilities':
-        this.setState({ selected: selected, room_utilities_all: selectedList});
+        list = selectedIdList;
         break;
     }
+    let selected = { ...this.state.selected};
+    selected[type] = list;
   };
 
   saveImages = images => {
@@ -536,6 +538,8 @@ class AddRoom extends Component {
               <div className="group-title">Dịch vụ và bảng giá</div>
             </div>
             <div className="group-content">
+              <AddFees type="extraFees" selected={extraFees} onChange={this.onChangeAddUtilities} />
+              <hr/>
               {
                 isView ? <ViewUtilities list={extraFees} /> : <AddUtilities type="extraFees" selected={extraFees} onChange={this.onChangeAddUtilities} />
               }
