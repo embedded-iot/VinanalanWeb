@@ -126,6 +126,7 @@ class AddRoom extends Component {
       if (response.data && response.data.room) {
         let room = response.data.room;
         let roomDetails = {
+          id: room.id,
           roomName: room.roomName,
           roomDescription: room.roomDescription,
           roomArea: room.roomArea,
@@ -539,12 +540,6 @@ class AddRoom extends Component {
             </div>
             <div className="group-content">
               <AddFees type="extraFees" selected={extraFees} onChange={this.onChangeAddUtilities} />
-              <hr/>
-              {
-                isView ? <ViewUtilities list={extraFees} /> : <AddUtilities type="extraFees" selected={extraFees} onChange={this.onChangeAddUtilities} />
-              }
-              {/*<EditFurniture emptyMessage='Tòa nhà chưa gắn với dịch vụ phòng nào. Chọn nút "Chỉnh sửa" để thêm dịch vụ.'
-                             list={inFurnituresAll} onChange={this.onChangeInputCostFurniture} disabled={isView}/>*/}
             </div>
           </div>
           <InputTextArea
