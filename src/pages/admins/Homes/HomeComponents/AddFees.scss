@@ -1,0 +1,45 @@
+.add-fees-wrapper {
+  .ant-row {
+    display: flex;
+    flex-flow: row wrap;
+    .ant-col-12 {
+      padding: 0 25px 15px 0;
+      min-height: 42px;
+      .ant-checkbox-wrapper {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        .icon-item {
+          width: 32px;
+          height: 32px;
+          margin: 0 15px 0 0;
+        }
+        .checkbox-text {
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+        }
+      }
+      span:last-child {
+        flex-grow: 1;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        .input-number-wrapper {
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          width: 50%;
+          margin-right: 30px !important;
+
+          input {
+            width: 200px;
+          }
+          span {
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+  }
+}

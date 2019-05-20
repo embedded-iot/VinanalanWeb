@@ -38,6 +38,7 @@ import InputDatePicker from "../../../components/commons/InputDatePicker/InputDa
 import camera from "../../../public/images/icons/camera.png";
 import no_image from "../../../public/images/icons/no-image.png";
 import no_video from "../../../public/images/icons/no-video.png";
+import AddFees from "../RoomsNew/RoomComponents/AddFees";
 
 const Option = Select.Option;
 const {TextArea} = Input;
@@ -741,7 +742,7 @@ class AddHome extends Component {
               <div className="group-title">Loại phí và giá (vnđ)</div>
             </div>
             <div className="group-content">
-              <AddUtilities type="extra_service" selected={extra_service} onChange={this.onChangeAddUtilities} />
+              <AddFees type="extraFees" selected={extra_service} onChange={this.onChangeAddUtilities} />
             </div>
           </div>
           <InputTextArea
