@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('error') {
       steps {
-        sh 'docker pull:node6-alpine'
+        sh 'docker pull node:6-alpine'
       }
     }
   }
